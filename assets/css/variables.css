@@ -1,0 +1,33 @@
+:root {
+    /* Cores */
+    --color-primary: #8B0836;
+    --color-background: #F5F5F5;
+    --color-surface: #F5F5F5;
+    --color-sidebar-bg: #FFFFFF;
+    --color-text-strong: #030303;
+    --color-text-secondary: #6B6B6B;
+    --color-white-soft: #FCF9E8;
+
+    /* Tipografia */
+    --font-family: 'Outfit', sans-serif;
+    --font-size-menu: 16px;
+
+    /* Sidebar */
+    --sidebar-width: 256px;
+    --sidebar-item-width-active: 196px;
+    --sidebar-item-height-active: 56px;
+    --logo-width: 185px;
+    --logo-height: 66px;
+
+    /* Ícones */
+    --icon-size: 24px;
+
+    /* Espaçamentos */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 40px;
+
+    /* Bordas */
+    --border-radius: 12px;
+}
