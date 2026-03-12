@@ -30,11 +30,14 @@
                 <div class="input-select-wrapper">
                     <select id="cargo" name="cargo" required>
                         <option value="" disabled selected>Selecione seu cargo</option>
-                        <option value="desenvolvedor">Desenvolvedor</option>
-                        <option value="designer">Designer</option>
-                        <option value="gerente">Gerente de Projetos</option>
-                        <option value="analista">Analista</option>
-                        <option value="outro">Outro</option>
+                        <option value="dev-frontend">Desenvolvedor Frontend</option>
+                        <option value="dev-backend">Desenvolvedor Backend</option>
+                        <option value="dev-fullstack">Desenvolvedor Full Stack</option>
+                        <option value="ui-ux-designer">UI/UX Designer</option>
+                        <option value="product-owner">Product Owner</option>
+                        <option value="scrum-master">Scrum Master</option>
+                        <option value="tech-lead">Tech Lead</option>
+                        <option value="qa-testes">QA / Testes</option>
                     </select>
                 </div>
             </div>
