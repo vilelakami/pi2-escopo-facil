@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escopo Fácil</title>
-    <link rel="stylesheet" href="/assets/css/reset.css">
-    <link rel="stylesheet" href="/assets/css/variables.css">
     <link rel="stylesheet" href="/assets/css/global.css">
     <link rel="stylesheet" href="/assets/css/layout.css">
     <?php if (file_exists(__DIR__ . '/assets/css/pages/' . $page . '.css')): ?>

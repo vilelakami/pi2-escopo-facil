@@ -1,0 +1,49 @@
+/* ========================================
+   Cadastro — Estilos específicos
+   ======================================== */
+
+.cadastro {
+    width: 100%;
+    max-width: 520px;
+}
+
+/* --- Header --- */
+.cadastro-logo {
+    width: var(--logo-width);
+    margin-bottom: var(--spacing-md);
+}
+
+.cadastro-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 42px;
+    color: var(--color-text-strong);
+    margin-bottom: var(--spacing-md);
+}
+
+/* --- Form --- */
+.cadastro-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+/* --- Footer --- */
+.cadastro-footer {
+    font-family: var(--font-family);
+    font-size: 16px;
+    font-weight: 500;
+    color: #718096;
+    text-align: center;
+    margin-top: var(--spacing-md);
+}
+
+.cadastro-footer a {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cadastro-footer a:hover {
+    text-decoration: underline;
+}
