@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/layout.css">
     <?php if (file_exists(__DIR__ . '/assets/css/pages/' . $page . '.css')): ?>
-        <link rel="stylesheet" href="/assets/css/pages/<?= $page ?>.css">
+        <link rel="stylesheet" href="assets/css/pages/<?= $page ?>.css">
     <?php endif; ?>
 </head>
 <body>
