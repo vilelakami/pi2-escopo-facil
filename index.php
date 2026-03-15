@@ -1,6 +1,15 @@
+<?php
+$page = $_GET['page'] ?? 'dashboard';
+
+// Páginas de autenticação (layout próprio, sem sidebar)
+$authPages = ['login', 'cadastro', 'esqueci-senha', 'redefinir-senha', 'confirmacao'];
+if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page . '.php')) {
+    include __DIR__ . '/pages/auth/' . $page . '.php';
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
-<?php $page = $_GET['page'] ?? 'dashboard'; ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +25,17 @@
         <?php include __DIR__ . '/partials/sidebar.php'; ?>
         <main class="main">
             <?php
-                $allowed = ['dashboard', 'tarefas', 'membros', 'configuracao'];
+                $allowed = ['dashboard', 'projetos', 'tarefas', 'membros', 'configuracao'];
                 if (in_array($page, $allowed)) {
-                    include __DIR__ . '/pages/' . $page . '.php';
+                    $pageFile = __DIR__ . '/pages/' . $page . '.php';
+                    $pageDirFile = __DIR__ . '/pages/' . $page . '/index.php';
+                    if (file_exists($pageDirFile)) {
+                        include $pageDirFile;
+                    } elseif (file_exists($pageFile)) {
+                        include $pageFile;
+                    } else {
+                        echo '<h1 class="page-title">Página não encontrada</h1>';
+                    }
                 } else {
                     echo '<h1 class="page-title">Página não encontrada</h1>';
                 }

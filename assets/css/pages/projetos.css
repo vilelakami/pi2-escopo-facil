@@ -1,0 +1,337 @@
+/* ===== Projetos ===== */
+
+.projetos {
+    padding: var(--spacing-md);
+    padding-top: 0;
+}
+
+/* Header */
+.projetos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.projetos-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--color-text-strong);
+}
+
+.projetos-header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Notificação */
+.projetos-notification {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.projetos-notification img {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
+.notification-dot {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    background: #E53E3E;
+    border-radius: 50%;
+}
+
+/* Usuário */
+.projetos-user {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.projetos-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.projetos-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.projetos-user-name {
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-text-strong);
+}
+
+.projetos-user-role {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+/* Toolbar: busca + botão */
+.projetos-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.projetos-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 0 var(--spacing-sm);
+    gap: var(--spacing-xs);
+}
+
+.projetos-search-icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    flex-shrink: 0;
+}
+
+.projetos-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--color-text-strong);
+}
+
+.projetos-search-input::placeholder {
+    color: #A0AEC0;
+}
+
+/* Botão criar projeto */
+.projetos-btn-criar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    height: 56px;
+    padding: 0 var(--spacing-md);
+    background: var(--color-primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-white-soft);
+    white-space: nowrap;
+}
+
+.projetos-btn-criar:hover {
+    opacity: 0.9;
+}
+
+.projetos-btn-icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
+/* ===== Cards Grid ===== */
+
+.projetos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+/* Card */
+.projeto-card {
+    height: 225px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.projeto-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+/* Ícone do card */
+.projeto-card-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.projeto-card-icon img {
+    width: 16px;
+    height: 16px;
+}
+
+.projeto-card-icon--admin {
+    background: #FCF2F2;
+}
+
+.projeto-card-icon--membro {
+    background: #EAEFF7;
+}
+
+/* Badge */
+.projeto-badge {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 5px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.projeto-badge--admin {
+    background: #FCF2F2;
+    color: #B83134;
+}
+
+.projeto-badge--membro {
+    background: #EAEFF7;
+    color: #2E61B4;
+}
+
+/* Título e descrição */
+.projeto-card-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 16px;
+    color: #3C4257;
+    margin-bottom: 4px;
+}
+
+.projeto-card-desc {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 12px;
+    color: #697386;
+    line-height: 1.4;
+    flex: 1;
+}
+
+/* Avatars */
+.projeto-card-avatars {
+    display: flex;
+    align-items: center;
+    height: 52px;
+    margin-bottom: 8px;
+}
+
+.projeto-card-avatars img {
+    height: 32px;
+}
+
+.projeto-card-extra {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #E8E8E8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 12px;
+    color: #697386;
+    margin-left: -6px;
+}
+
+/* Separador */
+.projeto-card-separator {
+    height: 1px;
+    background: #F5F5F5;
+    margin-bottom: 8px;
+}
+
+/* Ações */
+.projeto-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.projeto-btn-ver {
+    height: 28px;
+    padding: 0 10px;
+    background: #EEEBE5;
+    border: 1px solid #D3D4D7;
+    border-radius: 5px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 12px;
+    color: #3C4257;
+    cursor: pointer;
+}
+
+.projeto-btn-ver:hover {
+    background: #E5E5E5;
+}
+
+.projeto-btn-gerenciar {
+    height: 28px;
+    padding: 0 10px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 5px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-white-soft);
+    cursor: pointer;
+}
+
+.projeto-btn-gerenciar:hover {
+    opacity: 0.9;
+}
+
+.projeto-btn-sair {
+    height: 28px;
+    padding: 0 10px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 5px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-white-soft);
+    cursor: pointer;
+}
+
+.projeto-btn-sair:hover {
+    opacity: 0.9;
+}
