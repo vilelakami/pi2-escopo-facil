@@ -8,6 +8,24 @@
     --color-text-secondary: #6B6B6B;
     --color-white-soft: #FCF9E8;
 
+    /* Cards / Componentes */
+    --color-white: #FFFFFF;
+    --color-card-title: #3C4257;
+    --color-card-subtitle: #697386;
+    --color-border: #D3D4D7;
+    --color-placeholder: #A0AEC0;
+    --color-input-placeholder: #A3ACB9;
+    --color-btn-secondary: #EEEBE5;
+    --color-avatar-extra: #E8E8E8;
+    --color-danger: #E53E3E;
+    --color-badge-admin-bg: #FCF2F2;
+    --color-badge-admin-text: #B83134;
+    --color-badge-membro-bg: #EAEFF7;
+    --color-badge-membro-text: #2E61B4;
+    --color-overlay: rgba(0, 0, 0, 0.4);
+    --color-member-card-bg: #F4F4F5;
+    --color-member-email: #8D8D8D;
+
     /* Tipografia */
     --font-family: 'Outfit', sans-serif;
     --font-size-menu: 16px;

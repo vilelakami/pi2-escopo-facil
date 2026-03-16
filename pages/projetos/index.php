@@ -32,7 +32,7 @@
 
     <!-- Cards Grid -->
     <div class="projetos-grid">
-        <?php foreach ($projetos as $projeto):
+        <?php foreach ($projetos as $index => $projeto):
             $isAdmin = $projeto['role'] === 'admin';
             $roleClass = $isAdmin ? 'admin' : 'membro';
             $icon = $isAdmin ? '/assets/icon/user-key.svg' : '/assets/icon/user-lock.svg';
@@ -57,7 +57,7 @@
             <div class="projeto-card-actions">
                 <button class="projeto-btn-ver">Ver tarefas</button>
                 <?php if ($isAdmin): ?>
-                    <button class="projeto-btn-gerenciar">Gerenciar</button>
+                    <button class="projeto-btn-gerenciar" data-index="<?= $index ?>">Gerenciar</button>
                 <?php else: ?>
                     <button class="projeto-btn-sair">Sair</button>
                 <?php endif; ?>
@@ -66,3 +66,10 @@
         <?php endforeach; ?>
     </div>
 </div>
+
+<?php include __DIR__ . '/modais/novo-projeto.php'; ?>
+<?php include __DIR__ . '/modais/gerenciar-projeto.php'; ?>
+
+<script>
+    window.projetosMock = <?= json_encode($projetos, JSON_UNESCAPED_UNICODE) ?>;
+</script>

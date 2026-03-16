@@ -31,7 +31,7 @@
     position: relative;
     width: 48px;
     height: 48px;
-    background: #FFFFFF;
+    background: var(--color-white);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -50,7 +50,7 @@
     right: 12px;
     width: 8px;
     height: 8px;
-    background: #E53E3E;
+    background: var(--color-danger);
     border-radius: 50%;
 }
 
@@ -99,7 +99,7 @@
     display: flex;
     align-items: center;
     height: 56px;
-    background: #FFFFFF;
+    background: var(--color-white);
     border-radius: 10px;
     padding: 0 var(--spacing-sm);
     gap: var(--spacing-xs);
@@ -123,7 +123,7 @@
 }
 
 .projetos-search-input::placeholder {
-    color: #A0AEC0;
+    color: var(--color-placeholder);
 }
 
 /* Botão criar projeto */
@@ -166,7 +166,7 @@
 /* Card */
 .projeto-card {
     height: 225px;
-    background: #FFFFFF;
+    background: var(--color-white);
     border-radius: 8px;
     padding: 12px;
     display: flex;
@@ -196,11 +196,11 @@
 }
 
 .projeto-card-icon--admin {
-    background: #FCF2F2;
+    background: var(--color-badge-admin-bg);
 }
 
 .projeto-card-icon--membro {
-    background: #EAEFF7;
+    background: var(--color-badge-membro-bg);
 }
 
 /* Badge */
@@ -216,13 +216,13 @@
 }
 
 .projeto-badge--admin {
-    background: #FCF2F2;
-    color: #B83134;
+    background: var(--color-badge-admin-bg);
+    color: var(--color-badge-admin-text);
 }
 
 .projeto-badge--membro {
-    background: #EAEFF7;
-    color: #2E61B4;
+    background: var(--color-badge-membro-bg);
+    color: var(--color-badge-membro-text);
 }
 
 /* Título e descrição */
@@ -230,7 +230,7 @@
     font-family: var(--font-family);
     font-weight: 600;
     font-size: 16px;
-    color: #3C4257;
+    color: var(--color-card-title);
     margin-bottom: 4px;
 }
 
@@ -238,7 +238,7 @@
     font-family: var(--font-family);
     font-weight: 500;
     font-size: 12px;
-    color: #697386;
+    color: var(--color-card-subtitle);
     line-height: 1.4;
     flex: 1;
 }
@@ -259,21 +259,21 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #E8E8E8;
+    background: var(--color-avatar-extra);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-family);
     font-weight: 500;
     font-size: 12px;
-    color: #697386;
+    color: var(--color-card-subtitle);
     margin-left: -6px;
 }
 
 /* Separador */
 .projeto-card-separator {
     height: 1px;
-    background: #F5F5F5;
+    background: var(--color-background);
     margin-bottom: 8px;
 }
 
@@ -288,13 +288,13 @@
 .projeto-btn-ver {
     height: 28px;
     padding: 0 10px;
-    background: #EEEBE5;
-    border: 1px solid #D3D4D7;
+    background: var(--color-btn-secondary);
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     font-family: var(--font-family);
     font-weight: 500;
     font-size: 12px;
-    color: #3C4257;
+    color: var(--color-card-title);
     cursor: pointer;
 }
 
@@ -334,4 +334,390 @@
 
 .projeto-btn-sair:hover {
     opacity: 0.9;
+}
+
+/* ===== Modal Novo Projeto ===== */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-overlay);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--color-white);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    width: 100%;
+    max-width: 509px;
+}
+
+/* Header do modal */
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: var(--spacing-md);
+}
+
+.modal-back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modal-back-btn img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+}
+
+.modal-back-btn:hover {
+    opacity: 0.9;
+}
+
+.modal-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 30px;
+    color: var(--color-text-strong);
+}
+
+/* Form do modal — reutiliza .form-group do auth */
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.modal-form .form-group--textarea {
+    height: auto;
+    min-height: 90px;
+    padding: 12px 16px;
+    align-items: flex-start;
+}
+
+.modal-form .form-group--textarea textarea {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-strong);
+    outline: none;
+    width: 100%;
+    resize: vertical;
+    min-height: 50px;
+}
+
+.modal-form .form-group--textarea textarea::placeholder {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-input-placeholder);
+}
+
+/* Ações do modal */
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--spacing-xs);
+}
+
+.modal-btn-cancelar {
+    height: 44px;
+    padding: 0 20px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-text-strong);
+    cursor: pointer;
+}
+
+.modal-btn-cancelar:hover {
+    background: var(--color-background);
+}
+
+.modal-btn-salvar {
+    height: 44px;
+    padding: 0 20px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-white-soft);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-btn-salvar:hover {
+    opacity: 0.9;
+}
+
+.modal-btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* ===== Modal Lateral — Gerenciar Projeto ===== */
+
+.modal-lateral-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-overlay);
+    z-index: 1000;
+    justify-content: flex-end;
+}
+
+.modal-lateral-overlay.active {
+    display: flex;
+}
+
+.modal-lateral {
+    background: var(--color-white);
+    width: 100%;
+    max-width: 700px;
+    height: 100%;
+    border-radius: 20px 0 0 20px;
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.modal-lateral-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Form */
+.modal-lateral-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    flex: 1;
+}
+
+.modal-lateral-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.modal-lateral-row .form-group {
+    flex: 1;
+}
+
+.form-group--readonly input {
+    color: var(--color-text-secondary);
+    cursor: default;
+}
+
+/* Separator */
+.modal-lateral-separator {
+    height: 1px;
+    background: var(--color-surface);
+}
+
+/* Membros header */
+.modal-lateral-membros-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-lateral-membros-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--color-text-strong);
+}
+
+.modal-lateral-btn-adicionar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 16px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--color-white-soft);
+    cursor: pointer;
+}
+
+.modal-lateral-btn-adicionar:hover {
+    opacity: 0.9;
+}
+
+.modal-lateral-btn-adicionar .modal-btn-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Membros grid */
+.modal-lateral-membros-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+}
+
+/* Membro card */
+.membro-card {
+    height: 150px;
+    background: var(--color-member-card-bg);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.membro-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.membro-card-cargo {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.membro-card-menu {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.membro-card-menu:hover {
+    background: var(--color-border);
+}
+
+.membro-card-menu img {
+    width: 18px;
+    height: 18px;
+}
+
+/* Info */
+.membro-card-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.membro-card-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.membro-card-texts {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.membro-card-nome {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-text-strong);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.membro-card-email {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--color-member-email);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Separator + badge */
+.membro-card-separator {
+    height: 1px;
+    background: var(--color-border);
+    margin: 8px 0;
+}
+
+.membro-card-badge {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    height: 22px;
+    padding: 0 10px;
+    border-radius: 5px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 11px;
+}
+
+.membro-card-badge--admin {
+    background: var(--color-badge-admin-bg);
+    color: var(--color-badge-admin-text);
+}
+
+.membro-card-badge--membro {
+    background: var(--color-badge-membro-bg);
+    color: var(--color-badge-membro-text);
+}
+
+/* Ações do modal lateral */
+.modal-lateral-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: var(--spacing-sm);
 }

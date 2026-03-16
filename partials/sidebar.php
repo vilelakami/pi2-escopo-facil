@@ -10,7 +10,7 @@
             <img src="/assets/icon/dashboard.svg" alt=""> Dashboard
         </a>
         <a href="/index.php?page=projetos" class="sidebar-link <?= $page === 'projetos' ? 'active' : '' ?>">
-            <img src="/assets/icon/projetos.svg" alt=""> Projetos
+            <img src="/assets/icon/folder-search.svg" alt=""> Projetos
         </a>
         <a href="/index.php?page=tarefas" class="sidebar-link <?= $page === 'tarefas' ? 'active' : '' ?>">
             <img src="/assets/icon/tarefas.svg" alt=""> Tarefas

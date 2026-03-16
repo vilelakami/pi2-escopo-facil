@@ -16,6 +16,7 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
     <title>Escopo Fácil</title>
     <link rel="stylesheet" href="/assets/css/global.css">
     <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/auth/components.css">
     <?php if (file_exists(__DIR__ . '/assets/css/pages/' . $page . '.css')): ?>
         <link rel="stylesheet" href="/assets/css/pages/<?= $page ?>.css">
     <?php endif; ?>
