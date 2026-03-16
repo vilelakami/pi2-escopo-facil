@@ -1,8 +1,13 @@
 /* tarefas.css — estilos específicos da página de tarefas */
-.page-content{
+
+
+/* estilização da header */
+
+.page-content {
     padding-inline: var(--spacing-sm);
     background-color: var(--color-surface);
 }
+
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -13,7 +18,7 @@
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 20px; 
+    gap: 20px;
 }
 
 .member-profile {
@@ -24,13 +29,16 @@
 }
 
 .member-info p {
-    margin: 0; 
+    margin: 0;
 }
 
-.member-info .member-category{
+.member-info .member-category {
     font-size: 12px;
     color: var(--color-text-secondary);
 }
+
+
+/* barra de busca */
 
 .task-search-container {
     display: flex;
@@ -42,9 +50,9 @@
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    background: #fff; 
+    background: #fff;
     padding: 12px;
-    flex-grow: 1; 
+    flex-grow: 1;
     border-radius: var(--border-radius);
 }
 
@@ -57,12 +65,180 @@
 }
 
 .btn-new-task-main {
-    background-color: var(--color-primary); 
+    background-color: var(--color-primary);
     color: white;
     border: none;
-    padding: var( --spacing-sm) 23px;
+    padding: var(--spacing-sm) 23px;
     border-radius: var(--border-radius);
     font-weight: bold;
     cursor: pointer;
     white-space: nowrap;
+}
+
+
+/* estilização KANBAN */
+
+.kanban {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--spacing-md);
+    padding-block: var(--spacing-sm);
+    overflow-x: auto;
+}
+
+.kanban-column {
+    flex: 1;
+    min-width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.task-card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs);
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: 100%;
+}
+
+
+/* título do card */
+
+.task-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-title h3 {
+    color: #3C4257;
+    font-family: var(--font-family);
+    font-size: 18px;
+}
+
+
+/* descrição da tarefa */
+
+.task-description {
+    border-radius: 10px;
+    background: rgba(120, 120, 128, 0.08);
+    padding: 12px;
+
+    color: #3C4257;
+    font-family: var(--font-family);
+    font-size: 12px;
+}
+
+.task-description h3{
+    font-size: var(--font-size-menu);
+}
+
+/* prioridade e prazo */
+
+.task-status {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    font-family: var(--font-family);
+
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.priority-tag {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.priority-tag p {
+    padding: 4px var(--spacing-xs);
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.datetime-priority {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+
+/* cores das prioridades */
+
+.low p {
+    background: #CBF4C9;
+    color: #0E6245;
+}
+
+.medium p {
+    background: #F8E5BA;
+    color: #9C3F0F;
+}
+
+.high p {
+    background: #F9DEDC;
+    color: #8C1D18;
+}
+
+
+/* input de data */
+
+.input-deadline {
+    border: none;
+    background: transparent;
+    outline: none;
+
+    font-size: 13px;
+    color: var(--color-text-secondary);
+
+    width: 90px;
+}
+
+
+/* botões */
+
+.task-btn {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm) 0px 0px 0px;
+    border-top: 1px solid #fff;
+}
+
+.btn-edit {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    background-color: transparent;
+    border: 1px solid #D3D4D7;
+
+    color: var(--color-text-secondary);
+    font-family: var(--font-family);
+    font-size: 12px;
+
+    padding: 4px var(--spacing-sm);
+    border-radius: 6px;
+}
+
+.btn-delete {
+    background-color: var(--color-primary);
+    border: none;
+
+    padding: 4px var(--spacing-sm);
+    border-radius: 6px;
+
+    color: #fff;
+    font-weight: 600;
 }
