@@ -1,6 +1,6 @@
 <div class="auth-container">
     <div class="auth-image">
-        <img src="/assets/images/img.auth.webp" alt="Escopo Fácil">
+        <img src="<?= BASE_URL ?>/assets/images/img.auth.webp" alt="Escopo Fácil">
         <div class="auth-image-text">
             <p>Organize tarefas.</p>
             <p>Acompanhe o progresso.</p>
