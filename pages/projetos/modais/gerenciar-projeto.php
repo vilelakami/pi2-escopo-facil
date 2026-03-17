@@ -4,7 +4,7 @@
         <!-- Header -->
         <div class="modal-lateral-header">
             <button type="button" class="modal-back-btn" id="gerenciar-close-btn">
-                <img src="/assets/icon/arrow-left.svg" alt="Voltar">
+                <img src="<?= BASE_URL ?>/assets/icon/arrow-left.svg" alt="Voltar">
             </button>
             <h2 class="modal-title">Gerenciar projeto</h2>
         </div>
@@ -39,7 +39,7 @@
             <div class="modal-lateral-membros-header">
                 <h3 class="modal-lateral-membros-title">Membros</h3>
                 <button type="button" class="modal-lateral-btn-adicionar">
-                    <img src="/assets/icon/plus.svg" alt="+" class="modal-btn-icon"> Adicionar membro
+                    <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+" class="modal-btn-icon"> Adicionar membro
                 </button>
             </div>
 
@@ -62,7 +62,7 @@
         <div class="membro-card-top">
             <span class="membro-card-cargo"></span>
             <button type="button" class="membro-card-menu">
-                <img src="/assets/icon/three-dot.svg" alt="Menu">
+                <img src="<?= BASE_URL ?>/assets/icon/three-dot.svg" alt="Menu">
             </button>
         </div>
         <div class="membro-card-info">

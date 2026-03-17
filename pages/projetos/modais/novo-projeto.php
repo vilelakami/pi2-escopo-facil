@@ -3,7 +3,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="modal-back-btn" id="modal-close-btn">
-                <img src="/assets/icon/arrow-left.svg" alt="Voltar">
+                <img src="<?= BASE_URL ?>/assets/icon/arrow-left.svg" alt="Voltar">
             </button>
             <h2 class="modal-title">Novo projeto</h2>
         </div>
@@ -22,7 +22,7 @@
             <div class="modal-actions">
                 <button type="button" class="modal-btn-cancelar" id="modal-cancelar-btn">Cancelar</button>
                 <button type="submit" class="modal-btn-salvar">
-                    <img src="/assets/icon/plus.svg" alt="+" class="modal-btn-icon"> Adicionar projeto 
+                    <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+" class="modal-btn-icon"> Adicionar projeto 
                 </button>
             </div>
         </form>

@@ -6,7 +6,7 @@
         <h1 class="projetos-title">Projetos</h1>
         <div class="projetos-header-right">
             <div class="projetos-notification">
-                <img src="/assets/icon/bell.svg" alt="Notificações">
+                <img src="<?= BASE_URL ?>/assets/icon/bell.svg" alt="Notificações">
                 <span class="notification-dot"></span>
             </div>
             <div class="projetos-user">
@@ -22,11 +22,11 @@
     <!-- Barra de busca e botão -->
     <div class="projetos-toolbar">
         <div class="projetos-search">
-            <img src="/assets/icon/Search.svg" alt="Buscar" class="projetos-search-icon">
+            <img src="<?= BASE_URL ?>/assets/icon/Search.svg" alt="Buscar" class="projetos-search-icon">
             <input type="text" placeholder="Busque por prioridade, data ou titulo da tarefa" class="projetos-search-input">
         </div>
         <button class="projetos-btn-criar">
-            <img src="/assets/icon/plus.svg" alt="+" class="projetos-btn-icon"> Criar projeto
+            <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+" class="projetos-btn-icon"> Criar projeto
         </button>
     </div>
 
@@ -35,7 +35,7 @@
         <?php foreach ($projetos as $index => $projeto):
             $isAdmin = $projeto['role'] === 'admin';
             $roleClass = $isAdmin ? 'admin' : 'membro';
-            $icon = $isAdmin ? '/assets/icon/user-key.svg' : '/assets/icon/user-lock.svg';
+            $icon = $isAdmin ? BASE_URL . '/assets/icon/user-key.svg' : BASE_URL . '/assets/icon/user-lock.svg';
             $badgeText = $isAdmin ? 'Admin' : 'Membro';
         ?>
         <div class="projeto-card">
@@ -48,7 +48,7 @@
             <h2 class="projeto-card-title"><?= htmlspecialchars($projeto['titulo']) ?></h2>
             <p class="projeto-card-desc"><?= htmlspecialchars($projeto['descricao']) ?></p>
             <div class="projeto-card-avatars">
-                <img src="/assets/images/Avatar Group.png" alt="Membros">
+                <img src="<?= BASE_URL ?>/assets/images/Avatar Group.png" alt="Membros">
                 <?php if ($projeto['membros_extra'] > 0): ?>
                     <span class="projeto-card-extra">+<?= $projeto['membros_extra'] ?></span>
                 <?php endif; ?>

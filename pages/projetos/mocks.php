@@ -4,7 +4,7 @@
 $usuario = [
     'nome' => 'Natan Oliveira',
     'role' => 'Membro',
-    'avatar' => '/assets/images/Avatar (1).png',
+    'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
 ];
 
 $projetos = [
@@ -21,28 +21,28 @@ $projetos = [
                 'email' => 'natan@email.com',
                 'cargo' => 'Product Owner',
                 'role' => 'admin',
-                'avatar' => '/assets/images/natan.png',
+                'avatar' => BASE_URL . '/assets/images/natan.png',
             ],
             [
                 'nome' => 'Kami Vilela',
                 'email' => 'kami@email.com',
                 'cargo' => 'Desenvolvedor Frontend',
                 'role' => 'membro',
-                'avatar' => '/assets/images/kami.png',
+                'avatar' => BASE_URL . '/assets/images/kami.png',
             ],
             [
                 'nome' => 'Guilherme Santos',
                 'email' => 'guilherme@email.com',
                 'cargo' => 'Desenvolvedor Backend',
                 'role' => 'membro',
-                'avatar' => '/assets/images/guilherme.png',
+                'avatar' => BASE_URL . '/assets/images/guilherme.png',
             ],
             [
                 'nome' => 'Nicolas Ferreira',
                 'email' => 'nicolas@email.com',
                 'cargo' => 'Designer UI/UX',
                 'role' => 'membro',
-                'avatar' => '/assets/images/nicolas.png',
+                'avatar' => BASE_URL . '/assets/images/nicolas.png',
             ],
         ],
     ],
