@@ -26,7 +26,11 @@
             ?>
         </main>
     </div>
-    <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
+
+    <script src="<?= BASE_URL ?>./assets/js/app.js"></script>
+    
+    <?php include __DIR__ . '/pages/modal.php'; ?>
+
     <?php if (file_exists(__DIR__ . '/assets/js/pages/' . $page . '.js')): ?>
         <script src="<?= BASE_URL ?>/assets/js/pages/<?= $page ?>.js"></script>
     <?php endif; ?>
