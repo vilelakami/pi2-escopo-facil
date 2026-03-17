@@ -1,3 +1,4 @@
+<?php require __DIR__ . '/config.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <?php $page = $_GET['page'] ?? 'dashboard'; ?>
@@ -5,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escopo Fácil</title>
-    <link rel="stylesheet" href="assets/css/global.css">
-    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/layout.css">
     <?php if (file_exists(__DIR__ . '/assets/css/pages/' . $page . '.css')): ?>
-        <link rel="stylesheet" href="assets/css/pages/<?= $page ?>.css">
+        <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/pages/<?= $page ?>.css">
     <?php endif; ?>
 </head>
 <body>
@@ -25,9 +26,9 @@
             ?>
         </main>
     </div>
-    <script src="/assets/js/app.js"></script>
+    <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
     <?php if (file_exists(__DIR__ . '/assets/js/pages/' . $page . '.js')): ?>
-        <script src="/assets/js/pages/<?= $page ?>.js"></script>
+        <script src="<?= BASE_URL ?>/assets/js/pages/<?= $page ?>.js"></script>
     <?php endif; ?>
 </body>
 </html>

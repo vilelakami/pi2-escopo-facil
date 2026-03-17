@@ -1,13 +1,14 @@
+<?php require __DIR__ . '/../../config.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro — Escopo Fácil</title>
-    <link rel="stylesheet" href="/assets/css/global.css">
-    <link rel="stylesheet" href="/assets/css/auth/auth.css">
-    <link rel="stylesheet" href="/assets/css/auth/components.css">
-    <link rel="stylesheet" href="/assets/css/auth/cadastro.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/auth.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/components.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/cadastro.css">
 </head>
 <body>
 
@@ -15,7 +16,7 @@
 
 <div class="cadastro">
     <div class="cadastro-header">
-        <img src="/assets/images/Logo.png" alt="Escopo Fácil" class="cadastro-logo">
+        <img src="<?= BASE_URL ?>/assets/images/Logo.png" alt="Escopo Fácil" class="cadastro-logo">
         <h1 class="cadastro-title">Crie sua conta</h1>
     </div>
 
@@ -53,7 +54,7 @@
             <div class="input-password-wrapper">
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" minlength="8" required>
                 <button type="button" class="btn-toggle-password" data-target="senha" aria-label="Mostrar senha">
-                    <img src="/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
+                    <img src="<?= BASE_URL ?>/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
                 </button>
             </div>
         </div>
@@ -63,7 +64,7 @@
             <div class="input-password-wrapper">
                 <input type="password" id="confirmar-senha" name="confirmar_senha" placeholder="Confirme sua senha" minlength="8" required>
                 <button type="button" class="btn-toggle-password" data-target="confirmar-senha" aria-label="Mostrar senha">
-                    <img src="/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
+                    <img src="<?= BASE_URL ?>/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
                 </button>
             </div>
         </div>
@@ -77,13 +78,14 @@
     </form>
 
     <p class="cadastro-footer">
-        Você já tem uma conta? <a href="/pages/auth/login.php">Fazer login</a>
+        Você já tem uma conta? <a href="<?= BASE_URL ?>/pages/auth/login.php">Fazer login</a>
     </p>
 </div>
 
 <?php $authContent = ob_get_clean(); ?>
 <?php include __DIR__ . '/../../partials/auth-layout.php'; ?>
 
-    <script src="/assets/js/auth/cadastro.js"></script>
+    <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
+    <script src="<?= BASE_URL ?>/assets/js/auth/cadastro.js"></script>
 </body>
 </html>
