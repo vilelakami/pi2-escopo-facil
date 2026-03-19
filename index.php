@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/config.php';
+require_once __DIR__ . '/config.php';
 $page = $_GET['page'] ?? 'dashboard';
 
 // Páginas de autenticação (layout próprio, sem sidebar)
