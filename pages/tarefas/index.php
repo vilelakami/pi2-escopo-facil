@@ -58,7 +58,7 @@
 
                 <div class="task-description">
 
-                    <h3>Criar tela de Login</h3>
+                    <h3>Adicionar foto</h3>
 
                     <div>
                         <p>
@@ -116,7 +116,7 @@
 
                 <div class="task-description">
 
-                    <h3>Criar tela de Login</h3>
+                    <h3>Adicionar captcha</h3>
 
                     <div class="background-description">
                         <p>
@@ -221,7 +221,12 @@
 
     </div>
 
+    <div id="no-tasks-message" style="display: none; text-align: center; padding: 20px; color: #666;">
+        <p>Nenhuma tarefa encontrada com este termo.</p>
+    </div>
+
 </section>
 
 <?php include __DIR__ . '/nova-tarefa.php'; ?>
+<script src="<?= BASE_URL ?>/assets/js/pages/tarefas.js"></script>
 
