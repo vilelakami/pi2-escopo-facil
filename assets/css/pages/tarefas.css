@@ -1,8 +1,6 @@
 /* tarefas.css — estilos específicos da página de tarefas */
 
-
 /* estilização da header */
-
 .page-content {
     padding-inline: var(--spacing-sm);
     background-color: var(--color-surface);
@@ -245,6 +243,7 @@
 
 /* ====== MODAL ====== */
 
+/* modal com displaay:none para não aparecer */
 .modal-overlay{
     position: fixed;
     top: 0;
@@ -265,6 +264,7 @@
     display: flex;
 }
 
+/* estilização do conteúdo do modal */
 .modal{
     background-color: var(--color-sidebar-bg);
     border-radius: var(--border-radius);
@@ -272,6 +272,10 @@
     padding: var(--spacing-md);
 }
 
+/* tam do ícon de gráfico pois estava desproporcional */
+.icon{width: 20px;}
+
+/* estilização header */
 .modal-header{
     display: flex;
     align-items: center;
@@ -280,13 +284,21 @@
     font-size: 20px;
 }
 
+.required{
+    color: var(--color-primary);
+}
+
+/* estilização corpo do forms */
 .modal-body{
     display: flex;
     flex-direction: column;
+    gap: 18px;
 }
 
+/* campos */
 .modal-body .modal-title,
-.modal-body .modal-description{
+.modal-body .modal-description,
+.modal-body .modal-date{
     display: flex;
     flex-direction: column;
     background-color: #F4F4F5;
@@ -297,6 +309,35 @@
     gap: 3px;
 }
 
+/* estilização dos selects */
+.modal-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 21px;
+}
+
+.modal-priority,
+.modal-status{
+    background-color: #F4F4F5;
+    font-size: 14px;
+    color: #697386;
+    padding: 10px 13px;
+    border-radius: var(--border-radius);
+    gap: 3px;
+    flex: 1;
+}
+
+/* gambiarra porque o ícone estava desproporcional com o padding */
+.modal-status .modal-select img{
+    margin-left: -6px;
+}
+
+/* escondendo calendário nativo do prazo */
+input[type="date"]::-webkit-calendar-picker-indicator {opacity: 0; position: absolute; right: 10px;}
+
+
+/* inputs */
 .modal-body input,
 .modal-body textarea{
     background: transparent;
@@ -304,36 +345,57 @@
     color: #A3ACB9;
 }
 
-.modal-body textarea{padding-bottom: var(--spacing-md); resize: none; overflow: hidden;}
+.modal-body textarea{
+    padding-bottom: var(--spacing-md); 
+    resize: none; 
+    overflow: hidden;
+}
 
 input:focus,
 textarea:focus,
-select{
+select:focus{
     outline: none;
 }
 
-.modal-row{
+.modal-select, .input-wrapper{
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;  
+}
+
+.input-wrapper{gap: 3px;}
+
+.select-wrapper{
+    position: relative;
+    align-items: center;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #A3ACB9;
+}
+
+/* estilização do footer */
+.modal-footer{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.modal-priority{
+/* estilização dos botões */
+button{
     background-color: #F4F4F5;
-    font-size: 14px;
-    color: #697386;
-    padding: 10px 13px;
-    border-radius: var(--border-radius);
-    gap: 3px;
-}
-
-.modal-select{
-    display: flex;
-    gap: 7px;
-}
-
-.task-priority{
-    background: transparent;
     border: none;
-    color: #A3ACB9;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 25px;
+    border-radius: var(--border-radius);
 }
+
+.btn-save{
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+}
+
+
+
