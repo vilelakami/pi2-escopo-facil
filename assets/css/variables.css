@@ -1,0 +1,63 @@
+:root {
+    /* Cores */
+    --color-primary: #8B0836;
+    --color-background: #F5F5F5;
+    --color-surface: #F5F5F5;
+    --color-sidebar-bg: #FFFFFF;
+    --color-text-strong: #030303;
+    --color-text-secondary: #6B6B6B;
+    --color-white-soft: #FCF9E8;
+
+    /* Cards / Componentes */
+    --color-white: #FFFFFF;
+    --color-card-title: #3C4257;
+    --color-card-subtitle: #697386;
+    --color-border: #D3D4D7;
+    --color-placeholder: #A0AEC0;
+    --color-input-placeholder: #A3ACB9;
+    --color-btn-secondary: #EEEBE5;
+    --color-avatar-extra: #E8E8E8;
+    --color-danger: #E53E3E;
+    --color-badge-admin-bg: #FCF2F2;
+    --color-badge-admin-text: #B83134;
+    --color-badge-membro-bg: #EAEFF7;
+    --color-badge-membro-text: #2E61B4;
+    --color-overlay: rgba(0, 0, 0, 0.4);
+    --color-member-card-bg: #F4F4F5;
+    --color-member-email: #8D8D8D;
+
+    /* Tipografia */
+    --font-family: 'Outfit', sans-serif;
+    --font-size-menu: 16px;
+
+    /* Sidebar */
+    --sidebar-width: 256px;
+    --sidebar-item-width-active: 196px;
+    --sidebar-item-height-active: 56px;
+    --logo-width: 185px;
+    --logo-height: 66px;
+
+    /* Ícones */
+    --icon-size: 24px;
+
+    /* Espaçamentos */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 80px;
+
+    /* Bordas */
+    --border-radius: 12px;
+
+    /* ======= Auth ======= */
+    --auth-bg: #EAEAEC;
+    --auth-padding: 20px;
+    --auth-gap: 20px;
+    --auth-radius: 30px;
+    --auth-image-size: 1042px;
+    --auth-image-font-size: 42px;
+    --auth-image-text-color: rgba(255, 255, 255, 0.9);
+    --auth-form-bg: #FFFFFF;
+    --auth-form-max-width: 700px;
+    
+}

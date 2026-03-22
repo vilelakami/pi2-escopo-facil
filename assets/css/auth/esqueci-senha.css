@@ -1,0 +1,54 @@
+/* =======================================
+    Esqueci a senha — Estilos específicos
+   ======================================= */
+
+* {
+    font-family: var(--font-family)
+}
+
+.esqueci-senha {
+    width: 100%;
+    max-width: 520px;
+}
+
+/* --- Header --- */
+.esqueci-logo {
+    width: 300px;
+    margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+    margin-bottom: var(--spacing-md);
+}
+/* --- Form --- */
+.esqueci-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+/* --- Footer --- */
+.esqueci-footer {
+    font-size: 16px;
+    font-weight: 500;
+    color: #718096;
+    text-align: center;
+    margin-top: var(--spacing-md);
+}
+
+.esqueci-footer a {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.esqueci a:hover {
+    text-decoration: underline;
+}
+
+.lembrou-senha {
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-text-strong);
+    cursor: pointer;
+}

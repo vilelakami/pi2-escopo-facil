@@ -1,0 +1,10 @@
+@import url('reset.css');
+@import url('variables.css');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-menu);
+    color: var(--color-text-strong);
+    background: var(--color-background);
+}
