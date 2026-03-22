@@ -254,7 +254,7 @@
 
     background: rgba(0,0,0,0.4);
 
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
 
