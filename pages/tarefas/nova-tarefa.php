@@ -6,7 +6,7 @@
     <div class="modal">
 
         <div class="modal-header">
-            <img src="<?= BASE_URL ?>/assets/icon/arrow.svg" alt="seta para a esquerda">
+            <img class="btn-back" src="<?= BASE_URL ?>/assets/icon/arrow.svg" alt="seta para a esquerda">
             <h2>Nova Tarefa</h2>
         </div>
 
@@ -21,7 +21,7 @@
 
             <div class="modal-description">
                 <label>Descrição<span class="required">*</span></label>
-                <textarea name="taskDescription" id="taskDescription" placeholder="Descreva e detalhe o objetivo da tarefa"></textarea>
+                <textarea name="taskDescription" id="   " placeholder="Descreva e detalhe o objetivo da tarefa"></textarea>
             </div>
 
             <!-- separando prioridade e prazo inline -->
