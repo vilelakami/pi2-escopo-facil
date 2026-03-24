@@ -12,15 +12,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.src = (window.BASE_URL || '') + 'assets/icon/eye.svg';
+                icon.src = (window.BASE_URL || '') + '/assets/icon/eye.svg';
                 icon.alt = 'Ocultar senha';
                 btn.setAttribute('aria-label', 'Ocultar senha');
             } else {
                 input.type = 'password';
-                icon.src = (window.BASE_URL || '') + 'assets/icon/eye-off.svg';
+                icon.src = (window.BASE_URL || '') + '/assets/icon/eye-off.svg';
                 icon.alt = 'Mostrar senha';
                 btn.setAttribute('aria-label', 'Mostrar senha');
             }
         });
     });
+
+    // Login temporário — redireciona para dashboard com qualquer dado
+    const form = document.querySelector('.login-form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            window.location.href = (window.BASE_URL || '') + '/index.php?page=dashboard';
+        });
+    }
 });

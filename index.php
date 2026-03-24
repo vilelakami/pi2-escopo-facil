@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/config.php';
-$page = $_GET['page'] ?? 'dashboard';
+$page = $_GET['page'] ?? 'login';
 
 // Páginas de autenticação (layout próprio, sem sidebar)
 $authPages = ['login', 'cadastro', 'esqueci-senha', 'redefinir-senha', 'confirmacao'];

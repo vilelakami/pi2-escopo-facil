@@ -47,6 +47,9 @@
     <?php $authContent = ob_get_clean(); ?>
     <?php include __DIR__ . '/../../partials/auth-layout.php'; ?>
 
+    <script>
+        window.BASE_URL = '<?= BASE_URL ?>';
+    </script>
     <script src="<?= BASE_URL ?>/assets/js/auth/login.js?v=<?= time() ?>"></script>
 </body>
 

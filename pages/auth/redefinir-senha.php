@@ -33,10 +33,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="senha">Confirmação de senha<span class="required">*</span></label>
+                <label for="confirmar-senha">Confirmação de senha<span class="required">*</span></label>
                 <div class="input-password-wrapper">
-                    <input type="password" id="senha" name="senha" placeholder="Confirme sua senha" minlength="8" required>
-                    <button type="button" class="btn-toggle-password" data-target="senha" aria-label="Mostrar senha">
+                    <input type="password" id="confirmar-senha" name="confirmar-senha" placeholder="Confirme sua senha" minlength="8" required>
+                    <button type="button" class="btn-toggle-password" data-target="confirmar-senha" aria-label="Mostrar senha">
                         <img src="<?= BASE_URL ?>/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
                     </button>
                 </div>
@@ -49,6 +49,9 @@
     <?php $authContent = ob_get_clean(); ?>
     <?php include __DIR__ . '/../../partials/auth-layout.php'; ?>
 
+    <script>
+        window.BASE_URL = '<?= BASE_URL ?>';
+    </script>
     <script src="<?= BASE_URL ?>/assets/js/auth/redefinir-senha.js?v=<?= time() ?>"></script>
 </body>
 
