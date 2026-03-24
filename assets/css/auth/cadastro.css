@@ -1,5 +1,5 @@
 /* ========================================
-   Cadastro — Estilos específicos
+    Cadastro e Login — Estilos específicos
    ======================================== */
 
 .cadastro {
@@ -9,7 +9,7 @@
 
 /* --- Header --- */
 .cadastro-logo {
-    width: var(--logo-width);
+    width: 300px;
     margin-bottom: var(--spacing-md);
 }
 
@@ -25,7 +25,7 @@
 .cadastro-form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
 }
 
 /* --- Footer --- */

@@ -1,1 +1,63 @@
-/* Login — Estilos */
+/* =============================
+    Login — Estilos específicos
+   =============================*/
+   
+* {
+    font-family: var(--font-family)
+}
+
+.login {
+    width: 100%;
+    max-width: 520px;
+}
+
+/* --- Header --- */
+.login-logo {
+    width: 300px;
+    margin-bottom: var(--spacing-md);
+}
+
+.login-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 42px;
+    color: var(--color-text-strong);
+    margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+    color: var(--auth-subtitle-color);
+    margin-bottom: var(--spacing-md);
+}
+/* --- Form --- */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* --- Footer --- */
+.login-footer {
+    font-size: 16px;
+    font-weight: 500;
+    color: #718096;
+    text-align: center;
+    margin-top: var(--spacing-md);
+}
+
+.login-footer a {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.login a:hover {
+    text-decoration: underline;
+}
+
+.esqueci-senha {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--color-primary);
+    cursor: pointer;
+}

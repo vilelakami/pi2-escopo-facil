@@ -22,7 +22,7 @@
     <!-- Barra de busca e botão -->
     <div class="projetos-toolbar">
         <div class="projetos-search">
-            <img src="<?= BASE_URL ?>/assets/icon/Search.svg" alt="Buscar" class="projetos-search-icon">
+            <img src="<?= BASE_URL ?>/assets/icon/search.svg" alt="Buscar" class="projetos-search-icon">
             <input type="text" placeholder="Busque por prioridade, data ou titulo da tarefa" class="projetos-search-input">
         </div>
         <button class="projetos-btn-criar">

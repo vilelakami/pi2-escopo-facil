@@ -1,6 +1,6 @@
-/* ========================================
-   Auth Layout — Estilos compartilhados
-   ======================================== */
+/* ======================================
+    Auth Layout — Estilos compartilhados
+   ====================================== */
 
 .auth-container {
     display: flex;
@@ -51,7 +51,6 @@
     justify-content: center;
     background-color: var(--auth-form-bg);
     border-radius: var(--auth-radius);
-    padding: var(--spacing-lg);
 }
 
 /* ========================================

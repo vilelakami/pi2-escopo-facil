@@ -59,5 +59,6 @@
     --auth-image-text-color: rgba(255, 255, 255, 0.9);
     --auth-form-bg: #FFFFFF;
     --auth-form-max-width: 700px;
+    --auth-subtitle-color: #718096;
     
 }

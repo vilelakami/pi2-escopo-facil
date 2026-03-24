@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/config.php';
-$page = $_GET['page'] ?? 'dashboard';
+require __DIR__ . '/config.php';
+$page = $_GET['page'] ?? 'login';
 
 // Páginas de autenticação (layout próprio, sem sidebar)
 $authPages = ['login', 'cadastro', 'esqueci-senha', 'redefinir-senha', 'confirmacao'];
@@ -22,7 +22,7 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
         <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/pages/<?= $page ?>.css">
     <?php endif; ?>
 </head>
-<body data-base-url="<?= BASE_URL ?>">
+<body>
     <div class="layout">
         <?php include __DIR__ . '/partials/sidebar.php'; ?>
         <main class="main">

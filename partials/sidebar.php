@@ -22,4 +22,10 @@
             <img src="<?= BASE_URL ?>/assets/icon/configurações.svg" alt=""> Configuração
         </a>
     </nav>
+
+    <div class="sidebar-logout">
+        <a href="<?= BASE_URL ?>/index.php?page=login" class="sidebar-link">
+            <img src="<?= BASE_URL ?>/assets/icon/logout.svg" alt=""> Sair
+        </a>
+    </div>
 </aside>

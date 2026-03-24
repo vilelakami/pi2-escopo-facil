@@ -73,11 +73,6 @@
             </div>
         </div>
         <div class="membro-card-separator"></div>
-        <div class="membro-card-bottom">
-            <div class="membro-card-role-icon">
-                <img src="" alt="" class="membro-card-role-img">
-            </div>
-            <span class="membro-card-badge"></span>
-        </div>
+        <span class="membro-card-badge"></span>
     </div>
 </template>
