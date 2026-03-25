@@ -1,8 +1,27 @@
+{
 // ================= JS DA BARRA DE PESQUISA ========================
 // armazenando o input e a msg de 'tarefa nao encontrada' e também o icone de lupa
 const searchInput = document.querySelector('.search-input-wrapper input');
 const noTasksMessage = document.getElementById('no-tasks-message');
 const searchIcon = document.querySelector('.search-input-wrapper img');
+const btnNovaTarefa = document.querySelector('.btn-new-task-main');
+const modal = document.querySelector('.modal-overlay');
+// armazenando o botão de '+ nova tarefa', o modal, o botão de cancelar e o de salvar
+const btnCancelar = document.querySelector('#closeModal');
+const btnSalvar = document.querySelector('#saveTask');
+const btnVoltar = document.querySelector('.btn-back');
+// armazenando inputs:
+const inputTitulo = document.querySelector('#taskTitle');
+const inputDescricao = document.querySelector('#taskDescription');
+const inputPrioridade = document.querySelector('#taskPriority');
+const inputStatus = document.querySelector('#taskStatus');
+const inputPrazo = document.querySelector('#taskDate');
+// armazenando icone da data
+const iconCalendario = document.querySelector('.modal-date .icon');
+// armazenando icone de prioridade
+const iconPrioridade = document.querySelector('.modal-priority .icon');
+//armazenando icone de status
+const iconStatus = document.querySelector('.modal-status img');
 
 // função que filtra a pesquisa
 function Filter() {
@@ -54,13 +73,6 @@ searchIcon.addEventListener('click', Filter);
 
 
 // ==================== JS DO MODAL ============================
-// armazenando o botão de '+ nova tarefa', o modal, o botão de cancelar e o de salvar
-const btnNovaTarefa = document.querySelector('.btn-new-task-main');
-const modal = document.querySelector('.modal-overlay');
-const btnCancelar = document.querySelector('#closeModal');
-const btnSalvar = document.querySelector('#saveTask');
-const btnVoltar = document.querySelector('.btn-back');
-
 //arrow function que abre o modal
 btnNovaTarefa.addEventListener('click', () => {
     //adiciona uma classe ao modal-overlay como 'active' pra ela aparecer
@@ -89,17 +101,6 @@ modal.addEventListener('click', (e) => {
     }
 });
 
-// armazenando inputs:
-const inputTitulo = document.querySelector('#taskTitle');
-const inputDescricao = document.querySelector('#taskDescription');
-const inputPrioridade = document.querySelector('#taskPriority');
-const inputStatus = document.querySelector('#taskStatus');
-const inputPrazo = document.querySelector('#taskDate');
-// armazenando icone da data
-const iconCalendario = document.querySelector('.modal-date .icon');
-// armazenando icone de prioridade
-const iconPrioridade = document.querySelector('.modal-priority .icon');
-
 //se existe o icone e o input da data
 if(iconCalendario && inputPrazo){
     //faz a arrow function, assim que clicar no ícone de calendário as datas são exibidas
@@ -109,18 +110,45 @@ if(iconCalendario && inputPrazo){
 }
 
 //criando arrow function pra mudar os icones da prioridade
-inputPrioridade.addEventListener('click', () => {
+inputPrioridade.addEventListener('change', () => {
     // variável que armazena o valor da prioridade -> '1,2,3'
     const valor = inputPrioridade.value;
     // variavel que armazena o caminho desse icone
     let caminho = "";
 
-    // if que verifica qual prioridade é seu caminho respectivo
-    if(valor == 1) caminho = "assets/icon/grafico-baixa.svg";
-    if(valor == 2) caminho = "assets/icon/grafico-media.svg";
-    if(valor == 3) caminho = "assets/icon/grafico-alta.svg";
+    // objeto que mapeia o valor e seu respectivo icone
+    const mapaDeIcones = {
+        "1": "assets/icon/grafico-baixa.svg",
+        "2": "assets/icon/grafico-media.svg",
+        "3": "assets/icon/grafico-alta.svg"
+    };
 
-    //exibe o icone corretamente
-    iconPrioridade.src = caminho;
+    //caminho recebe o o valor e os ícones
+    caminho = mapaDeIcones[valor];
+
+    //verifica se o caminho existe
+    if(caminho){
+        //exibe o icone corretamente
+        iconPrioridade.src = caminho;
+    }
 });
 
+//criando arrow function para mudar os ícones de status
+inputStatus.addEventListener('change', () => {
+    const valor = inputStatus.value;
+    let caminho = "";
+
+    const mapaDeIcones = {
+        "1": "assets/icon/a-fazer.svg",
+        "2": "assets/icon/loading.svg",
+        "3": "assets/icon/concluido.svg"
+    };
+
+    caminho = mapaDeIcones[valor];
+
+    if(caminho){
+        iconStatus.src = caminho;
+    }
+});
+//dinâmica do botão salvar tarefa
+}

@@ -37,7 +37,8 @@
         </div>
 
         <button class="btn-new-task-main">
-            + Nova tarefa
+            <img src="assets/icon/plus.svg" alt="+">    
+            Nova tarefa
         </button>
 
     </div>
@@ -46,7 +47,7 @@
     <div class="kanban">
 
         <!-- primeira coluna: A Fazer -->
-        <div class="kanban-column">
+        <div class="kanban-column" id="col-1">
 
             <!-- conteúdo -->
             <div class="task-card">
@@ -104,9 +105,9 @@
         </div>
 
         <!-- segunda coluna: Em Andamento -->
-        <div class="kanban-column">
+        <div class="kanban-column" id="col-2">
 
-        <!-- conteúdo -->
+            <!-- conteúdo -->
             <div class="task-card">
 
                 <div class="task-title">
@@ -162,9 +163,9 @@
         </div>
 
         <!-- terceira coluna: Concluído -->
-        <div class="kanban-column">
+        <div class="kanban-column" id="col-3">
 
-        <!-- conteúdo -->
+            <!-- conteúdo -->
             <div class="task-card">
 
                 <div class="task-title">

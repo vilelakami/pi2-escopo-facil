@@ -21,7 +21,7 @@
 
             <div class="modal-description">
                 <label>Descrição<span class="required">*</span></label>
-                <textarea name="taskDescription" id="   " placeholder="Descreva e detalhe o objetivo da tarefa"></textarea>
+                <textarea name="taskDescription" id="taskDescription" placeholder="Descreva e detalhe o objetivo da tarefa"></textarea>
             </div>
 
             <!-- separando prioridade e prazo inline -->
@@ -79,7 +79,8 @@
         <!-- footer -->
         <div class="modal-footer">
             <button id="closeModal">Cancelar</button>
-            <button class="btn-save" id="saveTask">+ Salvar Tarefa</button>
+            <button class="btn-save" id="saveTask"> <img src="assets/icon/plus.svg" alt="+">
+             Salvar Tarefa</button>
         </div>
 
     </div>

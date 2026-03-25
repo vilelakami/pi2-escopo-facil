@@ -1,9 +1,12 @@
 /* tarefas.css — estilos específicos da página de tarefas */
-
+* {
+    font-family: var(--font-family);
+}
 /* estilização da header */
 .page-content {
     padding-inline: var(--spacing-sm);
     background-color: var(--color-surface);
+    overflow-x: auto;
 }
 
 .page-header {
@@ -23,8 +26,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: var(--font-family);
 }
+
+.member-name{font-weight: 600;}
 
 .member-info p {
     margin: 0;
@@ -62,13 +66,19 @@
     margin-left: 10px;
 }
 
+.search-input-wrapper input::placeholder{color: #A0AEC0;}
+
 .btn-new-task-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     background-color: var(--color-primary);
     color: var(--color-sidebar-bg);
     border: none;
     padding: var(--spacing-sm) 23px;
     border-radius: var(--border-radius);
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
 }
@@ -96,13 +106,14 @@
 .task-card {
     background-color: var(--color-sidebar-bg);
     border-radius: var(--border-radius);
-    padding: var(--spacing-xs);
+    padding: var(--spacing-xs) !important;
 
     display: flex;
     flex-direction: column;
     gap: 12px;
 
     width: 100%;
+    overflow: hidden;
 }
 
 
@@ -116,7 +127,6 @@
 
 .task-title h3 {
     color: #3C4257;
-    font-family: var(--font-family);
     font-size: 18px;
 }
 
@@ -129,12 +139,23 @@
     padding: 12px;
 
     color: #3C4257;
-    font-family: var(--font-family);
     font-size: 12px;
 }
 
 .task-description h3{
     font-size: var(--font-size-menu);
+}
+
+.task-cover-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover; /* Faz a foto preencher o espaço sem esticar */
+    border-radius: 8px 8px 0 0; /* Arredonda só em cima */
+}
+
+.task-image-container {
+    margin: -15px -15px 15px -15px; /* Remove o padding do card para a foto encostar nas bordas */
+    overflow: hidden;
 }
 
 /* prioridade e prazo */
@@ -148,7 +169,6 @@
 
     font-size: 12px;
     color: var(--color-text-secondary);
-    font-family: var(--font-family);
 
     margin-top: 10px;
     margin-bottom: 20px;
@@ -171,6 +191,8 @@
     align-items: center;
     gap: 2px;
 }
+
+.datetime-priority input::placeholder{color: #3C4257; font-weight: 500;}
 
 
 /* cores das prioridades */
@@ -223,8 +245,8 @@
     border: 1px solid #D3D4D7;
 
     color: var(--color-text-secondary);
-    font-family: var(--font-family);
     font-size: 12px;
+    font-weight: 500;
 
     padding: 4px var(--spacing-sm);
     border-radius: 6px;
@@ -239,6 +261,7 @@
 
     color: var(--color-sidebar-bg);
     font-weight: 600;
+    font-size: 14px;
 }
 
 /* ====== MODAL ====== */
@@ -298,7 +321,8 @@
 /* campos */
 .modal-body .modal-title,
 .modal-body .modal-description,
-.modal-body .modal-date{
+.modal-body .modal-date,
+.modal-body .modal-image{
     display: flex;
     flex-direction: column;
     background-color: #F4F4F5;
@@ -387,15 +411,13 @@ button{
     background-color: #F4F4F5;
     border: none;
     font-size: 16px;
-    font-weight: 600;
     padding: 16px 25px;
     border-radius: var(--border-radius);
+    font-weight: 600;
 }
 
 .btn-save{
     background-color: var(--color-primary);
     color: var(--color-surface);
 }
-
-
 
