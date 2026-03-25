@@ -55,6 +55,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const clone = templateMembro.content.cloneNode(true);
                 const isAdmin = membro.role === 'admin';
 
+                const roleIcon = clone.querySelector('.membro-card-role-icon');
+                const roleImg = clone.querySelector('.membro-card-role-img');
+                roleIcon.classList.add(isAdmin ? 'membro-card-role-icon--admin' : 'membro-card-role-icon--membro');
+                roleImg.src = (document.body.dataset.baseUrl || '') + '/assets/icon/' + (isAdmin ? 'user-key.svg' : 'user-lock.svg');
+
                 clone.querySelector('.membro-card-cargo').textContent = membro.cargo;
                 clone.querySelector('.membro-card-avatar').src = membro.avatar;
                 clone.querySelector('.membro-card-avatar').alt = membro.nome;

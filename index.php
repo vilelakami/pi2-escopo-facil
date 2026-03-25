@@ -22,7 +22,7 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
         <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/pages/<?= $page ?>.css">
     <?php endif; ?>
 </head>
-<body>
+<body data-base-url="<?= BASE_URL ?>">
     <div class="layout">
         <?php include __DIR__ . '/partials/sidebar.php'; ?>
         <main class="main">
