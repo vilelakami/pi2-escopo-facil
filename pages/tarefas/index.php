@@ -1,11 +1,10 @@
-<!-- conteúdo da página -->
+<!-- seção pai: todo o conteúdo -->
 <section class="page-content">
 
-    <!-- título da página -->
+    <!-- header, título do projeto, notificação e perfil do membro -->
     <div class="page-header">
         <h1 class="headline">Projeto: Sistema de PI</h1>
 
-        <!-- ações da header como notificações e perfil -->
         <div class="header-actions">
 
             <div class="notification-icon">
@@ -24,41 +23,40 @@
         </div>
     </div>
 
-    <!-- campo de pesquisa e botão de nova tarefa -->
+    <!-- barra de pesquisa, botão de nova tarefa -->
     <div class="task-search-container">
 
-        <!-- ícone da lupa de pesquisa -->
         <div class="search-input-wrapper">
             <img src="<?= BASE_URL ?>/assets/icon/search.svg" alt="lupa de pesquisa">
-            <input
-                type="text"
+            <input 
+                type="text" 
                 placeholder="Busque por prioridade, data ou título da tarefa"
             >
         </div>
 
         <button class="btn-new-task-main">
-            + Nova tarefa
+            <img src="assets/icon/plus.svg" alt="+">
+            Nova tarefa
         </button>
 
     </div>
 
-    <!-- conteúdo KANBAN -->
+    <!-- quadro KANBAN, onde vão as tarefas -->
     <div class="kanban">
 
-        <!-- primeira coluna: A Fazer -->
-        <div class="kanban-column">
+        <!-- coluna 1: A Fazer, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
+        <div class="kanban-column" id="col-1">
+            <div class="task-title">
+                <h3 class="title">A Fazer</h3>
+                <img src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="A Fazer">
+            </div>
 
-            <!-- conteúdo -->
-            <div class="task-card">
-
-                <div class="task-title">
-                    <h3 class="title">A Fazer</h3>
-                    <img src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="A Fazer">
-                </div>
+            <!-- função draggable para arrastar tarefas entre as colunas -->
+            <div class="task-card" draggable="true">
 
                 <div class="task-description">
 
-                    <h3>Criar tela de Login</h3>
+                    <h3>Adicionar foto</h3>
 
                     <div>
                         <p>
@@ -77,9 +75,9 @@
                         <div class="datetime-priority">
                             <p>Prazo:</p>
                             <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
-                            <input
-                                type="text"
-                                placeholder="19/02/2026"
+                            <input 
+                                type="text" 
+                                placeholder="19/02/2026" 
                                 class="input-deadline"
                             >
                         </div>
@@ -103,20 +101,19 @@
             </div>
         </div>
 
-        <!-- segunda coluna: Em Andamento -->
-        <div class="kanban-column">
+        <!-- coluna 2: Em Andamento, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
+        <div class="kanban-column" id="col-2">
+            <div class="task-title">
+                <h3 class="title">Em Andamento</h3>
+                <img src="<?= BASE_URL ?>/assets/icon/loading.svg" alt="Carregando">
+            </div>
 
-        <!-- conteúdo -->
-            <div class="task-card">
-
-                <div class="task-title">
-                    <h3 class="title">Em Andamento</h3>
-                    <img src="<?= BASE_URL ?>/assets/icon/loading.svg" alt="Carregando">
-                </div>
+            <!-- função draggable para arrastar tarefas entre as colunas -->
+            <div class="task-card" draggable="true">
 
                 <div class="task-description">
 
-                    <h3>Criar tela de Login</h3>
+                    <h3>Adicionar captcha</h3>
 
                     <div class="background-description">
                         <p>
@@ -135,9 +132,9 @@
                         <div class="datetime-priority">
                             <p>Prazo:</p>
                             <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
-                            <input
-                                type="text"
-                                placeholder="19/02/2026"
+                            <input 
+                                type="text" 
+                                placeholder="19/02/2026" 
                                 class="input-deadline"
                             >
                         </div>
@@ -161,16 +158,15 @@
             </div>
         </div>
 
-        <!-- terceira coluna: Concluído -->
-        <div class="kanban-column">
+        <!-- coluna 3: Concluído, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
+        <div class="kanban-column" id="col-3">
+            <div class="task-title">
+                <h3 class="title">Concluído</h3>
+                <img src="<?= BASE_URL ?>/assets/icon/concluido.svg" alt="Concluído">
+            </div>
 
-        <!-- conteúdo -->
-            <div class="task-card">
-
-                <div class="task-title">
-                    <h3 class="title">Concluído</h3>
-                    <img src="<?= BASE_URL ?>/assets/icon/concluido.svg" alt="Concluído">
-                </div>
+            <!-- função draggable para arrastar as tarefas entre as colunas -->
+            <div class="task-card" draggable="true">
 
                 <div class="task-description">
 
@@ -193,9 +189,9 @@
                         <div class="datetime-priority">
                             <p>Prazo:</p>
                             <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
-                            <input
-                                type="text"
-                                placeholder="19/02/2026"
+                            <input 
+                                type="text" 
+                                placeholder="19/02/2026" 
                                 class="input-deadline"
                             >
                         </div>
@@ -221,7 +217,12 @@
 
     </div>
 
+    <!-- div referente a barra de pesquisa, se a tarefa não for encontrada, exibe a mensagem abaixo: -->
+    <div id="no-tasks-message" style="display: none; text-align: center; padding: 20px; color: #666;">
+        <p>Nenhuma tarefa encontrada com este termo.</p>
+    </div>
+
 </section>
 
-<?php include __DIR__ . '/modal.php'; ?>
-
+<?php include __DIR__ . '/nova-tarefa.php'; ?>
+<script src="<?= BASE_URL ?>/assets/js/pages/tarefas.js"></script>
