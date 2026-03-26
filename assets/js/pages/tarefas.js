@@ -1,29 +1,76 @@
-{
 // ================= JS DA BARRA DE PESQUISA ========================
-// armazenando o input e a msg de 'tarefa nao encontrada' e também o icone de lupa
+
+// Armazenando a barra de pesquisa, a msg de 'tarefa nao encontrada', o icone de lupa, o botão de nova tarefa e o modal
 const searchInput = document.querySelector('.search-input-wrapper input');
 const noTasksMessage = document.getElementById('no-tasks-message');
 const searchIcon = document.querySelector('.search-input-wrapper img');
 const btnNovaTarefa = document.querySelector('.btn-new-task-main');
 const modal = document.querySelector('.modal-overlay');
-// armazenando o botão de '+ nova tarefa', o modal, o botão de cancelar e o de salvar
+
+// Armazenando o botão de cancelar do modal, o de salvar do modal e o ícone de voltar do título do modal
 const btnCancelar = document.querySelector('#closeModal');
 const btnSalvar = document.querySelector('#saveTask');
 const btnVoltar = document.querySelector('.btn-back');
-// armazenando inputs:
+
+// Armazenando inputs:
 const inputTitulo = document.querySelector('#taskTitle');
 const inputDescricao = document.querySelector('#taskDescription');
 const inputPrioridade = document.querySelector('#taskPriority');
 const inputStatus = document.querySelector('#taskStatus');
 const inputPrazo = document.querySelector('#taskDate');
-// armazenando icone da data
+
+// Armazenando ícones do modal:
 const iconCalendario = document.querySelector('.modal-date .icon');
-// armazenando icone de prioridade
 const iconPrioridade = document.querySelector('.modal-priority .icon');
-//armazenando icone de status
 const iconStatus = document.querySelector('.modal-status img');
 
-// função que filtra a pesquisa
+// Variável de arrastar card
+let cardArrastado = null;
+
+// ==================== FUNÇÃO DE ARRASTAR E SOLTAR ============================
+// IA
+document.addEventListener('dragstart', (e) => {
+    // Se o que eu peguei tem a classe task-card
+    if (e.target.classList.contains('task-card')) {
+        cardArrastado = e.target; // Guardo ele na variável
+        e.target.style.opacity = '0.5'; // Deixo ele transparente pra dar efeito
+    }
+});
+
+// Seleciona todas as colunas brancas
+const colunas = document.querySelectorAll('.kanban-column');
+
+colunas.forEach(coluna => {
+    // 1. OBRIGATÓRIO: Avisar que a coluna aceita o drop
+    coluna.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Isso "abre a porta" para o card entrar
+        coluna.classList.add('drag-over'); // Opcional: muda a cor da coluna
+    });
+
+    // 2. Quando o card sai de cima da coluna sem soltar
+    coluna.addEventListener('dragleave', () => {
+        coluna.classList.remove('drag-over');
+    });
+
+    // 3. Quando você solta o botão do mouse
+    coluna.addEventListener('drop', () => {
+        coluna.classList.remove('drag-over');
+        
+        if (cardArrastado) {
+            // O appendChild move o elemento da coluna antiga para esta nova
+            coluna.appendChild(cardArrastado);
+        }
+    });
+});
+
+document.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('task-card')) {
+        e.target.style.opacity = '1'; // Volta ao normal quando solta
+    }
+});
+
+// ==================== FUNÇÃO FILTRO PESQUISA ============================
+
 function Filter() {
     // pega o que a pessoa digitou converte em minusculo e armazena
     const tipoPesquisa = searchInput.value.toLowerCase();
@@ -32,15 +79,15 @@ function Filter() {
     // contador bool que verifica se o card foi encontrado
     let encontrouAlguma = false;
 
-    // for que percorre o array de tarefas
+    // foreach que percorre o array de tarefas
     tarefas.forEach(tarefa => {
         // pega o titulo da tarefa, descrição, prioridade ou prazo e armazena
         const titulo = tarefa.querySelector('.task-description h3').innerText.toLowerCase();
         const descricao = tarefa.querySelector('.task-description p').innerText.toLowerCase();
         const prioridade = tarefa.querySelector(".priority-tag p").innerText.toLowerCase();
-        const prazo = tarefa.querySelector('.input-deadline')
+        const prazo = tarefa.querySelector('.input-deadline');
 
-        //compra se o prazo tem valor no input ou placeholder
+        //compara se o prazo tem valor no input ou placeholder
         const valorPrazo = (prazo.value || prazo.placeholder).toLowerCase();
 
         //inclui o tipo de pesquisa a toas as variaveis
@@ -49,13 +96,13 @@ function Filter() {
         const temPrioridade = prioridade.includes(tipoPesquisa);
 
         // se o campo de pesquisa estiver vazio, ou se encontrar o titulo, descrição, prioridade ou prazo
-        if  (tipoPesquisa === "" || temPrazo || temPrioridade || temTexto){
+        if (tipoPesquisa === "" || temPrazo || temPrioridade || temTexto){
             //a tarefa aparece
             tarefa.style.display = "block";
             //e o contador é true   
             encontrouAlguma = true;
-            // caso contrario nao aparece nada
         } else {
+            // caso contrario nao aparece nada
             tarefa.style.display = "none";
         }
     });
@@ -66,13 +113,14 @@ function Filter() {
     }
 }
 
-//esse evento do input ocorre em tempo real de digitação
+// IA: esse evento do input ocorre em tempo real de digitação
 searchInput.addEventListener('input', Filter);
 //esse evento transforma o icone de lupa em 'enter'
 searchIcon.addEventListener('click', Filter);
 
 
-// ==================== JS DO MODAL ============================
+// ==================== JS DO MODAL (ESTADOS E EVENTOS) ============================
+
 //arrow function que abre o modal
 btnNovaTarefa.addEventListener('click', () => {
     //adiciona uma classe ao modal-overlay como 'active' pra ela aparecer
@@ -83,6 +131,7 @@ btnNovaTarefa.addEventListener('click', () => {
 btnCancelar.addEventListener('click', () => {
     // remove a classe 'active' e fecha o modal
     modal.classList.remove('active');
+    limparCamposModal();
 });
 
 // se o ícone existe
@@ -91,6 +140,7 @@ if(btnVoltar){
     btnVoltar.addEventListener('click', () => {
         // remove a classe 'active' e fecha o modal
         modal.classList.remove('active');
+        limparCamposModal();
     });
 }
 
@@ -98,6 +148,7 @@ if(btnVoltar){
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         modal.classList.remove('active');
+        limparCamposModal();
     }
 });
 
@@ -109,49 +160,34 @@ if(iconCalendario && inputPrazo){
     });
 }
 
-//criando arrow function pra mudar os icones da prioridade
+// +-IA: criando arrow function pra mudar os icones da prioridade
 inputPrioridade.addEventListener('change', () => {
-    // variável que armazena o valor da prioridade -> '1,2,3'
     const valor = inputPrioridade.value;
-    // variavel que armazena o caminho desse icone
-    let caminho = "";
-
-    // objeto que mapeia o valor e seu respectivo icone
     const mapaDeIcones = {
         "1": "assets/icon/grafico-baixa.svg",
         "2": "assets/icon/grafico-media.svg",
         "3": "assets/icon/grafico-alta.svg"
     };
 
-    //caminho recebe o o valor e os ícones
-    caminho = mapaDeIcones[valor];
-
-    //verifica se o caminho existe
-    if(caminho){
-        //exibe o icone corretamente
-        iconPrioridade.src = caminho;
-    }
+    const caminho = mapaDeIcones[valor];
+    if(caminho) iconPrioridade.src = caminho;
 });
 
-//criando arrow function para mudar os ícones de status
+// +-IA: criando arrow function para mudar os ícones de status
 inputStatus.addEventListener('change', () => {
     const valor = inputStatus.value;
-    let caminho = "";
-
     const mapaDeIcones = {
         "1": "assets/icon/a-fazer.svg",
         "2": "assets/icon/loading.svg",
         "3": "assets/icon/concluido.svg"
     };
 
-    caminho = mapaDeIcones[valor];
-
-    if(caminho){
-        iconStatus.src = caminho;
-    }
+    const caminho = mapaDeIcones[valor];
+    if(caminho) iconStatus.src = caminho;
 });
 
 // ========================= JS DO BOTÃO SALVAR/MODAL ========================
+// IA
 btnSalvar.onclick = function () {
     const titulo = inputTitulo.value;
     const descricao = inputDescricao.value;
@@ -168,7 +204,7 @@ btnSalvar.onclick = function () {
     if (prazo === "") {
         const hoje = new Date();
         const dia = String(hoje.getDate()).padStart(2, '0');
-        const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
         const ano = hoje.getFullYear();
         dataExibicao = `${dia}/${mes}/${ano}`;
     } else {
@@ -179,6 +215,7 @@ btnSalvar.onclick = function () {
     // 2. Criar o elemento do card
     const novoCard = document.createElement('div');
     novoCard.classList.add('task-card');
+    novoCard.setAttribute('draggable', 'true');
 
     // 3. Configurar classes e ícones de acordo com a prioridade
     const infoPrio = {
@@ -215,13 +252,7 @@ btnSalvar.onclick = function () {
             </div>
         </div>
     `;
-
-    // 5. Adicionar funcionalidade ao botão de excluir que acabamos de criar
-    const btnExcluir = novoCard.querySelector('.btn-delete');
-    btnExcluir.addEventListener('click', () => {
-        novoCard.remove();
-    });
-
+    
     // 6. Inserir na coluna correta
     const colunaDestino = document.querySelector(`#col-${status}`);
     if (colunaDestino) {
@@ -234,4 +265,40 @@ btnSalvar.onclick = function () {
         alert("Coluna não encontrada!");
     }
 };
+
+// ==================== JS LIMPAR MODAL ============================
+
+function limparCamposModal() {
+    inputTitulo.value = "";
+    inputDescricao.value = "";
+    inputPrazo.value = "";
+    inputPrioridade.value = "1";
+    inputStatus.value = "1";
+    
+    // reseta os ícones
+    iconPrioridade.src = "assets/icon/grafico-baixa.svg";
+    iconStatus.src = "assets/icon/a-fazer.svg";
 }
+
+
+// ==================== JS DE EXCLUIR CARD ========================
+document.removeEventListener('click', excluirTarefaGlobal);
+
+function excluirTarefaGlobal(event) {
+    //fazendo com que o eventListener não escute mais de uma vez o click de excluir
+    const btn = event.target.closest('.btn-delete');
+    if (!btn) return;
+
+    event.stopImmediatePropagation();
+    event.preventDefault();
+
+    const card = btn.closest('.task-card');
+
+    if (card) {
+        if (confirm("Deseja realmente excluir esta tarefa?")) {
+            card.remove();
+        }
+    }
+}
+
+document.addEventListener('click', excluirTarefaGlobal);

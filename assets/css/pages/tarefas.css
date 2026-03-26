@@ -2,10 +2,12 @@
 * {
     font-family: var(--font-family);
 }
+
 /* estilização da header */
 .page-content {
-    padding-inline: var(--spacing-sm);
     background-color: var(--color-surface);
+
+    padding-inline: var(--spacing-sm);
     overflow-x: auto;
 }
 
@@ -16,22 +18,21 @@
     margin-bottom: 24px;
 }
 
-.header-actions {
+.header-actions, .member-profile {
     display: flex;
     align-items: center;
+}
+
+.header-actions {
     gap: 20px;
 }
 
 .member-profile {
-    display: flex;
-    align-items: center;
     gap: 10px;
 }
 
-.member-name{font-weight: 600;}
-
-.member-info p {
-    margin: 0;
+.member-name {
+    font-weight: 600;
 }
 
 .member-info .member-category {
@@ -39,9 +40,7 @@
     color: var(--color-text-secondary);
 }
 
-
 /* barra de busca */
-
 .task-search-container {
     display: flex;
     justify-content: space-between;
@@ -52,40 +51,41 @@
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    background: var(--color-sidebar-bg);
     padding: 12px;
     flex-grow: 1;
     border-radius: var(--border-radius);
+
+    background: var(--color-white);
 }
 
 .search-input-wrapper input {
     border: none;
-    background: transparent;
     outline: none;
     width: 100%;
     margin-left: 10px;
+
+    background: transparent;
 }
 
-.search-input-wrapper input::placeholder{color: #A0AEC0;}
+.search-input-wrapper input::placeholder {color: var(--color-placeholder);}
 
 .btn-new-task-main {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background-color: var(--color-primary);
-    color: var(--color-sidebar-bg);
-    border: none;
     padding: var(--spacing-sm) 23px;
     border-radius: var(--border-radius);
+
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
 }
 
-
 /* estilização KANBAN */
-
 .kanban {
     display: flex;
     justify-content: flex-start;
@@ -97,91 +97,89 @@
 .kanban-column {
     flex: 1;
     min-width: 300px;
-
+    min-height: 500px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    padding: var(--spacing-xs);
+    gap: 10px;
+
+    background-color: var(--color-white);
+    border-radius: 12px;
 }
 
-.task-card {
-    background-color: var(--color-sidebar-bg);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-xs) !important;
-
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    width: 100%;
-    overflow: hidden;
-}
-
-
-/* título do card */
-
-.task-title {
+.kanban-column .task-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-inline: var(--spacing-xs);
 }
 
+.kanban-column .task-title img {
+    object-fit: contain;
+    display: block;
+}
+
+.task-card {
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    overflow: hidden;
+
+    background-color: var(--color-white);
+}
+
+/* título do card */
 .task-title h3 {
-    color: #3C4257;
+    color: var(--color-card-title);
     font-size: 18px;
 }
 
-
 /* descrição da tarefa */
-
 .task-description {
     border-radius: 10px;
-    background: rgba(120, 120, 128, 0.08);
     padding: 12px;
-
-    color: #3C4257;
-    font-size: 12px; 
-
-    word-wrap: break-word; 
-    word-break: break-word;    
-    overflow-wrap: break-word;  
-    white-space: normal;        
     max-width: 100%;
+
+    background: rgba(120, 120, 128, 0.08);
+    color: var(--color-card-title);
+    font-size: 12px;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
-.task-description h3{
-    font-size: var(--font-size-menu);
-}
+.task-description h3 {font-size: var(--font-size-menu);}
 
 .task-cover-img {
     width: 100%;
     height: 150px;
-    object-fit: cover; /* Faz a foto preencher o espaço sem esticar */
-    border-radius: 8px 8px 0 0; /* Arredonda só em cima */
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
 }
 
 .task-image-container {
-    margin: -15px -15px 15px -15px; /* Remove o padding do card para a foto encostar nas bordas */
+    margin: -15px -15px 15px -15px;
     overflow: hidden;
 }
 
 /* prioridade e prazo */
-
 .task-status {
     width: 100%;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 
     font-size: 12px;
     color: var(--color-text-secondary);
-
-    margin-top: 10px;
-    margin-bottom: 20px;
 }
 
-.priority-tag {
+.priority-tag, .datetime-priority {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -192,247 +190,198 @@
 .priority-tag p {
     padding: 4px var(--spacing-xs);
     border-radius: 8px;
-    white-space: nowrap;
 }
 
-.datetime-priority {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    flex-shrink: 0;
+.datetime-priority input::placeholder {
+    color: var(--color-card-title);
+    font-weight: 500;
 }
-
-.datetime-priority input::placeholder{color: #3C4257; font-weight: 500;}
-
 
 /* cores das prioridades */
-
-.low p {
-    background: #CBF4C9;
-    color: #0E6245;
-}
-
-.medium p {
-    background: #F8E5BA;
-    color: #9C3F0F;
-}
-
-.high p {
-    background: #F9DEDC;
-    color: #8C1D18;
-}
-
+.low p { background: #CBF4C9; color: #0E6245; }
+.medium p { background: #F8E5BA; color: #9C3F0F; }
+.high p { background: #F9DEDC; color: #8C1D18; }
 
 /* input de data */
-
 .input-deadline {
+    width: 90px;
+
     border: none;
     background: transparent;
     outline: none;
-
     font-size: 13px;
     color: var(--color-text-secondary);
-
-    width: 90px;
 }
 
-
 /* botões */
-
 .task-btn {
     display: flex;
     justify-content: space-between;
-    padding: var(--spacing-sm) 0px 0px 0px;
-    border-top: 1px solid #fff;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-white);
+}
+
+.btn-edit, .btn-new-task-main, .btn-save {
+    display: flex;
+    align-items: center;
 }
 
 .btn-edit {
-    display: flex;
-    align-items: center;
     gap: 4px;
+    border: 1px solid var(--color-border);
+    padding: 4px var(--spacing-sm);
+    border-radius: 6px;
 
     background-color: transparent;
-    border: 1px solid #D3D4D7;
-
     color: var(--color-text-secondary);
     font-size: 12px;
     font-weight: 500;
-
-    padding: 4px var(--spacing-sm);
-    border-radius: 6px;
+    cursor: pointer;
 }
 
 .btn-delete {
     background-color: var(--color-primary);
-    border: none;
-
-    padding: 4px var(--spacing-sm);
-    border-radius: 6px;
-
-    color: var(--color-sidebar-bg);
+    color: var(--color-white);
     font-weight: 600;
     font-size: 14px;
+    cursor: pointer;
+
+    border: none;
+    padding: 4px var(--spacing-sm);
+    border-radius: 6px;
 }
 
-/* ====== MODAL ====== */
-
-/* modal com displaay:none para não aparecer */
-.modal-overlay{
+/* ================ MODAL ================ */
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-
-    background: rgba(0,0,0,0.4);
-
     display: none;
     justify-content: center;
     align-items: center;
-
     z-index: 999;
+
+    background: var(--color-overlay);
 }
 
-.modal-overlay.active{
-    display: flex;
-}
+.modal-overlay.active {display: flex;}
 
-/* estilização do conteúdo do modal */
-.modal{
-    background-color: var(--color-sidebar-bg);
+.modal {
+    background-color: var(--color-white);
+
     border-radius: var(--border-radius);
     width: 400px;
     padding: var(--spacing-md);
 }
 
-/* tam do ícon de gráfico pois estava desproporcional */
-.icon{width: 20px;}
+.icon {width: 20px;}
 
-/* estilização header */
-.modal-header{
+.modal-header {
     display: flex;
     align-items: center;
     gap: 18px;
     margin-bottom: 25px;
+
     font-size: 20px;
 }
 
-.required{
-    color: var(--color-primary);
-}
+.required {color: var(--color-primary);}
 
-/* estilização corpo do forms */
-.modal-body{
+.modal-body {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
-/* campos */
 .modal-body .modal-title,
 .modal-body .modal-description,
 .modal-body .modal-date,
-.modal-body .modal-image{
+.modal-body .modal-image,
+.modal-priority,
+.modal-status {
     display: flex;
     flex-direction: column;
-    background-color: #F4F4F5;
-    font-size: 14px;
-    color: #697386;
     padding: 10px 13px;
     border-radius: var(--border-radius);
     gap: 3px;
+
+    background-color: var(--color-member-card-bg);
+    font-size: 14px;
+    color: var(--color-card-subtitle);
 }
 
-/* estilização dos selects */
-.modal-row{
+.modal-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 21px;
 }
 
-.modal-priority,
-.modal-status{
-    background-color: #F4F4F5;
-    font-size: 14px;
-    color: #697386;
-    padding: 10px 13px;
-    border-radius: var(--border-radius);
-    gap: 3px;
-    flex: 1;
+.modal-priority, .modal-status {flex: 1;}
+
+.modal-status .modal-select img {margin-left: -6px;}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 10px;
 }
 
-/* gambiarra porque o ícone estava desproporcional com o padding */
-.modal-status .modal-select img{
-    margin-left: -6px;
-}
-
-/* escondendo calendário nativo do prazo */
-input[type="date"]::-webkit-calendar-picker-indicator {opacity: 0; position: absolute; right: 10px;}
-
-
-/* inputs */
 .modal-body input,
-.modal-body textarea{
+.modal-body textarea {
     background: transparent;
     border: none;
-    color: #A3ACB9;
+    color: var(--color-input-placeholder);
 }
 
-.modal-body textarea{
+.modal-body textarea {
     padding-bottom: var(--spacing-md); 
     resize: none; 
     overflow: hidden;
 }
 
-input:focus,
-textarea:focus,
-select:focus{
-    outline: none;
-}
+input:focus, textarea:focus, select:focus {outline: none;}
 
-.modal-select, .input-wrapper{
+.modal-select, .input-wrapper {
     position: relative;
     display: flex;
     align-items: center;
     width: 100%;  
 }
 
-.input-wrapper{gap: 3px;}
+.input-wrapper { gap: 3px; }
 
-.select-wrapper{
+.select-wrapper {
     position: relative;
-    align-items: center;
     width: 100%;
-    background: transparent;
     border: none;
-    color: #A3ACB9;
+
+    background: transparent;
+    color: var(--color-input-placeholder);
 }
 
-/* estilização do footer */
-.modal-footer{
+.modal-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* estilização dos botões */
-button{
-    background-color: #F4F4F5;
-    border: none;
+/* botoões do modal */
+button {
+    background-color: var(--color-member-card-bg);
     font-size: 16px;
-    padding: 16px 25px;
-    border-radius: var(--border-radius);
     font-weight: 600;
+    cursor: pointer;
+
+    padding: 16px 25px;
+    border: none;
+    border-radius: var(--border-radius);
 }
 
-.btn-save{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.btn-save {
     gap: 8px;
     background-color: var(--color-primary);
     color: var(--color-surface);
 }
-
