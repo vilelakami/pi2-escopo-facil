@@ -150,5 +150,88 @@ inputStatus.addEventListener('change', () => {
         iconStatus.src = caminho;
     }
 });
-//dinâmica do botão salvar tarefa
+
+// ========================= JS DO BOTÃO SALVAR/MODAL ========================
+btnSalvar.onclick = function () {
+    const titulo = inputTitulo.value;
+    const descricao = inputDescricao.value;
+    const prioridade = inputPrioridade.value;
+    const status = inputStatus.value;
+    const prazo = inputPrazo.value;
+
+    if (titulo.trim() === "") {
+        alert("O título é obrigatório!");
+        return;
+    }
+
+    let dataExibicao = "";
+    if (prazo === "") {
+        const hoje = new Date();
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+        const ano = hoje.getFullYear();
+        dataExibicao = `${dia}/${mes}/${ano}`;
+    } else {
+        const partes = prazo.split('-'); // Converte de YYYY-MM-DD para DD/MM/YYYY
+        dataExibicao = `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    // 2. Criar o elemento do card
+    const novoCard = document.createElement('div');
+    novoCard.classList.add('task-card');
+
+    // 3. Configurar classes e ícones de acordo com a prioridade
+    const infoPrio = {
+        "1": { texto: "Baixa", classe: "low", icone: "grafico-baixa.svg" },
+        "2": { texto: "Média", classe: "medium", icone: "grafico-media.svg" },
+        "3": { texto: "Alta", classe: "high", icone: "grafico-alta.svg" }
+    };
+    const prio = infoPrio[prioridade];
+
+    novoCard.innerHTML = `
+        <div class="task-description">
+            <h3>${titulo}</h3>
+            <p>${descricao}</p>
+            
+            <div class="task-status">
+                <div class="priority-tag ${prio.classe}">
+                    <p>Prioridade: ${prio.texto}</p>
+                    <img src="assets/icon/${prio.icone}" alt="prioridade">
+                </div>
+
+                <div class="datetime-priority">
+                    <p>Prazo:</p>
+                    <img src="assets/icon/calendar.svg" alt="calendário">
+                    <span class="deadline-text">${dataExibicao}</span>
+                </div>
+            </div>
+
+            <div class="task-btn">
+                <button class="btn-edit">
+                    <img src="assets/icon/edit.svg" alt="editar">
+                    Editar
+                </button>
+                <button class="btn-delete">Excluir</button>
+            </div>
+        </div>
+    `;
+
+    // 5. Adicionar funcionalidade ao botão de excluir que acabamos de criar
+    const btnExcluir = novoCard.querySelector('.btn-delete');
+    btnExcluir.addEventListener('click', () => {
+        novoCard.remove();
+    });
+
+    // 6. Inserir na coluna correta
+    const colunaDestino = document.querySelector(`#col-${status}`);
+    if (colunaDestino) {
+        colunaDestino.appendChild(novoCard);
+        
+        // 7. Fechar modal e limpar
+        modal.classList.remove('active');
+        limparCamposModal();
+    } else {
+        alert("Coluna não encontrada!");
+    }
+};
 }

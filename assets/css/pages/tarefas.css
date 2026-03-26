@@ -139,7 +139,13 @@
     padding: 12px;
 
     color: #3C4257;
-    font-size: 12px;
+    font-size: 12px; 
+
+    word-wrap: break-word; 
+    word-break: break-word;    
+    overflow-wrap: break-word;  
+    white-space: normal;        
+    max-width: 100%;
 }
 
 .task-description h3{
@@ -166,6 +172,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
 
     font-size: 12px;
     color: var(--color-text-secondary);
@@ -177,7 +184,9 @@
 .priority-tag {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 5px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .priority-tag p {
@@ -189,7 +198,9 @@
 .datetime-priority {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 5px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .datetime-priority input::placeholder{color: #3C4257; font-weight: 500;}
@@ -417,6 +428,10 @@ button{
 }
 
 .btn-save{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     background-color: var(--color-primary);
     color: var(--color-surface);
 }
