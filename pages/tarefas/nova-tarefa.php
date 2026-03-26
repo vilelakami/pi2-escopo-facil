@@ -7,7 +7,7 @@
         <!-- cabeçalho do modal, ícone e título -->
         <div class="modal-header">
             <img class="btn-back" src="<?= BASE_URL ?>/assets/icon/arrow.svg" alt="seta para a esquerda">
-            <h2>Nova Tarefa</h2>
+            <h2 id="modalTitulo">Nova Tarefa</h2>
         </div>
 
         <!-- corpo do modal, campo de título, descrição, campo de prioridade (contém prioridade e prazo), e campo de status -->
@@ -28,14 +28,23 @@
                 <div class="modal-priority">
                     <label>Prioridade<span class="required">*</span></label>
 
-                    <div class="modal-select">
-                        <img class="icon" src="<?= BASE_URL ?>/assets/icon/grafico-baixa.svg" alt="baixa prioridade">
-
-                        <select class="select-wrapper" name="taskPriority" id="taskPriority">
-                            <option value="1">Baixa</option>
-                            <option value="2">Média</option>
-                            <option value="3">Alta</option>
-                        </select>
+                    <div class="custom-select" id="taskPriority" data-value="1">
+                        <div class="custom-select-trigger">
+                            <img class="custom-select-icon" src="<?= BASE_URL ?>/assets/icon/grafico-baixa.svg" alt="prioridade">
+                            <span class="custom-select-text">Baixa</span>
+                            <span class="custom-select-arrow"></span>
+                        </div>
+                        <ul class="custom-select-options">
+                            <li data-value="1" data-icon="<?= BASE_URL ?>/assets/icon/grafico-baixa.svg">
+                                <img src="<?= BASE_URL ?>/assets/icon/grafico-baixa.svg" alt="baixa"> Baixa
+                            </li>
+                            <li data-value="2" data-icon="<?= BASE_URL ?>/assets/icon/grafico-media.svg">
+                                <img src="<?= BASE_URL ?>/assets/icon/grafico-media.svg" alt="média"> Média
+                            </li>
+                            <li data-value="3" data-icon="<?= BASE_URL ?>/assets/icon/grafico-alta.svg">
+                                <img src="<?= BASE_URL ?>/assets/icon/grafico-alta.svg" alt="alta"> Alta
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
@@ -55,14 +64,23 @@
                 <div class="modal-status">
                     <label>Status<span class="required">*</span></label>
 
-                    <div class="modal-select">
-                        <img src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="status: a fazer">
-
-                        <select class="select-wrapper" name="taskStatus" id="taskStatus">
-                            <option value="1">A Fazer</option>
-                            <option value="2">Em Andamento</option>
-                            <option value="3">Concluído</option>
-                        </select>
+                    <div class="custom-select" id="taskStatus" data-value="1">
+                        <div class="custom-select-trigger">
+                            <img class="custom-select-icon" src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="status">
+                            <span class="custom-select-text">A Fazer</span>
+                            <span class="custom-select-arrow"></span>
+                        </div>
+                        <ul class="custom-select-options">
+                            <li data-value="1" data-icon="<?= BASE_URL ?>/assets/icon/a-fazer.svg">
+                                <img src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="a fazer"> A Fazer
+                            </li>
+                            <li data-value="2" data-icon="<?= BASE_URL ?>/assets/icon/loading.svg">
+                                <img src="<?= BASE_URL ?>/assets/icon/loading.svg" alt="em andamento"> Em Andamento
+                            </li>
+                            <li data-value="3" data-icon="<?= BASE_URL ?>/assets/icon/concluido.svg">
+                                <img src="<?= BASE_URL ?>/assets/icon/concluido.svg" alt="concluído"> Concluído
+                            </li>
+                        </ul>
                     </div>
                 </div>
 

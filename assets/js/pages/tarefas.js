@@ -15,17 +15,19 @@ const btnVoltar = document.querySelector('.btn-back');
 // Armazenando inputs:
 const inputTitulo = document.querySelector('#taskTitle');
 const inputDescricao = document.querySelector('#taskDescription');
-const inputPrioridade = document.querySelector('#taskPriority');
-const inputStatus = document.querySelector('#taskStatus');
+const selectPrioridade = document.querySelector('#taskPriority');
+const selectStatus = document.querySelector('#taskStatus');
 const inputPrazo = document.querySelector('#taskDate');
 
 // Armazenando ícones do modal:
 const iconCalendario = document.querySelector('.modal-date .icon');
-const iconPrioridade = document.querySelector('.modal-priority .icon');
-const iconStatus = document.querySelector('.modal-status img');
 
 // Variável de arrastar card
 let cardArrastado = null;
+
+// Variável de edição — guarda o card sendo editado (null = modo criação)
+let cardEditando = null;
+const modalTitulo = document.querySelector('#modalTitulo');
 
 // ==================== FUNÇÃO DE ARRASTAR E SOLTAR ============================
 // IA
@@ -123,14 +125,17 @@ searchIcon.addEventListener('click', Filter);
 
 //arrow function que abre o modal
 btnNovaTarefa.addEventListener('click', () => {
-    //adiciona uma classe ao modal-overlay como 'active' pra ela aparecer
+    cardEditando = null;
+    modalTitulo.textContent = 'Nova Tarefa';
+    limparCamposModal();
     modal.classList.add('active');
 });
 
 //arrow function que fecha o modal
 btnCancelar.addEventListener('click', () => {
-    // remove a classe 'active' e fecha o modal
     modal.classList.remove('active');
+    cardEditando = null;
+    modalTitulo.textContent = 'Nova Tarefa';
     limparCamposModal();
 });
 
@@ -138,8 +143,9 @@ btnCancelar.addEventListener('click', () => {
 if(btnVoltar){
     // e se for clicado
     btnVoltar.addEventListener('click', () => {
-        // remove a classe 'active' e fecha o modal
         modal.classList.remove('active');
+        cardEditando = null;
+        modalTitulo.textContent = 'Nova Tarefa';
         limparCamposModal();
     });
 }
@@ -148,6 +154,8 @@ if(btnVoltar){
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         modal.classList.remove('active');
+        cardEditando = null;
+        modalTitulo.textContent = 'Nova Tarefa';
         limparCamposModal();
     }
 });
@@ -160,39 +168,128 @@ if(iconCalendario && inputPrazo){
     });
 }
 
-// +-IA: criando arrow function pra mudar os icones da prioridade
-inputPrioridade.addEventListener('change', () => {
-    const valor = inputPrioridade.value;
-    const mapaDeIcones = {
-        "1": "assets/icon/grafico-baixa.svg",
-        "2": "assets/icon/grafico-media.svg",
-        "3": "assets/icon/grafico-alta.svg"
-    };
+// ==================== CUSTOM SELECT (PRIORIDADE E STATUS) ============================
 
-    const caminho = mapaDeIcones[valor];
-    if(caminho) iconPrioridade.src = caminho;
+// Inicializa todos os custom selects do modal
+document.querySelectorAll('.modal .custom-select').forEach(select => {
+    const trigger = select.querySelector('.custom-select-trigger');
+    const options = select.querySelectorAll('.custom-select-options li');
+    const iconEl = select.querySelector('.custom-select-icon');
+    const textEl = select.querySelector('.custom-select-text');
+
+    // Marca a opção inicial como selected
+    const initialValue = select.dataset.value;
+    options.forEach(opt => {
+        if (opt.dataset.value === initialValue) opt.classList.add('selected');
+    });
+
+    // Abre/fecha o dropdown ao clicar no trigger
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Fecha outros selects abertos
+        document.querySelectorAll('.custom-select.open').forEach(s => {
+            if (s !== select) s.classList.remove('open');
+        });
+        select.classList.toggle('open');
+    });
+
+    // Ao clicar numa opção
+    options.forEach(opt => {
+        opt.addEventListener('click', (e) => {
+            e.stopPropagation();
+            select.dataset.value = opt.dataset.value;
+            textEl.textContent = opt.textContent.trim();
+            iconEl.src = opt.dataset.icon;
+
+            // Atualiza classe selected
+            options.forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+
+            select.classList.remove('open');
+        });
+    });
 });
 
-// +-IA: criando arrow function para mudar os ícones de status
-inputStatus.addEventListener('change', () => {
-    const valor = inputStatus.value;
-    const mapaDeIcones = {
-        "1": "assets/icon/a-fazer.svg",
-        "2": "assets/icon/loading.svg",
-        "3": "assets/icon/concluido.svg"
-    };
-
-    const caminho = mapaDeIcones[valor];
-    if(caminho) iconStatus.src = caminho;
+// Fecha custom selects ao clicar fora
+document.addEventListener('click', () => {
+    document.querySelectorAll('.custom-select.open').forEach(s => s.classList.remove('open'));
 });
+
+// ==================== JS DO BOTÃO EDITAR ============================
+
+// Mapa de prioridade: texto do card → valor do custom select
+const mapaPrioTexto = { "baixa": "1", "média": "2", "alta": "3" };
+
+// Mapa de coluna → valor de status
+const mapaColStatus = { "col-1": "1", "col-2": "2", "col-3": "3" };
+
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-edit');
+    if (!btn) return;
+
+    const card = btn.closest('.task-card');
+    if (!card) return;
+
+    cardEditando = card;
+    modalTitulo.textContent = 'Editar Tarefa';
+
+    // Extrai dados do card
+    const titulo = card.querySelector('.task-description h3').textContent.trim();
+    const descricao = card.querySelector('.task-description p').textContent.trim();
+    const prioTexto = card.querySelector('.priority-tag p').textContent.replace('Prioridade:', '').trim().toLowerCase();
+    const prioValor = mapaPrioTexto[prioTexto] || "1";
+
+    // Prazo — pode ser input ou span
+    const prazoInput = card.querySelector('.input-deadline');
+    const prazoSpan = card.querySelector('.deadline-text');
+    let prazoTexto = '';
+    if (prazoInput) prazoTexto = prazoInput.value || prazoInput.placeholder || '';
+    else if (prazoSpan) prazoTexto = prazoSpan.textContent.trim();
+
+    // Converte DD/MM/YYYY para YYYY-MM-DD para o input date
+    let prazoDate = '';
+    if (prazoTexto) {
+        const partes = prazoTexto.split('/');
+        if (partes.length === 3) prazoDate = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+
+    // Status pela coluna onde o card está
+    const coluna = card.closest('.kanban-column');
+    const statusValor = coluna ? (mapaColStatus[coluna.id] || "1") : "1";
+
+    // Preenche o modal
+    inputTitulo.value = titulo;
+    inputDescricao.value = descricao;
+    inputPrazo.value = prazoDate;
+
+    // Atualiza custom selects
+    setCustomSelectValue(selectPrioridade, prioValor);
+    setCustomSelectValue(selectStatus, statusValor);
+
+    modal.classList.add('active');
+});
+
+// Helper para setar valor de um custom select
+function setCustomSelectValue(select, value) {
+    select.dataset.value = value;
+    const options = select.querySelectorAll('.custom-select-options li');
+    options.forEach(opt => {
+        opt.classList.remove('selected');
+        if (opt.dataset.value === value) {
+            opt.classList.add('selected');
+            select.querySelector('.custom-select-text').textContent = opt.textContent.trim();
+            select.querySelector('.custom-select-icon').src = opt.dataset.icon;
+        }
+    });
+}
 
 // ========================= JS DO BOTÃO SALVAR/MODAL ========================
 // IA
 btnSalvar.onclick = function () {
     const titulo = inputTitulo.value;
     const descricao = inputDescricao.value;
-    const prioridade = inputPrioridade.value;
-    const status = inputStatus.value;
+    const prioridade = selectPrioridade.dataset.value;
+    const status = selectStatus.dataset.value;
     const prazo = inputPrazo.value;
 
     if (titulo.trim() === "") {
@@ -208,16 +305,10 @@ btnSalvar.onclick = function () {
         const ano = hoje.getFullYear();
         dataExibicao = `${dia}/${mes}/${ano}`;
     } else {
-        const partes = prazo.split('-'); // Converte de YYYY-MM-DD para DD/MM/YYYY
+        const partes = prazo.split('-');
         dataExibicao = `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
 
-    // 2. Criar o elemento do card
-    const novoCard = document.createElement('div');
-    novoCard.classList.add('task-card');
-    novoCard.setAttribute('draggable', 'true');
-
-    // 3. Configurar classes e ícones de acordo com a prioridade
     const infoPrio = {
         "1": { texto: "Baixa", classe: "low", icone: "grafico-baixa.svg" },
         "2": { texto: "Média", classe: "medium", icone: "grafico-media.svg" },
@@ -225,7 +316,7 @@ btnSalvar.onclick = function () {
     };
     const prio = infoPrio[prioridade];
 
-    novoCard.innerHTML = `
+    const cardHTML = `
         <div class="task-description">
             <h3>${titulo}</h3>
             <p>${descricao}</p>
@@ -252,17 +343,36 @@ btnSalvar.onclick = function () {
             </div>
         </div>
     `;
-    
-    // 6. Inserir na coluna correta
+
     const colunaDestino = document.querySelector(`#col-${status}`);
-    if (colunaDestino) {
-        colunaDestino.appendChild(novoCard);
-        
-        // 7. Fechar modal e limpar
+
+    if (cardEditando) {
+        // Modo edição — atualiza o card existente
+        cardEditando.innerHTML = cardHTML;
+
+        // Se mudou de coluna, move o card
+        const colunaAtual = cardEditando.closest('.kanban-column');
+        if (colunaDestino && colunaAtual.id !== colunaDestino.id) {
+            colunaDestino.appendChild(cardEditando);
+        }
+
+        cardEditando = null;
         modal.classList.remove('active');
         limparCamposModal();
     } else {
-        alert("Coluna não encontrada!");
+        // Modo criação — cria novo card
+        const novoCard = document.createElement('div');
+        novoCard.classList.add('task-card');
+        novoCard.setAttribute('draggable', 'true');
+        novoCard.innerHTML = cardHTML;
+
+        if (colunaDestino) {
+            colunaDestino.appendChild(novoCard);
+            modal.classList.remove('active');
+            limparCamposModal();
+        } else {
+            alert("Coluna não encontrada!");
+        }
     }
 };
 
@@ -272,12 +382,24 @@ function limparCamposModal() {
     inputTitulo.value = "";
     inputDescricao.value = "";
     inputPrazo.value = "";
-    inputPrioridade.value = "1";
-    inputStatus.value = "1";
-    
-    // reseta os ícones
-    iconPrioridade.src = "assets/icon/grafico-baixa.svg";
-    iconStatus.src = "assets/icon/a-fazer.svg";
+
+    // Reseta custom selects para valor padrão
+    resetCustomSelect(selectPrioridade, "1");
+    resetCustomSelect(selectStatus, "1");
+}
+
+function resetCustomSelect(select, defaultValue) {
+    select.dataset.value = defaultValue;
+    const options = select.querySelectorAll('.custom-select-options li');
+    options.forEach(opt => {
+        opt.classList.remove('selected');
+        if (opt.dataset.value === defaultValue) {
+            opt.classList.add('selected');
+            select.querySelector('.custom-select-text').textContent = opt.textContent.trim();
+            select.querySelector('.custom-select-icon').src = opt.dataset.icon;
+        }
+    });
+    select.classList.remove('open');
 }
 
 

@@ -4,18 +4,41 @@
 }
 
 /* estilização da header */
+.layout:has(.page-content) {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.layout:has(.page-content) .main {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
 .page-content {
     background-color: var(--color-surface);
-
-    padding-inline: var(--spacing-sm);
-    overflow-x: auto;
+    padding-inline: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
+
 
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-md);
+}
+
+.headline {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--color-text-strong);
 }
 
 .header-actions, .member-profile {
@@ -51,36 +74,47 @@
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    padding: 12px;
+    height: 56px;
+    padding: 0 var(--spacing-sm);
     flex-grow: 1;
-    border-radius: var(--border-radius);
+    border-radius: 10px;
+    gap: var(--spacing-xs);
 
     background: var(--color-white);
 }
 
 .search-input-wrapper input {
+    flex: 1;
     border: none;
     outline: none;
     width: 100%;
-    margin-left: 10px;
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--color-text-strong);
 
     background: transparent;
 }
 
-.search-input-wrapper input::placeholder {color: var(--color-placeholder);}
+.search-input-wrapper input::placeholder {
+    color: var(--color-placeholder);
+}
 
 .btn-new-task-main {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: var(--spacing-sm) 23px;
-    border-radius: var(--border-radius);
+    gap: var(--spacing-xs);
+    height: 56px;
+    padding: 0 var(--spacing-md);
+    border-radius: 10px;
 
     background-color: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-white-soft);
     border: none;
+    font-family: var(--font-family);
     font-weight: 700;
+    font-size: 16px;
     cursor: pointer;
     white-space: nowrap;
 }
@@ -90,18 +124,22 @@
     display: flex;
     justify-content: flex-start;
     gap: var(--spacing-md);
-    padding-block: var(--spacing-sm);
-    overflow-x: auto;
+    overflow: hidden;
+    margin-top: var(--spacing-md);
+    flex: 1;
+    min-height: 0;
+    flex-wrap: nowrap;
 }
 
 .kanban-column {
-    flex: 1;
-    min-width: 300px;
-    min-height: 500px;
+    flex: 1 0 300px;
     display: flex;
     flex-direction: column;
     padding: var(--spacing-xs);
     gap: 10px;
+    overflow-y: auto;
+    min-height: 0;
+    max-height: 100%;
 
     background-color: var(--color-white);
     border-radius: 12px;
@@ -111,7 +149,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-inline: var(--spacing-xs);
+    padding-left: var(--spacing-xs);
+    flex-shrink: 0;
+    position: sticky;
+    top: -8px;
+    background-color: var(--color-white);
+    z-index: 1;
+    padding-top: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
+    margin: -8px -8px 0 -8px;
+    padding-right: var(--spacing-xs);
+    padding-left: var(--spacing-xs);
 }
 
 .kanban-column .task-title img {
@@ -125,7 +173,9 @@
     flex-direction: column;
     gap: 14px;
     width: 100%;
+    flex-shrink: 0;
     overflow: hidden;
+    cursor: grab;
 
     background-color: var(--color-white);
 }
@@ -272,7 +322,8 @@
     background-color: var(--color-white);
 
     border-radius: var(--border-radius);
-    width: 400px;
+    width: 500px;
+    max-width: calc(100% - 32px);
     padding: var(--spacing-md);
 }
 
@@ -326,7 +377,19 @@
 input[type="date"]::-webkit-calendar-picker-indicator {
     opacity: 0;
     position: absolute;
-    right: 10px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.modal-body input[type="date"] {
+    cursor: pointer;
+}
+
+.input-wrapper {
+    position: relative;
 }
 
 .modal-body input,
@@ -366,6 +429,98 @@ input:focus, textarea:focus, select:focus {outline: none;}
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: var(--spacing-md);
+}
+
+/* ================ CUSTOM SELECT ================ */
+
+.custom-select {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 2px 0;
+}
+
+.custom-select-trigger .custom-select-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.custom-select-trigger .custom-select-text {
+    flex: 1;
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-card-subtitle);
+}
+
+.custom-select-trigger .custom-select-arrow {
+    width: 10px;
+    height: 6px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23697386' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.custom-select.open .custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-options {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: -13px;
+    right: -13px;
+    background: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+    overflow: hidden;
+    list-style: none;
+    padding: 4px 0;
+    margin: 0;
+}
+
+.custom-select.open .custom-select-options {
+    display: block;
+}
+
+.custom-select-options li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 13px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-card-title);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.custom-select-options li:hover {
+    background: var(--color-member-card-bg);
+}
+
+.custom-select-options li.selected {
+    background: var(--color-member-card-bg);
+    font-weight: 600;
+}
+
+.custom-select-options li img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 /* botoões do modal */
