@@ -6,7 +6,8 @@ $basePath = str_replace('\\', '/', str_replace($docRoot, '', $projRoot));
 define('BASE_URL', rtrim($basePath, '/'));
 
 // ── Conexão com o Banco de Dados ──
-define('DB_HOST', 'localhost');
+define('DB_HOST', '127.0.0.1');
+define('DB_PORT', '3306');
 define('DB_NAME', 'escopo_facil');
 define('DB_USER', 'root');
 define('DB_PASS', '');
