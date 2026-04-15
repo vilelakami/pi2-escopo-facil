@@ -336,6 +336,23 @@
     opacity: 0.9;
 }
 
+.projeto-btn-detalhes {
+    height: 28px;
+    padding: 0 10px;
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    border-radius: 5px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+.projeto-btn-detalhes:hover {
+    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
 /* ===== Modal Novo Projeto ===== */
 
 .modal-overlay {
@@ -477,6 +494,23 @@
 }
 
 .modal-btn-salvar:hover {
+    opacity: 0.9;
+}
+
+.modal-btn-sair-projeto {
+    height: 44px;
+    padding: 0 20px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.modal-btn-sair-projeto:hover {
     opacity: 0.9;
 }
 
@@ -768,6 +802,51 @@
 .membro-card-badge--membro {
     background: var(--color-badge-membro-bg);
     color: var(--color-badge-membro-text);
+}
+
+/* Membro card — dropdown menu */
+.membro-card-menu-wrapper {
+    position: relative;
+}
+
+.membro-card-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+    min-width: 190px;
+    overflow: hidden;
+}
+
+.membro-card-dropdown.open {
+    display: block;
+}
+
+.membro-card-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--color-text-strong);
+}
+
+.membro-card-dropdown-item:hover {
+    background: var(--color-background);
+}
+
+.membro-card-dropdown-remove {
+    color: var(--color-danger);
 }
 
 /* Ações do modal lateral */

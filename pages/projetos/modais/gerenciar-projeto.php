@@ -61,9 +61,15 @@
     <div class="membro-card">
         <div class="membro-card-top">
             <span class="membro-card-cargo"></span>
-            <button type="button" class="membro-card-menu">
-                <img src="<?= BASE_URL ?>/assets/icon/three-dot.svg" alt="Menu">
-            </button>
+            <div class="membro-card-menu-wrapper">
+                <button type="button" class="membro-card-menu">
+                    <img src="<?= BASE_URL ?>/assets/icon/three-dot.svg" alt="Menu">
+                </button>
+                <div class="membro-card-dropdown">
+                    <button type="button" class="membro-card-dropdown-item membro-card-dropdown-promote"></button>
+                    <button type="button" class="membro-card-dropdown-item membro-card-dropdown-remove">Remover do grupo</button>
+                </div>
+            </div>
         </div>
         <div class="membro-card-info">
             <img src="" alt="Avatar" class="membro-card-avatar">
