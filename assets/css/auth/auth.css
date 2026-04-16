@@ -1,0 +1,71 @@
+/* ======================================
+    Auth Layout — Estilos compartilhados
+   ====================================== */
+
+.auth-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--auth-bg);
+    padding: var(--auth-padding);
+    gap: var(--auth-gap);
+}
+
+/* --- Lado esquerdo: Imagem --- */
+.auth-image {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: calc(100vh - (var(--auth-padding) * 2));
+    border-radius: var(--auth-radius);
+    overflow: hidden;
+}
+
+.auth-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--auth-radius);
+}
+
+.auth-image-text {
+    position: absolute;
+    bottom: var(--spacing-lg);
+    left: var(--spacing-lg);
+    right: var(--spacing-lg);
+}
+
+.auth-image-text p {
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: var(--auth-image-font-size);
+    line-height: 1.15;
+    color: var(--auth-image-text-color);
+}
+
+/* --- Lado direito: Formulário --- */
+.auth-form-wrapper {
+    flex: 1;
+    max-width: var(--auth-form-max-width);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--auth-form-bg);
+    border-radius: var(--auth-radius);
+}
+
+/* ========================================
+   Responsividade
+   ======================================== */
+@media (max-width: 1024px) {
+    .auth-image {
+        display: none;
+    }
+
+    .auth-container {
+        padding: var(--spacing-sm);
+    }
+
+    .auth-form-wrapper {
+        width: 100%;
+    }
+}

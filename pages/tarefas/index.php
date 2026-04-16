@@ -1,0 +1,228 @@
+<!-- seção pai: todo o conteúdo -->
+<section class="page-content">
+
+    <!-- header, título do projeto, notificação e perfil do membro -->
+    <div class="page-header">
+        <h1 class="headline">Projeto: Sistema de PI</h1>
+
+        <div class="header-actions">
+
+            <div class="notification-icon">
+                <img src="<?= BASE_URL ?>/assets/icon/bells.svg" alt="notificações">
+            </div>
+
+            <div class="member-profile">
+                <img src="<?= BASE_URL ?>/assets/icon/avatar.svg" alt="foto de perfil" class="avatar">
+
+                <div class="member-info">
+                    <p class="member-name">Natan Oliveira</p>
+                    <p class="member-category">Membro</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- barra de pesquisa, botão de nova tarefa -->
+    <div class="task-search-container">
+
+        <div class="search-input-wrapper">
+            <img src="<?= BASE_URL ?>/assets/icon/search.svg" alt="lupa de pesquisa">
+            <input 
+                type="text" 
+                placeholder="Busque por prioridade, data ou título da tarefa"
+            >
+        </div>
+
+        <button class="btn-new-task-main">
+            <img src="assets/icon/plus.svg" alt="+">
+            Nova tarefa
+        </button>
+
+    </div>
+
+    <!-- quadro KANBAN, onde vão as tarefas -->
+    <div class="kanban">
+
+        <!-- coluna 1: A Fazer, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
+        <div class="kanban-column" id="col-1">
+            <div class="task-title">
+                <h3 class="title">A Fazer</h3>
+                <img src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="A Fazer">
+            </div>
+
+            <!-- função draggable para arrastar tarefas entre as colunas -->
+            <div class="task-card" draggable="true">
+
+                <div class="task-description">
+
+                    <h3>Adicionar foto</h3>
+
+                    <div>
+                        <p>
+                            Montar a estrutura inicial da tela de acesso
+                            com validação visual dos campos
+                        </p>
+                    </div>
+
+                    <div class="task-status">
+
+                        <div class="priority-tag low">
+                            <p>Prioridade: Baixa</p>
+                            <img src="<?= BASE_URL ?>/assets/icon/grafico-baixa.svg" alt="gráfico de baixa prioridade">
+                        </div>
+
+                        <div class="datetime-priority">
+                            <p>Prazo:</p>
+                            <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
+                            <input 
+                                type="text" 
+                                placeholder="19/02/2026" 
+                                class="input-deadline"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="task-btn">
+
+                        <button class="btn-edit">
+                            <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
+                            Editar
+                        </button>
+
+                        <button class="btn-delete">
+                            Excluir
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- coluna 2: Em Andamento, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
+        <div class="kanban-column" id="col-2">
+            <div class="task-title">
+                <h3 class="title">Em Andamento</h3>
+                <img src="<?= BASE_URL ?>/assets/icon/loading.svg" alt="Carregando">
+            </div>
+
+            <!-- função draggable para arrastar tarefas entre as colunas -->
+            <div class="task-card" draggable="true">
+
+                <div class="task-description">
+
+                    <h3>Adicionar captcha</h3>
+
+                    <div class="background-description">
+                        <p>
+                            Montar a estrutura inicial da tela de acesso
+                            com validação visual dos campos
+                        </p>
+                    </div>
+
+                    <div class="task-status">
+
+                        <div class="priority-tag medium">
+                            <p>Prioridade: Média</p>
+                            <img src="<?= BASE_URL ?>/assets/icon/grafico-media.svg" alt="gráfico de média prioridade">
+                        </div>
+
+                        <div class="datetime-priority">
+                            <p>Prazo:</p>
+                            <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
+                            <input 
+                                type="text" 
+                                placeholder="19/02/2026" 
+                                class="input-deadline"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="task-btn">
+
+                        <button class="btn-edit">
+                            <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
+                            Editar
+                        </button>
+
+                        <button class="btn-delete">
+                            Excluir
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- coluna 3: Concluído, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
+        <div class="kanban-column" id="col-3">
+            <div class="task-title">
+                <h3 class="title">Concluído</h3>
+                <img src="<?= BASE_URL ?>/assets/icon/concluido.svg" alt="Concluído">
+            </div>
+
+            <!-- função draggable para arrastar as tarefas entre as colunas -->
+            <div class="task-card" draggable="true">
+
+                <div class="task-description">
+
+                    <h3>Criar tela de Login</h3>
+
+                    <div class="background-description">
+                        <p>
+                            Montar a estrutura inicial da tela de acesso
+                            com validação visual dos campos
+                        </p>
+                    </div>
+
+                    <div class="task-status">
+
+                        <div class="priority-tag high">
+                            <p>Prioridade: Alta</p>
+                            <img src="<?= BASE_URL ?>/assets/icon/grafico-alta.svg" alt="gráfico de alta prioridade">
+                        </div>
+
+                        <div class="datetime-priority">
+                            <p>Prazo:</p>
+                            <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
+                            <input 
+                                type="text" 
+                                placeholder="19/02/2026" 
+                                class="input-deadline"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="task-btn">
+
+                        <button class="btn-edit">
+                            <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
+                            Editar
+                        </button>
+
+                        <button class="btn-delete">
+                            Excluir
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- div referente a barra de pesquisa, se a tarefa não for encontrada, exibe a mensagem abaixo: -->
+    <div id="no-tasks-message" style="display: none; text-align: center; padding: 20px; color: #666;">
+        <p>Nenhuma tarefa encontrada com este termo.</p>
+    </div>
+
+</section>
+
+<?php include __DIR__ . '/nova-tarefa.php'; ?>
+<script src="<?= BASE_URL ?>/assets/js/pages/tarefas.js"></script>
