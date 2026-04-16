@@ -1,0 +1,241 @@
+/* configuracao.css — estilos específicos da página de configuração */
+
+/* ===== Configuração ===== */
+
+.configuracao {
+    padding: var(--spacing-md);
+    padding-top: 0;
+}
+
+/* Header */
+.configuracao-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.configuracao-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--color-text-strong);
+}
+
+.configuracao-header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Notificação */
+.configuracao-notification {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.configuracao-notification img {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
+.configuracao-notification .notification-dot {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    background: var(--color-danger);
+    border-radius: 50%;
+}
+
+/* Usuário */
+.configuracao-user {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.configuracao-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.configuracao-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.configuracao-user-name {
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-text-strong);
+}
+
+.configuracao-user-role {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+/* Body */
+.configuracao-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* Card */
+.configuracao-card {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+}
+
+.configuracao-card-header {
+    margin-bottom: var(--spacing-sm);
+}
+
+.configuracao-card-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--color-card-title);
+    margin-bottom: 4px;
+}
+
+.configuracao-card-desc {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-card-subtitle);
+}
+
+/* Form */
+.configuracao-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.configuracao-form-row {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.configuracao-form-row .form-group {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Ações do form */
+.configuracao-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.configuracao-btn-cancelar {
+    height: 44px;
+    padding: 0 20px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-text-strong);
+    cursor: pointer;
+}
+
+.configuracao-btn-cancelar:hover {
+    background: var(--color-background);
+}
+
+.configuracao-btn-salvar {
+    height: 44px;
+    padding: 0 20px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-white-soft);
+    cursor: pointer;
+}
+
+.configuracao-btn-salvar:hover {
+    opacity: 0.9;
+}
+
+/* ===== Card Zona de Perigo ===== */
+
+.configuracao-card--danger {
+    border: 1px solid var(--color-danger);
+}
+
+.configuracao-danger-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.configuracao-danger-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.configuracao-danger-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.configuracao-danger-label {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--color-text-strong);
+}
+
+.configuracao-danger-desc {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-card-subtitle);
+}
+
+.configuracao-btn-excluir {
+    height: 44px;
+    padding: 0 20px;
+    background: transparent;
+    border: 2px solid var(--color-danger);
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-danger);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.configuracao-btn-excluir:hover {
+    background: var(--color-danger);
+    color: var(--color-white);
+}

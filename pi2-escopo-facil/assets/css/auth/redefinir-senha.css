@@ -1,0 +1,56 @@
+/* =======================================
+    Redefinir senha — Estilos específicos
+   ======================================= */
+
+* {
+    font-family: var(--font-family)
+}
+
+.redefinir-senha {
+    width: 100%;
+    max-width: 520px;
+}
+
+/* --- Header --- */
+.redefinir-logo {
+    width: 300px;
+    margin-bottom: var(--spacing-md);
+}
+
+.redefinir-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 42px;
+    color: var(--color-text-strong);
+    margin-bottom: var(--spacing-md);
+}
+
+.subtitle {
+    color: var(--auth-subtitle-color);
+    margin-bottom: var(--spacing-md);
+}
+/* --- Form --- */
+.redefinir-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* --- Footer --- */
+.redefinir-footer {
+    font-size: 16px;
+    font-weight: 500;
+    color: #718096;
+    text-align: center;
+    margin-top: var(--spacing-md);
+}
+
+.redefinir-footer a {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.redefinir a:hover {
+    text-decoration: underline;
+}
