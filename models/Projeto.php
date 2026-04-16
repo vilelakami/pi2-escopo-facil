@@ -1,6 +1,8 @@
 <?php
 // RESPONSABILIDADE: única camada que fala com a tabela `projetos`
 // Não valida regra de negócio. Só executa SQL e retorna dados.
+
+require_once __DIR__ . '/../includes/db.php';
 //
 // Métodos que devem existir aqui:
 //
