@@ -222,10 +222,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const membrosGridVisualizar = document.getElementById('visualizar-membros-grid');
     const templateMembroVisualizar = document.getElementById('template-membro-card-visualizar');
 
+    var visualizarProjetoId = null;
+
     function abrirVisualizar(index) {
         const projeto = window.projetosMock[index];
         if (!projeto) return;
 
+        visualizarProjetoId = projeto.id;
         document.getElementById('visualizar-titulo').value = projeto.titulo;
         document.getElementById('visualizar-descricao').value = projeto.descricao;
         document.getElementById('visualizar-criado-por').value = projeto.criado_por;
@@ -277,8 +280,19 @@ document.addEventListener('DOMContentLoaded', function () {
     btnVisualizarFechar.addEventListener('click', fecharVisualizar);
 
     btnVisualizarSair.addEventListener('click', function () {
-        // TODO: integrar com backend — chamar ação de sair do projeto
-        fecharVisualizar();
+        if (!visualizarProjetoId) return;
+        if (!confirm('Tem certeza que deseja sair do projeto?')) return;
+
+        var formData = new FormData();
+        formData.append('projeto_id', visualizarProjetoId);
+        formData.append('membro_id', document.body.dataset.usuarioId);
+
+        fetch(baseUrl + '/actions/membros/remover.php', {
+            method: 'POST',
+            body: formData
+        }).then(function () {
+            window.location.reload();
+        });
     });
 
     modalVisualizar.addEventListener('click', function (e) {
