@@ -5,16 +5,28 @@ $projRoot = realpath(__DIR__);
 $basePath = str_replace('\\', '/', str_replace($docRoot, '', $projRoot));
 define('BASE_URL', rtrim($basePath, '/'));
 
+// ── Carregar variáveis do .env ──
+$envFile = __DIR__ . '/.env';
+if (!file_exists($envFile)) {
+    die('Arquivo .env não encontrado. Copie .env.example para .env e configure.');
+}
+foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+    if (str_starts_with(trim($line), '#')) continue;
+    if (strpos($line, '=') === false) continue;
+    [$key, $value] = explode('=', $line, 2);
+    $_ENV[trim($key)] = trim($value);
+}
+
 // ── Conexão com o Banco de Dados ──
-define('DB_HOST', '127.0.0.1');
-define('DB_PORT', '3306');
-define('DB_NAME', 'escopo_facil');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+define('DB_HOST',    $_ENV['DB_HOST']    ?? '127.0.0.1');
+define('DB_PORT',    $_ENV['DB_PORT']    ?? '3306');
+define('DB_NAME',    $_ENV['DB_NAME']    ?? 'escopo_facil');
+define('DB_USER',    $_ENV['DB_USER']    ?? 'root');
+define('DB_PASS',    $_ENV['DB_PASS']    ?? '');
+define('DB_CHARSET', $_ENV['DB_CHARSET'] ?? 'utf8mb4');
 
 function getConnection(): PDO {
-    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+    $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
