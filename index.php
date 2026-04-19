@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/config.php';
+require __DIR__ . '/includes/session.php';
 $page = $_GET['page'] ?? 'login';
 
 // Páginas de autenticação (layout próprio, sem sidebar)

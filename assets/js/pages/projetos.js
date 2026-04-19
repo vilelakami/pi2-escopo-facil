@@ -26,9 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        // TODO: integrar com backend
-        fecharModal();
+        // Submit nativo para o action PHP
     });
 
     // ===== Modal Lateral: Gerenciar Projeto =====
@@ -39,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const membrosGrid = document.getElementById('gerenciar-membros-grid');
     const templateMembro = document.getElementById('template-membro-card');
     const baseUrl = document.body.dataset.baseUrl || '';
+    var gerenciarProjetoIndex = null;
 
     function renderMembrosGrid(projeto) {
         membrosGrid.innerHTML = '';
@@ -82,12 +81,34 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             card.querySelector('.membro-card-dropdown-promote').addEventListener('click', function () {
-                membro.role = isAdmin ? 'membro' : 'admin';
+                var novoRole = isAdmin ? 'membro' : 'admin';
+                var projetoId = document.getElementById('gerenciar-projeto-id').value;
+                var formData = new FormData();
+                formData.append('projeto_id', projetoId);
+                formData.append('membro_id', membro.id);
+                formData.append('role', novoRole);
+
+                fetch(baseUrl + '/actions/membros/alterar-role.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                membro.role = novoRole;
                 dropdown.classList.remove('open');
                 renderMembrosGrid(projeto);
             });
 
             card.querySelector('.membro-card-dropdown-remove').addEventListener('click', function () {
+                var projetoId = document.getElementById('gerenciar-projeto-id').value;
+                var formData = new FormData();
+                formData.append('projeto_id', projetoId);
+                formData.append('membro_id', membro.id);
+
+                fetch(baseUrl + '/actions/membros/remover.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
                 projeto.membros.splice(membroIndex, 1);
                 dropdown.classList.remove('open');
                 renderMembrosGrid(projeto);
@@ -99,17 +120,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const projeto = window.projetosMock[index];
         if (!projeto) return;
 
+        document.getElementById('gerenciar-projeto-id').value = projeto.id || '';
         document.getElementById('gerenciar-titulo').value = projeto.titulo;
         document.getElementById('gerenciar-descricao').value = projeto.descricao;
         document.getElementById('gerenciar-criado-por').value = projeto.criado_por;
         document.getElementById('gerenciar-data-criacao').value = projeto.data_criacao;
 
+        gerenciarProjetoIndex = index;
         renderMembrosGrid(projeto);
         modalGerenciar.classList.add('active');
     }
 
     function fecharGerenciar() {
         modalGerenciar.classList.remove('active');
+        adicionarInline.style.display = 'none';
+        inputEmailMembro.value = '';
+        erroAdicionar.textContent = '';
     }
 
     // Delegate click nos botões "Gerenciar"
@@ -130,9 +156,62 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     formGerenciar.addEventListener('submit', function (e) {
-        e.preventDefault();
-        // TODO: integrar com backend
-        fecharGerenciar();
+        // Submit nativo para o action PHP
+    });
+
+    // ===== Adicionar Membro (inline no modal gerenciar) =====
+    const btnToggleAdicionar = document.getElementById('btn-toggle-adicionar-membro');
+    const adicionarInline = document.getElementById('adicionar-membro-inline');
+    const inputEmailMembro = document.getElementById('adicionar-membro-email');
+    const btnConfirmarAdicionar = document.getElementById('btn-confirmar-adicionar-membro');
+    const erroAdicionar = document.getElementById('adicionar-membro-erro');
+
+    btnToggleAdicionar.addEventListener('click', function () {
+        const visivel = adicionarInline.style.display !== 'none';
+        adicionarInline.style.display = visivel ? 'none' : 'flex';
+        if (!visivel) inputEmailMembro.focus();
+    });
+
+    btnConfirmarAdicionar.addEventListener('click', function () {
+        const email = inputEmailMembro.value.trim();
+        const projetoId = document.getElementById('gerenciar-projeto-id').value;
+        erroAdicionar.textContent = '';
+
+        if (!email) {
+            erroAdicionar.textContent = 'Informe o email do membro.';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('projeto_id', projetoId);
+        formData.append('email', email);
+
+        fetch(baseUrl + '/actions/membros/adicionar.php', {
+            method: 'POST',
+            body: formData
+        }).then(function (response) {
+            if (response.redirected) {
+                const url = new URL(response.url);
+                const erro = url.searchParams.get('erro');
+                if (erro) {
+                    const msgs = {
+                        'usuario-nao-encontrado': 'Nenhum usuário encontrado com esse email.',
+                        'ja-membro': 'Esse usuário já é membro do projeto.',
+                        'nao-autorizado': 'Você não tem permissão para adicionar membros.',
+                        'email-vazio': 'Informe o email do membro.'
+                    };
+                    erroAdicionar.textContent = msgs[erro] || 'Erro ao adicionar membro.';
+                } else {
+                    sessionStorage.setItem('reabrir_gerenciar', gerenciarProjetoIndex);
+                    window.location.reload();
+                }
+            } else {
+                sessionStorage.setItem('reabrir_gerenciar', gerenciarProjetoIndex);
+                window.location.reload();
+            }
+        }).catch(function () {
+            erroAdicionar.textContent = 'Erro de conexão. Tente novamente.';
+        });
     });
 
     // ===== Modal Lateral: Visualizar Projeto (Membro) =====
@@ -214,4 +293,11 @@ document.addEventListener('DOMContentLoaded', function () {
             d.classList.remove('open');
         });
     });
+
+    // Reabrir modal gerenciar após reload (ex: adicionar membro)
+    var reabrirIndex = sessionStorage.getItem('reabrir_gerenciar');
+    if (reabrirIndex !== null) {
+        sessionStorage.removeItem('reabrir_gerenciar');
+        abrirGerenciar(parseInt(reabrirIndex, 10));
+    }
 });

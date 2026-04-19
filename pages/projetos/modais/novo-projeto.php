@@ -8,7 +8,7 @@
             <h2 class="modal-title">Novo projeto</h2>
         </div>
 
-        <form class="modal-form" id="form-novo-projeto">
+        <form class="modal-form" id="form-novo-projeto" method="POST" action="<?= BASE_URL ?>/actions/projetos/criar.php">
             <div class="form-group">
                 <label for="projeto-titulo">Título<span class="required">*</span></label>
                 <input type="text" id="projeto-titulo" name="titulo" placeholder="Descreva o nome do projeto" required>

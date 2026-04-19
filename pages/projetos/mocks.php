@@ -1,281 +1,62 @@
 <?php
-// Mock de dados — substituir por dados do banco futuramente
+require_once __DIR__ . '/../../includes/session.php';
+require_once __DIR__ . '/../../models/Projeto.php';
+require_once __DIR__ . '/../../models/ProjetoMembro.php';
+
+$usuarioId = usuarioLogado();
+
+// Dados do usuário logado
+$pdo = getConnection();
+$stmtUser = $pdo->prepare("SELECT nome, cargo, avatar FROM usuarios WHERE id = :id");
+$stmtUser->execute(['id' => $usuarioId]);
+$dadosUsuario = $stmtUser->fetch();
 
 $usuario = [
-    'nome' => 'Natan Oliveira',
-    'role' => 'Membro',
-    'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
+    'nome'   => $dadosUsuario['nome'] ?? 'Usuário',
+    'role'   => $dadosUsuario['cargo'] ?? '',
+    'avatar' => $dadosUsuario['avatar'] ?? BASE_URL . '/assets/images/Avatar (1).png',
 ];
 
-$projetos = [
-    [
-        'titulo' => 'Escopo fácil',
-        'descricao' => 'Projeto principal do PI com foco em gestão de tarefas e colaboração.',
-        'role' => 'admin',
-        'membros_extra' => 0,
-        'criado_por' => 'Natan Oliveira',
-        'data_criacao' => '12/06/2025',
-        'membros' => [
-            [
-                'nome' => 'Natan Oliveira',
-                'email' => 'natan@email.com',
-                'cargo' => 'Product Owner',
-                'role' => 'admin',
-                'avatar' => BASE_URL . '/assets/images/natan.png',
-            ],
-            [
-                'nome' => 'Kami Vilela',
-                'email' => 'kami@email.com',
-                'cargo' => 'Desenvolvedor Frontend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/kami.png',
-            ],
-            [
-                'nome' => 'Guilherme Santos',
-                'email' => 'guilherme@email.com',
-                'cargo' => 'Desenvolvedor Backend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/guilherme.png',
-            ],
-            [
-                'nome' => 'Nicolas Ferreira',
-                'email' => 'nicolas@email.com',
-                'cargo' => 'Designer UI/UX',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/nicolas.png',
-            ],
-        ],
-    ],
-    [
-        'titulo' => 'Escopo fácil',
-        'descricao' => 'Montar a estrutura inicial da tela de acesso com validação visual dos campos',
-        'role' => 'membro',
-        'membros_extra' => 4,
-        'criado_por' => 'Kami Vilela',
-        'data_criacao' => '10/06/2025',
-        'membros' => [
-            [
-                'nome' => 'Kami Vilela',
-                'email' => 'kami@email.com',
-                'cargo' => 'Desenvolvedor Frontend',
-                'role' => 'admin',
-                'avatar' => BASE_URL . '/assets/images/kami.png',
-            ],
-            [
-                'nome' => 'Natan Oliveira',
-                'email' => 'natan@email.com',
-                'cargo' => 'Product Owner',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/natan.png',
-            ],
-            [
-                'nome' => 'Guilherme Santos',
-                'email' => 'guilherme@email.com',
-                'cargo' => 'Desenvolvedor Backend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/guilherme.png',
-            ],
-            [
-                'nome' => 'Nicolas Ferreira',
-                'email' => 'nicolas@email.com',
-                'cargo' => 'Designer UI/UX',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/nicolas.png',
-            ],
-            [
-                'nome' => 'Ana Costa',
-                'email' => 'ana@email.com',
-                'cargo' => 'QA Engineer',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
-            ],
-        ],
-    ],
-    [
-        'titulo' => 'App Financeiro',
-        'descricao' => 'Aplicativo de controle financeiro pessoal com relatórios mensais.',
-        'role' => 'membro',
-        'membros_extra' => 2,
-        'criado_por' => 'Guilherme Santos',
-        'data_criacao' => '05/06/2025',
-        'membros' => [
-            [
-                'nome' => 'Guilherme Santos',
-                'email' => 'guilherme@email.com',
-                'cargo' => 'Desenvolvedor Backend',
-                'role' => 'admin',
-                'avatar' => BASE_URL . '/assets/images/guilherme.png',
-            ],
-            [
-                'nome' => 'Natan Oliveira',
-                'email' => 'natan@email.com',
-                'cargo' => 'Product Owner',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/natan.png',
-            ],
-            [
-                'nome' => 'Kami Vilela',
-                'email' => 'kami@email.com',
-                'cargo' => 'Desenvolvedor Frontend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/kami.png',
-            ],
-        ],
-    ],
-    [
-        'titulo' => 'Landing Page',
-        'descricao' => 'Criação da landing page institucional com foco em conversão.',
-        'role' => 'membro',
-        'membros_extra' => 5,
-        'criado_por' => 'Nicolas Ferreira',
-        'data_criacao' => '01/06/2025',
-        'membros' => [
-            [
-                'nome' => 'Nicolas Ferreira',
-                'email' => 'nicolas@email.com',
-                'cargo' => 'Designer UI/UX',
-                'role' => 'admin',
-                'avatar' => BASE_URL . '/assets/images/nicolas.png',
-            ],
-            [
-                'nome' => 'Natan Oliveira',
-                'email' => 'natan@email.com',
-                'cargo' => 'Product Owner',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/natan.png',
-            ],
-            [
-                'nome' => 'Kami Vilela',
-                'email' => 'kami@email.com',
-                'cargo' => 'Desenvolvedor Frontend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/kami.png',
-            ],
-            [
-                'nome' => 'Guilherme Santos',
-                'email' => 'guilherme@email.com',
-                'cargo' => 'Desenvolvedor Backend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/guilherme.png',
-            ],
-            [
-                'nome' => 'Ana Costa',
-                'email' => 'ana@email.com',
-                'cargo' => 'QA Engineer',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
-            ],
-            [
-                'nome' => 'Pedro Lima',
-                'email' => 'pedro@email.com',
-                'cargo' => 'Scrum Master',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
-            ],
-        ],
-    ],
-    [
-        'titulo' => 'Dashboard Admin',
-        'descricao' => 'Painel administrativo para gerenciamento de usuários e métricas.',
-        'role' => 'membro',
-        'membros_extra' => 3,
-        'criado_por' => 'Natan Oliveira',
-        'data_criacao' => '28/05/2025',
-        'membros' => [
-            [
-                'nome' => 'Natan Oliveira',
-                'email' => 'natan@email.com',
-                'cargo' => 'Product Owner',
-                'role' => 'admin',
-                'avatar' => BASE_URL . '/assets/images/natan.png',
-            ],
-            [
-                'nome' => 'Guilherme Santos',
-                'email' => 'guilherme@email.com',
-                'cargo' => 'Desenvolvedor Backend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/guilherme.png',
-            ],
-            [
-                'nome' => 'Nicolas Ferreira',
-                'email' => 'nicolas@email.com',
-                'cargo' => 'Designer UI/UX',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/nicolas.png',
-            ],
-            [
-                'nome' => 'Kami Vilela',
-                'email' => 'kami@email.com',
-                'cargo' => 'Desenvolvedor Frontend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/kami.png',
-            ],
-        ],
-    ],
-    [
-        'titulo' => 'E-commerce',
-        'descricao' => 'Plataforma de vendas online com carrinho e integração de pagamento.',
-        'role' => 'membro',
-        'membros_extra' => 7,
-        'criado_por' => 'Kami Vilela',
-        'data_criacao' => '20/05/2025',
-        'membros' => [
-            [
-                'nome' => 'Kami Vilela',
-                'email' => 'kami@email.com',
-                'cargo' => 'Desenvolvedor Frontend',
-                'role' => 'admin',
-                'avatar' => BASE_URL . '/assets/images/kami.png',
-            ],
-            [
-                'nome' => 'Natan Oliveira',
-                'email' => 'natan@email.com',
-                'cargo' => 'Product Owner',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/natan.png',
-            ],
-            [
-                'nome' => 'Guilherme Santos',
-                'email' => 'guilherme@email.com',
-                'cargo' => 'Desenvolvedor Backend',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/guilherme.png',
-            ],
-            [
-                'nome' => 'Nicolas Ferreira',
-                'email' => 'nicolas@email.com',
-                'cargo' => 'Designer UI/UX',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/nicolas.png',
-            ],
-            [
-                'nome' => 'Ana Costa',
-                'email' => 'ana@email.com',
-                'cargo' => 'QA Engineer',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
-            ],
-            [
-                'nome' => 'Pedro Lima',
-                'email' => 'pedro@email.com',
-                'cargo' => 'Scrum Master',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
-            ],
-            [
-                'nome' => 'Carla Mendes',
-                'email' => 'carla@email.com',
-                'cargo' => 'DevOps',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
-            ],
-            [
-                'nome' => 'Rafael Torres',
-                'email' => 'rafael@email.com',
-                'cargo' => 'Analista de Negócios',
-                'role' => 'membro',
-                'avatar' => BASE_URL . '/assets/images/Avatar (1).png',
-            ],
-        ],
-    ],
-];
+// Fallback de avatar
+if (empty($usuario['avatar'])) {
+    $usuario['avatar'] = BASE_URL . '/assets/images/Avatar (1).png';
+}
+
+// Projetos do usuário logado
+$projetosRaw = Projeto::listarPorUsuario($usuarioId);
+$projetos = [];
+
+foreach ($projetosRaw as $p) {
+    $membros = ProjetoMembro::listar((int) $p['id']);
+    $membrosFormatados = [];
+
+    foreach ($membros as $m) {
+        $avatar = $m['avatar'];
+        if (empty($avatar)) {
+            $avatar = BASE_URL . '/assets/images/Avatar (1).png';
+        }
+        $membrosFormatados[] = [
+            'id'     => $m['usuario_id'],
+            'nome'   => $m['nome'],
+            'email'  => $m['email'],
+            'cargo'  => $m['cargo'],
+            'role'   => $m['role'],
+            'avatar' => $avatar,
+        ];
+    }
+
+    $totalMembros = (int) $p['total_membros'];
+    $membrosVisiveis = 4;
+    $membrosExtra = max(0, $totalMembros - $membrosVisiveis);
+
+    $projetos[] = [
+        'id'            => $p['id'],
+        'titulo'        => $p['titulo'],
+        'descricao'     => $p['descricao'] ?? '',
+        'role'          => $p['role'],
+        'membros_extra' => $membrosExtra,
+        'criado_por'    => $p['criado_por_nome'],
+        'data_criacao'  => date('d/m/Y', strtotime($p['criado_em'])),
+        'membros'       => $membrosFormatados,
+    ];
+}
