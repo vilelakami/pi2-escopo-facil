@@ -10,7 +10,8 @@
         </div>
 
         <!-- Form -->
-        <form class="modal-lateral-form" id="form-gerenciar-projeto">
+        <form class="modal-lateral-form" id="form-gerenciar-projeto" method="POST" action="<?= BASE_URL ?>/actions/projetos/editar.php">
+            <input type="hidden" id="gerenciar-projeto-id" name="projeto_id" value="">
             <div class="form-group">
                 <label for="gerenciar-titulo">Título<span class="required">*</span></label>
                 <input type="text" id="gerenciar-titulo" name="titulo" placeholder="Nome do projeto" required>
@@ -38,9 +39,18 @@
             <!-- Membros -->
             <div class="modal-lateral-membros-header">
                 <h3 class="modal-lateral-membros-title">Membros</h3>
-                <button type="button" class="modal-lateral-btn-adicionar">
+                <button type="button" class="modal-lateral-btn-adicionar" id="btn-toggle-adicionar-membro">
                     <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+" class="modal-btn-icon"> Adicionar membro
                 </button>
+            </div>
+
+            <!-- Form inline: adicionar membro -->
+            <div class="adicionar-membro-inline" id="adicionar-membro-inline" style="display:none;">
+                <div class="adicionar-membro-row">
+                    <input type="email" id="adicionar-membro-email" placeholder="Email do membro" class="adicionar-membro-input">
+                    <button type="button" id="btn-confirmar-adicionar-membro" class="modal-btn-salvar adicionar-membro-btn">Adicionar</button>
+                </div>
+                <span class="adicionar-membro-erro" id="adicionar-membro-erro"></span>
             </div>
 
             <div class="modal-lateral-membros-grid" id="gerenciar-membros-grid">
@@ -61,9 +71,15 @@
     <div class="membro-card">
         <div class="membro-card-top">
             <span class="membro-card-cargo"></span>
-            <button type="button" class="membro-card-menu">
-                <img src="<?= BASE_URL ?>/assets/icon/three-dot.svg" alt="Menu">
-            </button>
+            <div class="membro-card-menu-wrapper">
+                <button type="button" class="membro-card-menu">
+                    <img src="<?= BASE_URL ?>/assets/icon/three-dot.svg" alt="Menu">
+                </button>
+                <div class="membro-card-dropdown">
+                    <button type="button" class="membro-card-dropdown-item membro-card-dropdown-promote"></button>
+                    <button type="button" class="membro-card-dropdown-item membro-card-dropdown-remove">Remover do grupo</button>
+                </div>
+            </div>
         </div>
         <div class="membro-card-info">
             <img src="" alt="Avatar" class="membro-card-avatar">

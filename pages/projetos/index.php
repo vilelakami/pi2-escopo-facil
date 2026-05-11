@@ -59,7 +59,7 @@
                 <?php if ($isAdmin): ?>
                     <button class="projeto-btn-gerenciar" data-index="<?= $index ?>">Gerenciar</button>
                 <?php else: ?>
-                    <button class="projeto-btn-sair">Sair</button>
+                    <button class="projeto-btn-detalhes" data-index="<?= $index ?>">Ver detalhes</button>
                 <?php endif; ?>
             </div>
         </div>
@@ -69,6 +69,7 @@
 
 <?php include __DIR__ . '/modais/novo-projeto.php'; ?>
 <?php include __DIR__ . '/modais/gerenciar-projeto.php'; ?>
+<?php include __DIR__ . '/modais/visualizar-projeto.php'; ?>
 
 <script>
     window.projetosMock = <?= json_encode($projetos, JSON_UNESCAPED_UNICODE) ?>;

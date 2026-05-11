@@ -7,12 +7,15 @@
 /* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    min-height: 100vh;
+    min-height: 80vh;
     background: var(--color-sidebar-bg);
     padding: var(--spacing-md);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    border-radius: var(--border-radius);
+    margin: var(--spacing-sm);
+    margin-right: 0;
 }
 
 .sidebar-logo {

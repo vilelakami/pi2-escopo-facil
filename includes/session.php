@@ -4,6 +4,11 @@
     session_start();
  }
 
+ // DEV ONLY: simula usuário logado (remover quando login estiver pronto)
+ if (!isset($_SESSION['usuario_id'])) {
+    $_SESSION['usuario_id'] = 1; // Natan Oliveira
+ }
+
  function usuarioLogado () {
     return $_SESSION['usuario_id'] ?? false;
  }

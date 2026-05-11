@@ -26,9 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        // TODO: integrar com backend
-        fecharModal();
+        // Submit nativo para o action PHP
     });
 
     // ===== Modal Lateral: Gerenciar Projeto =====
@@ -38,47 +36,106 @@ document.addEventListener('DOMContentLoaded', function () {
     const formGerenciar = document.getElementById('form-gerenciar-projeto');
     const membrosGrid = document.getElementById('gerenciar-membros-grid');
     const templateMembro = document.getElementById('template-membro-card');
+    const baseUrl = document.body.dataset.baseUrl || '';
+    var gerenciarProjetoIndex = null;
+
+    function renderMembrosGrid(projeto) {
+        membrosGrid.innerHTML = '';
+        if (!projeto.membros || projeto.membros.length === 0) return;
+
+        projeto.membros.forEach(function (membro, membroIndex) {
+            const clone = templateMembro.content.cloneNode(true);
+            const isAdmin = membro.role === 'admin';
+
+            const roleIcon = clone.querySelector('.membro-card-role-icon');
+            const roleImg = clone.querySelector('.membro-card-role-img');
+            roleIcon.classList.add(isAdmin ? 'membro-card-role-icon--admin' : 'membro-card-role-icon--membro');
+            roleImg.src = baseUrl + '/assets/icon/' + (isAdmin ? 'user-key.svg' : 'user-lock.svg');
+
+            clone.querySelector('.membro-card-cargo').textContent = membro.cargo;
+            clone.querySelector('.membro-card-avatar').src = membro.avatar;
+            clone.querySelector('.membro-card-avatar').alt = membro.nome;
+            clone.querySelector('.membro-card-nome').textContent = membro.nome;
+            clone.querySelector('.membro-card-email').textContent = membro.email;
+
+            const badge = clone.querySelector('.membro-card-badge');
+            badge.textContent = isAdmin ? 'Admin' : 'Membro';
+            badge.classList.add(isAdmin ? 'membro-card-badge--admin' : 'membro-card-badge--membro');
+
+            clone.querySelector('.membro-card-dropdown-promote').textContent =
+                isAdmin ? 'Rebaixar para Membro' : 'Promover para Admin';
+
+            membrosGrid.appendChild(clone);
+
+            // Wire actions after append (fragment loses references)
+            const card = membrosGrid.lastElementChild;
+            const menuBtn = card.querySelector('.membro-card-menu');
+            const dropdown = card.querySelector('.membro-card-dropdown');
+
+            menuBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                document.querySelectorAll('.membro-card-dropdown.open').forEach(function (d) {
+                    if (d !== dropdown) d.classList.remove('open');
+                });
+                dropdown.classList.toggle('open');
+            });
+
+            card.querySelector('.membro-card-dropdown-promote').addEventListener('click', function () {
+                var novoRole = isAdmin ? 'membro' : 'admin';
+                var projetoId = document.getElementById('gerenciar-projeto-id').value;
+                var formData = new FormData();
+                formData.append('projeto_id', projetoId);
+                formData.append('membro_id', membro.id);
+                formData.append('role', novoRole);
+
+                fetch(baseUrl + '/actions/membros/alterar-role.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                membro.role = novoRole;
+                dropdown.classList.remove('open');
+                renderMembrosGrid(projeto);
+            });
+
+            card.querySelector('.membro-card-dropdown-remove').addEventListener('click', function () {
+                var projetoId = document.getElementById('gerenciar-projeto-id').value;
+                var formData = new FormData();
+                formData.append('projeto_id', projetoId);
+                formData.append('membro_id', membro.id);
+
+                fetch(baseUrl + '/actions/membros/remover.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                projeto.membros.splice(membroIndex, 1);
+                dropdown.classList.remove('open');
+                renderMembrosGrid(projeto);
+            });
+        });
+    }
 
     function abrirGerenciar(index) {
         const projeto = window.projetosMock[index];
         if (!projeto) return;
 
+        document.getElementById('gerenciar-projeto-id').value = projeto.id || '';
         document.getElementById('gerenciar-titulo').value = projeto.titulo;
         document.getElementById('gerenciar-descricao').value = projeto.descricao;
         document.getElementById('gerenciar-criado-por').value = projeto.criado_por;
         document.getElementById('gerenciar-data-criacao').value = projeto.data_criacao;
 
-        // Render membros
-        membrosGrid.innerHTML = '';
-        if (projeto.membros && projeto.membros.length > 0) {
-            projeto.membros.forEach(function (membro) {
-                const clone = templateMembro.content.cloneNode(true);
-                const isAdmin = membro.role === 'admin';
-
-                const roleIcon = clone.querySelector('.membro-card-role-icon');
-                const roleImg = clone.querySelector('.membro-card-role-img');
-                roleIcon.classList.add(isAdmin ? 'membro-card-role-icon--admin' : 'membro-card-role-icon--membro');
-                roleImg.src = (document.body.dataset.baseUrl || '') + '/assets/icon/' + (isAdmin ? 'user-key.svg' : 'user-lock.svg');
-
-                clone.querySelector('.membro-card-cargo').textContent = membro.cargo;
-                clone.querySelector('.membro-card-avatar').src = membro.avatar;
-                clone.querySelector('.membro-card-avatar').alt = membro.nome;
-                clone.querySelector('.membro-card-nome').textContent = membro.nome;
-                clone.querySelector('.membro-card-email').textContent = membro.email;
-
-                const badge = clone.querySelector('.membro-card-badge');
-                badge.textContent = isAdmin ? 'Admin' : 'Membro';
-                badge.classList.add(isAdmin ? 'membro-card-badge--admin' : 'membro-card-badge--membro');
-
-                membrosGrid.appendChild(clone);
-            });
-        }
-
+        gerenciarProjetoIndex = index;
+        renderMembrosGrid(projeto);
         modalGerenciar.classList.add('active');
     }
 
     function fecharGerenciar() {
         modalGerenciar.classList.remove('active');
+        adicionarInline.style.display = 'none';
+        inputEmailMembro.value = '';
+        erroAdicionar.textContent = '';
     }
 
     // Delegate click nos botões "Gerenciar"
@@ -99,8 +156,162 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     formGerenciar.addEventListener('submit', function (e) {
-        e.preventDefault();
-        // TODO: integrar com backend
-        fecharGerenciar();
+        // Submit nativo para o action PHP
     });
+
+    // ===== Adicionar Membro (inline no modal gerenciar) =====
+    const btnToggleAdicionar = document.getElementById('btn-toggle-adicionar-membro');
+    const adicionarInline = document.getElementById('adicionar-membro-inline');
+    const inputEmailMembro = document.getElementById('adicionar-membro-email');
+    const btnConfirmarAdicionar = document.getElementById('btn-confirmar-adicionar-membro');
+    const erroAdicionar = document.getElementById('adicionar-membro-erro');
+
+    btnToggleAdicionar.addEventListener('click', function () {
+        const visivel = adicionarInline.style.display !== 'none';
+        adicionarInline.style.display = visivel ? 'none' : 'flex';
+        if (!visivel) inputEmailMembro.focus();
+    });
+
+    btnConfirmarAdicionar.addEventListener('click', function () {
+        const email = inputEmailMembro.value.trim();
+        const projetoId = document.getElementById('gerenciar-projeto-id').value;
+        erroAdicionar.textContent = '';
+
+        if (!email) {
+            erroAdicionar.textContent = 'Informe o email do membro.';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('projeto_id', projetoId);
+        formData.append('email', email);
+
+        fetch(baseUrl + '/actions/membros/adicionar.php', {
+            method: 'POST',
+            body: formData
+        }).then(function (response) {
+            if (response.redirected) {
+                const url = new URL(response.url);
+                const erro = url.searchParams.get('erro');
+                if (erro) {
+                    const msgs = {
+                        'usuario-nao-encontrado': 'Nenhum usuário encontrado com esse email.',
+                        'ja-membro': 'Esse usuário já é membro do projeto.',
+                        'nao-autorizado': 'Você não tem permissão para adicionar membros.',
+                        'email-vazio': 'Informe o email do membro.'
+                    };
+                    erroAdicionar.textContent = msgs[erro] || 'Erro ao adicionar membro.';
+                } else {
+                    sessionStorage.setItem('reabrir_gerenciar', gerenciarProjetoIndex);
+                    window.location.reload();
+                }
+            } else {
+                sessionStorage.setItem('reabrir_gerenciar', gerenciarProjetoIndex);
+                window.location.reload();
+            }
+        }).catch(function () {
+            erroAdicionar.textContent = 'Erro de conexão. Tente novamente.';
+        });
+    });
+
+    // ===== Modal Lateral: Visualizar Projeto (Membro) =====
+    const modalVisualizar = document.getElementById('modal-visualizar-projeto');
+    const btnVisualizarClose = document.getElementById('visualizar-close-btn');
+    const btnVisualizarFechar = document.getElementById('visualizar-fechar-btn');
+    const btnVisualizarSair = document.getElementById('visualizar-sair-btn');
+    const membrosGridVisualizar = document.getElementById('visualizar-membros-grid');
+    const templateMembroVisualizar = document.getElementById('template-membro-card-visualizar');
+
+    var visualizarProjetoId = null;
+
+    function abrirVisualizar(index) {
+        const projeto = window.projetosMock[index];
+        if (!projeto) return;
+
+        visualizarProjetoId = projeto.id;
+        document.getElementById('visualizar-titulo').value = projeto.titulo;
+        document.getElementById('visualizar-descricao').value = projeto.descricao;
+        document.getElementById('visualizar-criado-por').value = projeto.criado_por;
+        document.getElementById('visualizar-data-criacao').value = projeto.data_criacao;
+
+        membrosGridVisualizar.innerHTML = '';
+        if (projeto.membros && projeto.membros.length > 0) {
+            projeto.membros.forEach(function (membro) {
+                const clone = templateMembroVisualizar.content.cloneNode(true);
+                const isAdmin = membro.role === 'admin';
+                const baseUrl = document.body.dataset.baseUrl || '';
+
+                const roleIcon = clone.querySelector('.membro-card-role-icon');
+                const roleImg = clone.querySelector('.membro-card-role-img');
+                roleIcon.classList.add(isAdmin ? 'membro-card-role-icon--admin' : 'membro-card-role-icon--membro');
+                roleImg.src = baseUrl + '/assets/icon/' + (isAdmin ? 'user-key.svg' : 'user-lock.svg');
+
+                clone.querySelector('.membro-card-cargo').textContent = membro.cargo;
+                clone.querySelector('.membro-card-avatar').src = membro.avatar;
+                clone.querySelector('.membro-card-avatar').alt = membro.nome;
+                clone.querySelector('.membro-card-nome').textContent = membro.nome;
+                clone.querySelector('.membro-card-email').textContent = membro.email;
+
+                const badge = clone.querySelector('.membro-card-badge');
+                badge.textContent = isAdmin ? 'Admin' : 'Membro';
+                badge.classList.add(isAdmin ? 'membro-card-badge--admin' : 'membro-card-badge--membro');
+
+                membrosGridVisualizar.appendChild(clone);
+            });
+        } else {
+            membrosGridVisualizar.innerHTML = '<p class="modal-sem-membros">Nenhum membro visível.</p>';
+        }
+
+        modalVisualizar.classList.add('active');
+    }
+
+    function fecharVisualizar() {
+        modalVisualizar.classList.remove('active');
+    }
+
+    document.querySelectorAll('.projeto-btn-detalhes').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const index = parseInt(this.getAttribute('data-index'), 10);
+            abrirVisualizar(index);
+        });
+    });
+
+    btnVisualizarClose.addEventListener('click', fecharVisualizar);
+    btnVisualizarFechar.addEventListener('click', fecharVisualizar);
+
+    btnVisualizarSair.addEventListener('click', function () {
+        if (!visualizarProjetoId) return;
+        if (!confirm('Tem certeza que deseja sair do projeto?')) return;
+
+        var formData = new FormData();
+        formData.append('projeto_id', visualizarProjetoId);
+        formData.append('membro_id', document.body.dataset.usuarioId);
+
+        fetch(baseUrl + '/actions/membros/remover.php', {
+            method: 'POST',
+            body: formData
+        }).then(function () {
+            window.location.reload();
+        });
+    });
+
+    modalVisualizar.addEventListener('click', function (e) {
+        if (e.target === modalVisualizar) {
+            fecharVisualizar();
+        }
+    });
+
+    // Fechar qualquer dropdown de membro ao clicar fora
+    document.addEventListener('click', function () {
+        document.querySelectorAll('.membro-card-dropdown.open').forEach(function (d) {
+            d.classList.remove('open');
+        });
+    });
+
+    // Reabrir modal gerenciar após reload (ex: adicionar membro)
+    var reabrirIndex = sessionStorage.getItem('reabrir_gerenciar');
+    if (reabrirIndex !== null) {
+        sessionStorage.removeItem('reabrir_gerenciar');
+        abrirGerenciar(parseInt(reabrirIndex, 10));
+    }
 });

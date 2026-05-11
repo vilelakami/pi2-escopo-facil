@@ -1,11 +1,16 @@
 <?php
-// RESPONSABILIDADE: ponto de entrada para a action de deletar projeto (POST)
-// Arquivo chamado diretamente pelo formulário: action="actions/projetos/deletar.php"
-//
-// O que deve acontecer aqui, nesta ordem:
-//   1. session_start()
-//   2. require config.php
-//   3. require ProjetoController.php
-//   4. verificar se $_SESSION['usuario_id'] existe — se não, redireciona para login
-//   5. verificar se $_SERVER['REQUEST_METHOD'] === 'POST' — se não, redireciona para projetos
-//   6. chamar ProjetoController::deletar()
+session_start();
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../controllers/ProjetoController.php';
+
+if (!isset($_SESSION['usuario_id'])) {
+    header('Location: /?page=login');
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: /?page=projetos');
+    exit;
+}
+
+(new ProjetoController())->deletar();
