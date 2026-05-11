@@ -20,7 +20,7 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/layout.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/components.css">
     <?php if (file_exists(__DIR__ . '/assets/css/pages/' . $page . '.css')): ?>
-        <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/pages/<?= $page ?>.css">
+        <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/pages/<?= $page ?>.css?v=<?= time() ?>">
     <?php endif; ?>
 </head>
 <body data-base-url="<?= BASE_URL ?>" data-usuario-id="<?= $_SESSION['usuario_id'] ?? '' ?>">
@@ -51,5 +51,7 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
     <?php if (file_exists(__DIR__ . '/assets/js/pages/' . $page . '.js')): ?>
         <script src="<?= BASE_URL ?>/assets/js/pages/<?= $page ?>.js?v=<?= time()?>.js"></script>
     <?php endif; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
