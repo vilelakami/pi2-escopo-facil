@@ -1,31 +1,112 @@
-<!-- seção pai: todo o conteúdo -->
+<?php
+// conexão com o banco e variáveis globais
+require_once __DIR__ . '/../../config.php';
+
+// pegar o id do projeto vindo da url
+$projeto_id = isset($_GET['projeto_id']) ? (int)$_GET['projeto_id'] : 1;
+
+global $pdo;
+
+if(!isset($pdo)){
+    die("Erro: A conexão com o banco de dados (\$pdo) não foi inicializada no config.php.");
+}
+
+$nomeProjeto = "Projeto Sem Nome";
+// buscando o nome do projeto atual
+try {
+    $stmtProjeto = $pdo->prepare("SELECT titulo FROM projetos WHERE id = :id");
+    $stmtProjeto->execute([':id' => $projeto_id]);
+    $projeto = $stmtProjeto->fetch(PDO::FETCH_ASSOC);
+    $nomeProjeto = $projeto ? $projeto['titulo'] : "Projeto não encontrado.";
+} catch (PDOException $e){
+    $nomeProjeto = 'Erro: ' . $e->getMessage();
+}
+
+// buscando as tarefas do projet0
+$tarefas = [];
+try{
+    $stmtTarefas = $pdo->prepare("SELECT id, titulo, descricao, prioridade, status, prazo, criado_em FROM tarefas WHERE projeto_id = :projeto_id");
+    $stmtTarefas->execute([':projeto_id' => $projeto_id]);
+    $tarefas = $stmtTarefas->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Erro no banco: " . $e->getMessage());
+}
+
+function renderizarCardTarefa($tarefa) {
+    $prioridadeClasse = 'low';
+    $prioridadeTexto = 'Baixa';
+    $prioridadeGrafico = 'grafico-baixa.svg';
+
+    if ($tarefa['prioridade'] == 2) {
+        $prioridadeClasse = 'medium';
+        $prioridadeTexto = 'Média';
+        $prioridadeGrafico = 'grafico-media.svg';
+    } elseif ($tarefa['prioridade'] == 3) {
+        $prioridadeClasse = 'high';
+        $prioridadeTexto = 'Alta';
+        $prioridadeGrafico = 'grafico-alta.svg';
+    }
+
+    // Formata a data para o padrão brasileiro de forma segura se houver prazo
+    $dataFormatada = $tarefa['prazo'] ? date('d/m/Y', strtotime($tarefa['prazo'])) : 'Sem prazo';
+    ?>
+    <div class="task-card" draggable="true" data-id="<?= $tarefa['id'] ?>">
+        <div class="task-description">
+            <h3><?= htmlspecialchars($tarefa['titulo']) ?></h3>
+            <div>
+                <p><?= htmlspecialchars($tarefa['descricao']) ?></p>
+            </div>
+            <div class="task-status">
+                <div class="priority-tag <?= $prioridadeClasse ?>">
+                    <p>Prioridade: <?= $prioridadeTexto ?></p>
+                    <img src="<?= BASE_URL ?>/assets/icon/<?= $prioridadeGrafico ?>" alt="gráfico de prioridade">
+                </div>
+                <div class="datetime-priority">
+                    <p>Prazo:</p>
+                    <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
+                    <input 
+                        type="text" 
+                        value="<?= $dataFormatada ?>" 
+                        class="input-deadline" 
+                        readonly
+                    >
+                </div>
+            </div>
+            <div class="task-btn">
+                <a href="editar-tarefa.php?id=<?= $tarefa['id'] ?>" class="btn-edit">
+                    <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar"> Editar
+                </a>
+                <a href="excluir-tarefa.php?id=<?= $tarefa['id'] ?>" class="btn-delete" onclick="return confirm('Deseja excluir esta tarefa?')">
+                    Excluir
+                </a>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+?>
+
 <section class="page-content">
 
-    <!-- header, título do projeto, notificação e perfil do membro -->
     <div class="page-header">
-        <h1 class="headline">Projeto: Sistema de PI</h1>
+        <h1 class="headline">Projeto: <?= htmlspecialchars($nomeProjeto)?></h1>
 
         <div class="header-actions">
-
             <div class="notification-icon">
                 <img src="<?= BASE_URL ?>/assets/icon/bells.svg" alt="notificações">
             </div>
 
             <div class="member-profile">
                 <img src="<?= BASE_URL ?>/assets/icon/avatar.svg" alt="foto de perfil" class="avatar">
-
                 <div class="member-info">
                     <p class="member-name">Natan Oliveira</p>
                     <p class="member-category">Membro</p>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- barra de pesquisa, botão de nova tarefa -->
     <div class="task-search-container">
-
         <div class="search-input-wrapper">
             <img src="<?= BASE_URL ?>/assets/icon/search.svg" alt="lupa de pesquisa">
             <input 
@@ -35,189 +116,57 @@
         </div>
 
         <button class="btn-new-task-main">
-            <img src="assets/icon/plus.svg" alt="+">
+            <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+">
             Nova tarefa
         </button>
-
     </div>
 
-    <!-- quadro KANBAN, onde vão as tarefas -->
     <div class="kanban">
 
-        <!-- coluna 1: A Fazer, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
         <div class="kanban-column" id="col-1">
             <div class="task-title">
                 <h3 class="title">A Fazer</h3>
                 <img src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="A Fazer">
             </div>
-
-            <!-- função draggable para arrastar tarefas entre as colunas -->
-            <div class="task-card" draggable="true">
-
-                <div class="task-description">
-
-                    <h3>Adicionar foto</h3>
-
-                    <div>
-                        <p>
-                            Montar a estrutura inicial da tela de acesso
-                            com validação visual dos campos
-                        </p>
-                    </div>
-
-                    <div class="task-status">
-
-                        <div class="priority-tag low">
-                            <p>Prioridade: Baixa</p>
-                            <img src="<?= BASE_URL ?>/assets/icon/grafico-baixa.svg" alt="gráfico de baixa prioridade">
-                        </div>
-
-                        <div class="datetime-priority">
-                            <p>Prazo:</p>
-                            <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
-                            <input 
-                                type="text" 
-                                placeholder="19/02/2026" 
-                                class="input-deadline"
-                            >
-                        </div>
-
-                    </div>
-
-                    <div class="task-btn">
-
-                        <button class="btn-edit">
-                            <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
-                            Editar
-                        </button>
-
-                        <button class="btn-delete">
-                            Excluir
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
+            <?php
+            foreach ($tarefas as $tarefa){
+                if($tarefa['status'] == 1){ 
+                    renderizarCardTarefa($tarefa);
+                }
+            }
+            ?>
         </div>
 
-        <!-- coluna 2: Em Andamento, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
         <div class="kanban-column" id="col-2">
             <div class="task-title">
                 <h3 class="title">Em Andamento</h3>
                 <img src="<?= BASE_URL ?>/assets/icon/loading.svg" alt="Carregando">
             </div>
-
-            <!-- função draggable para arrastar tarefas entre as colunas -->
-            <div class="task-card" draggable="true">
-
-                <div class="task-description">
-
-                    <h3>Adicionar captcha</h3>
-
-                    <div class="background-description">
-                        <p>
-                            Montar a estrutura inicial da tela de acesso
-                            com validação visual dos campos
-                        </p>
-                    </div>
-
-                    <div class="task-status">
-
-                        <div class="priority-tag medium">
-                            <p>Prioridade: Média</p>
-                            <img src="<?= BASE_URL ?>/assets/icon/grafico-media.svg" alt="gráfico de média prioridade">
-                        </div>
-
-                        <div class="datetime-priority">
-                            <p>Prazo:</p>
-                            <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
-                            <input 
-                                type="text" 
-                                placeholder="19/02/2026" 
-                                class="input-deadline"
-                            >
-                        </div>
-
-                    </div>
-
-                    <div class="task-btn">
-
-                        <button class="btn-edit">
-                            <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
-                            Editar
-                        </button>
-
-                        <button class="btn-delete">
-                            Excluir
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
+            <?php
+            foreach($tarefas as $tarefa){
+                if($tarefa['status'] == 2){
+                    renderizarCardTarefa($tarefa);
+                }
+            }
+            ?>
         </div>
 
-        <!-- coluna 3: Concluído, contém: nome da coluna, título da tarefa, descrição, prioridade, prazo e botões: editar e excluir -->
         <div class="kanban-column" id="col-3">
             <div class="task-title">
                 <h3 class="title">Concluído</h3>
                 <img src="<?= BASE_URL ?>/assets/icon/concluido.svg" alt="Concluído">
             </div>
-
-            <!-- função draggable para arrastar as tarefas entre as colunas -->
-            <div class="task-card" draggable="true">
-
-                <div class="task-description">
-
-                    <h3>Criar tela de Login</h3>
-
-                    <div class="background-description">
-                        <p>
-                            Montar a estrutura inicial da tela de acesso
-                            com validação visual dos campos
-                        </p>
-                    </div>
-
-                    <div class="task-status">
-
-                        <div class="priority-tag high">
-                            <p>Prioridade: Alta</p>
-                            <img src="<?= BASE_URL ?>/assets/icon/grafico-alta.svg" alt="gráfico de alta prioridade">
-                        </div>
-
-                        <div class="datetime-priority">
-                            <p>Prazo:</p>
-                            <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
-                            <input 
-                                type="text" 
-                                placeholder="19/02/2026" 
-                                class="input-deadline"
-                            >
-                        </div>
-
-                    </div>
-
-                    <div class="task-btn">
-
-                        <button class="btn-edit">
-                            <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
-                            Editar
-                        </button>
-
-                        <button class="btn-delete">
-                            Excluir
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
+            <?php
+            foreach($tarefas as $tarefa){
+                if($tarefa['status'] == 3){
+                    renderizarCardTarefa($tarefa);
+                }
+            }
+            ?>
         </div>
 
     </div>
 
-    <!-- div referente a barra de pesquisa, se a tarefa não for encontrada, exibe a mensagem abaixo: -->
     <div id="no-tasks-message" style="display: none; text-align: center; padding: 20px; color: #666;">
         <p>Nenhuma tarefa encontrada com este termo.</p>
     </div>

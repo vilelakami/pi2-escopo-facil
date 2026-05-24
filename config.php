@@ -34,3 +34,4 @@ function getConnection(): PDO {
     ];
     return new PDO($dsn, DB_USER, DB_PASS, $options);
 }
+$pdo = getConnection();

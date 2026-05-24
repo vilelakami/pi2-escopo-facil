@@ -284,8 +284,10 @@ function setCustomSelectValue(select, value) {
 }
 
 // ========================= JS DO BOTÃO SALVAR/MODAL ========================
-// IA
-btnSalvar.onclick = function () {
+// IA - Atualizado para suportar persistência no PHP de forma nativa
+btnSalvar.onclick = function (e) {
+    e.preventDefault(); 
+
     const titulo = inputTitulo.value;
     const descricao = inputDescricao.value;
     const prioridade = selectPrioridade.dataset.value;
@@ -297,6 +299,21 @@ btnSalvar.onclick = function () {
         return;
     }
 
+    // 1. Sincroniza os Custom Selects com os Inputs Hidden
+    document.getElementById('hiddenPriority').value = prioridade;
+    document.getElementById('hiddenStatus').value = status;
+
+    if (!cardEditando) {
+        const formulario = document.getElementById('formNovaTarefa');
+        if (formulario) {
+            formulario.submit(); 
+        } else {
+            alert("Erro: Formulário HTML não foi encontrado na página.");
+        }
+        return; 
+    }
+
+    // 3. SE FOR EDIÇÃO 
     let dataExibicao = "";
     if (prazo === "") {
         const hoje = new Date();
@@ -320,24 +337,20 @@ btnSalvar.onclick = function () {
         <div class="task-description">
             <h3>${titulo}</h3>
             <p>${descricao}</p>
-            
             <div class="task-status">
                 <div class="priority-tag ${prio.classe}">
                     <p>Prioridade: ${prio.texto}</p>
                     <img src="assets/icon/${prio.icone}" alt="prioridade">
                 </div>
-
                 <div class="datetime-priority">
                     <p>Prazo:</p>
                     <img src="assets/icon/calendar.svg" alt="calendário">
                     <span class="deadline-text">${dataExibicao}</span>
                 </div>
             </div>
-
             <div class="task-btn">
                 <button class="btn-edit">
-                    <img src="assets/icon/edit.svg" alt="editar">
-                    Editar
+                    <img src="assets/icon/edit.svg" alt="editar"> Editar
                 </button>
                 <button class="btn-delete">Excluir</button>
             </div>
@@ -345,35 +358,16 @@ btnSalvar.onclick = function () {
     `;
 
     const colunaDestino = document.querySelector(`#col-${status}`);
+    cardEditando.innerHTML = cardHTML;
 
-    if (cardEditando) {
-        // Modo edição — atualiza o card existente
-        cardEditando.innerHTML = cardHTML;
-
-        // Se mudou de coluna, move o card
-        const colunaAtual = cardEditando.closest('.kanban-column');
-        if (colunaDestino && colunaAtual.id !== colunaDestino.id) {
-            colunaDestino.appendChild(cardEditando);
-        }
-
-        cardEditando = null;
-        modal.classList.remove('active');
-        limparCamposModal();
-    } else {
-        // Modo criação — cria novo card
-        const novoCard = document.createElement('div');
-        novoCard.classList.add('task-card');
-        novoCard.setAttribute('draggable', 'true');
-        novoCard.innerHTML = cardHTML;
-
-        if (colunaDestino) {
-            colunaDestino.appendChild(novoCard);
-            modal.classList.remove('active');
-            limparCamposModal();
-        } else {
-            alert("Coluna não encontrada!");
-        }
+    const colunaAtual = cardEditando.closest('.kanban-column');
+    if (colunaDestino && colunaAtual.id !== colunaDestino.id) {
+        colunaDestino.appendChild(cardEditando);
     }
+
+    cardEditando = null;
+    modal.classList.remove('active');
+    limparCamposModal();
 };
 
 // ==================== JS LIMPAR MODAL ============================
