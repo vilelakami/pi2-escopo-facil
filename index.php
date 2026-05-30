@@ -16,6 +16,7 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escopo Fácil</title>
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/images/Logo.png">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/layout.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/components.css">
