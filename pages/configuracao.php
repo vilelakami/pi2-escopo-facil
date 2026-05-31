@@ -1,3 +1,41 @@
+<?php
+require_once __DIR__ . '/../includes/auth_guard.php';
+require_once __DIR__ . '/../models/Usuario.php';
+
+$usuario = Usuario::buscarPorId((int) usuarioLogado());
+
+if (!$usuario) {
+    header('Location: ' . BASE_URL . '/?page=login');
+    exit;
+}
+
+$avatar = $usuario['avatar'] ?: BASE_URL . '/assets/images/Avatar (1).png';
+$sucesso = $_GET['sucesso'] ?? '';
+$erro = $_GET['erro'] ?? '';
+
+$mensagensSucesso = [
+    'perfil-atualizado' => 'Dados atualizados com sucesso.',
+    'senha-alterada' => 'Senha alterada com sucesso.',
+    '1' => 'Alteracao salva com sucesso.',
+];
+
+$mensagensErro = [
+    'campos-obrigatorios' => 'Preencha todos os campos obrigatorios.',
+    'email-invalido' => 'Informe um email valido.',
+    'email-em-uso' => 'Este email ja esta em uso.',
+    'cargo-invalido' => 'Selecione um cargo valido.',
+    'senha-curta' => 'A nova senha deve ter pelo menos 8 caracteres.',
+    'senhas-diferentes' => 'A confirmacao precisa ser igual a nova senha.',
+    'senha-atual-incorreta' => 'A senha atual esta incorreta.',
+    'erro-ao-atualizar' => 'Nao foi possivel atualizar os dados.',
+];
+
+function cargoSelecionado(string $cargoUsuario, string $cargoOption): string
+{
+    return $cargoUsuario === $cargoOption ? 'selected' : '';
+}
+?>
+
 <section class="configuracao">
 
     <!-- Header -->
@@ -9,10 +47,10 @@
                 <span class="notification-dot"></span>
             </div>
             <div class="configuracao-user">
-                <img src="<?= BASE_URL ?>/assets/images/Avatar (1).png" alt="Avatar" class="configuracao-avatar">
+                <img src="<?= htmlspecialchars($avatar) ?>" alt="Avatar" class="configuracao-avatar">
                 <div class="configuracao-user-info">
-                    <span class="configuracao-user-name">Natan Oliveira</span>
-                    <span class="configuracao-user-role">Membro</span>
+                    <span class="configuracao-user-name"><?= htmlspecialchars($usuario['nome']) ?></span>
+                    <span class="configuracao-user-role"><?= htmlspecialchars($usuario['cargo']) ?></span>
                 </div>
             </div>
         </div>
@@ -20,6 +58,17 @@
 
     <!-- Conteúdo principal -->
     <div class="configuracao-body">
+        <?php if ($sucesso && isset($mensagensSucesso[$sucesso])): ?>
+            <div class="configuracao-feedback configuracao-feedback--success">
+                <?= htmlspecialchars($mensagensSucesso[$sucesso]) ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($erro && isset($mensagensErro[$erro])): ?>
+            <div class="configuracao-feedback configuracao-feedback--error">
+                <?= htmlspecialchars($mensagensErro[$erro]) ?>
+            </div>
+        <?php endif; ?>
 
         <!-- Card: Dados pessoais -->
         <div class="configuracao-card">
@@ -28,25 +77,25 @@
                 <p class="configuracao-card-desc">Atualize suas informações de perfil.</p>
             </div>
 
-            <form class="configuracao-form" action="#" method="POST">
+            <form class="configuracao-form" action="<?= BASE_URL ?>/actions/usuario/atualizar.php" method="POST">
                 <div class="configuracao-form-row">
                     <div class="form-group">
                         <label for="config-nome">Nome<span class="required">*</span></label>
-                        <input type="text" id="config-nome" name="nome" value="Natan Oliveira">
+                        <input type="text" id="config-nome" name="nome" value="<?= htmlspecialchars($usuario['nome']) ?>">
                     </div>
                     <div class="form-group">
                         <label for="config-cargo">Cargo<span class="required">*</span></label>
                         <div class="input-select-wrapper">
                             <select id="config-cargo" name="cargo">
                                 <option value="" disabled>Selecione seu cargo</option>
-                                <option value="dev-frontend">Desenvolvedor Frontend</option>
-                                <option value="dev-backend">Desenvolvedor Backend</option>
-                                <option value="dev-fullstack" selected>Desenvolvedor Full Stack</option>
-                                <option value="ui-ux-designer">UI/UX Designer</option>
-                                <option value="product-owner">Product Owner</option>
-                                <option value="scrum-master">Scrum Master</option>
-                                <option value="tech-lead">Tech Lead</option>
-                                <option value="qa-testes">QA / Testes</option>
+                                <option value="dev-frontend" <?= cargoSelecionado($usuario['cargo'], 'dev-frontend') ?>>Desenvolvedor Frontend</option>
+                                <option value="dev-backend" <?= cargoSelecionado($usuario['cargo'], 'dev-backend') ?>>Desenvolvedor Backend</option>
+                                <option value="dev-fullstack" <?= cargoSelecionado($usuario['cargo'], 'dev-fullstack') ?>>Desenvolvedor Full Stack</option>
+                                <option value="ui-ux-designer" <?= cargoSelecionado($usuario['cargo'], 'ui-ux-designer') ?>>UI/UX Designer</option>
+                                <option value="product-owner" <?= cargoSelecionado($usuario['cargo'], 'product-owner') ?>>Product Owner</option>
+                                <option value="scrum-master" <?= cargoSelecionado($usuario['cargo'], 'scrum-master') ?>>Scrum Master</option>
+                                <option value="tech-lead" <?= cargoSelecionado($usuario['cargo'], 'tech-lead') ?>>Tech Lead</option>
+                                <option value="qa-testes" <?= cargoSelecionado($usuario['cargo'], 'qa-testes') ?>>QA / Testes</option>
                             </select>
                         </div>
                     </div>
@@ -54,7 +103,7 @@
 
                 <div class="form-group">
                     <label for="config-email">Email<span class="required">*</span></label>
-                    <input type="email" id="config-email" name="email" value="natan@email.com">
+                    <input type="email" id="config-email" name="email" value="<?= htmlspecialchars($usuario['email']) ?>">
                 </div>
 
                 <div class="configuracao-form-actions">
@@ -71,7 +120,7 @@
                 <p class="configuracao-card-desc">Para sua segurança, recomendamos uma senha forte.</p>
             </div>
 
-            <form class="configuracao-form" action="#" method="POST">
+            <form class="configuracao-form" action="<?= BASE_URL ?>/actions/usuario/alterar-senha.php" method="POST">
                 <div class="form-group">
                     <label for="config-senha-atual">Senha atual<span class="required">*</span></label>
                     <div class="input-password-wrapper">
@@ -95,7 +144,7 @@
                     <div class="form-group">
                         <label for="config-confirmar-senha">Confirmar senha<span class="required">*</span></label>
                         <div class="input-password-wrapper">
-                            <input type="password" id="config-confirmar-senha" name="confirmar_senha" placeholder="Confirme a nova senha" minlength="8">
+                            <input type="password" id="config-confirmar-senha" name="confirmar_nova_senha" placeholder="Confirme a nova senha" minlength="8">
                             <button type="button" class="btn-toggle-password" data-target="config-confirmar-senha" aria-label="Mostrar senha">
                                 <img src="<?= BASE_URL ?>/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
                             </button>

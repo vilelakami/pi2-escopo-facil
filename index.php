@@ -5,8 +5,24 @@ $page = $_GET['page'] ?? 'login';
 
 // Páginas de autenticação (layout próprio, sem sidebar)
 $authPages = ['login', 'cadastro', 'esqueci-senha', 'redefinir-senha', 'confirmacao'];
+if ($page === 'confirmar-email') {
+    require __DIR__ . '/actions/auth/confirmar-email.php';
+    exit;
+}
+
 if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page . '.php')) {
+    if (estaLogado() && in_array($page, ['login', 'cadastro'], true)) {
+        header('Location: ' . BASE_URL . '/index.php?page=dashboard');
+        exit;
+    }
+
     include __DIR__ . '/pages/auth/' . $page . '.php';
+    exit;
+}
+
+$allowed = ['dashboard', 'projetos', 'tarefas', 'membros', 'configuracao'];
+if (in_array($page, $allowed, true) && !estaLogado()) {
+    header('Location: ' . BASE_URL . '/index.php?page=login');
     exit;
 }
 ?>
@@ -29,7 +45,6 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
         <?php include __DIR__ . '/partials/sidebar.php'; ?>
         <main class="main">
             <?php
-                $allowed = ['dashboard', 'projetos', 'tarefas', 'membros', 'configuracao'];
                 if (in_array($page, $allowed)) {
                     $pageFile = __DIR__ . '/pages/' . $page . '.php';
                     $pageDirFile = __DIR__ . '/pages/' . $page . '/index.php';

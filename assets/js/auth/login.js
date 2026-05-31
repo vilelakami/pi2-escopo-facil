@@ -1,7 +1,6 @@
-// Login — Scripts
+// Login - Scripts
 
 document.addEventListener('DOMContentLoaded', () => {
-    //// Toggle de visibilidade da senha
     document.querySelectorAll('.btn-toggle-password').forEach((btn) => {
         btn.addEventListener('click', () => {
             const targetId = btn.dataset.target;
@@ -23,13 +22,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // Login temporário — redireciona para dashboard com qualquer dado
-    const form = document.querySelector('.login-form');
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            window.location.href = (window.BASE_URL || '') + '/index.php?page=dashboard';
-        });
-    }
 });

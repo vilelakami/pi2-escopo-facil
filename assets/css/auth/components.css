@@ -110,6 +110,18 @@
     padding-right: 32px;
 }
 
+.input-password-wrapper input::-ms-reveal,
+.input-password-wrapper input::-ms-clear {
+    display: none;
+}
+
+.input-password-wrapper input::-webkit-credentials-auto-fill-button,
+.input-password-wrapper input::-webkit-contacts-auto-fill-button {
+    visibility: hidden;
+    display: none;
+    pointer-events: none;
+}
+
 .btn-toggle-password {
     position: absolute;
     right: 16px;
@@ -208,6 +220,26 @@
 
 .btn-primary:hover {
     opacity: 0.9;
+}
+
+.auth-feedback {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.auth-feedback--success {
+    background: #e8f7ee;
+    border: 1px solid #9ed8b4;
+    color: #1f6b3a;
+}
+
+.auth-feedback--error {
+    background: #fdecec;
+    border: 1px solid #f2b8b8;
+    color: #9f2424;
 }
 
 /* --- Responsividade --- */

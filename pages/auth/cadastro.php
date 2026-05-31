@@ -1,14 +1,27 @@
-<?php require_once __DIR__ . '/../../config.php'; ?>
+<?php
+require_once __DIR__ . '/../../config.php';
+
+$erro = $_GET['erro'] ?? '';
+$mensagensErro = [
+    'campos-obrigatorios' => 'Preencha todos os campos obrigatorios.',
+    'email-invalido' => 'Informe um email valido.',
+    'cargo-invalido' => 'Selecione um cargo valido.',
+    'senha-curta' => 'A senha deve ter pelo menos 8 caracteres.',
+    'senhas-diferentes' => 'A confirmacao precisa ser igual a senha.',
+    'termos-obrigatorios' => 'Aceite os termos para criar a conta.',
+    'email-em-uso' => 'Este email ja esta em uso.',
+];
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro — Escopo Fácil</title>
+    <title>Cadastro - Escopo Facil</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/auth.css?v=<?= time() ?>">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/components.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/components.css?v=<?= time() ?>">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/cadastro.css">
 </head>
 
@@ -18,11 +31,17 @@
 
     <section class="cadastro">
         <div class="cadastro-header">
-            <img src="<?= BASE_URL ?>/assets/images/logo.png" alt="Escopo Fácil" class="cadastro-logo">
+            <img src="<?= BASE_URL ?>/assets/images/logo.png" alt="Escopo Facil" class="cadastro-logo">
             <h1 class="cadastro-title">Crie sua conta</h1>
         </div>
 
-        <form class="cadastro-form" action="#" method="POST">
+        <?php if ($erro && isset($mensagensErro[$erro])): ?>
+            <div class="auth-feedback auth-feedback--error">
+                <?= htmlspecialchars($mensagensErro[$erro]) ?>
+            </div>
+        <?php endif; ?>
+
+        <form class="cadastro-form" action="<?= BASE_URL ?>/actions/auth/cadastro.php" method="POST">
             <div class="form-row">
                 <div class="form-group">
                     <label for="nome">Nome<span class="required">*</span></label>
@@ -62,7 +81,7 @@
             </div>
 
             <div class="form-group">
-                <label for="confirmar-senha">Confirmação de senha<span class="required">*</span></label>
+                <label for="confirmar-senha">Confirmacao de senha<span class="required">*</span></label>
                 <div class="input-password-wrapper">
                     <input type="password" id="confirmar-senha" name="confirmar_senha" placeholder="Confirme sua senha" minlength="8" required>
                     <button type="button" class="btn-toggle-password" data-target="confirmar-senha" aria-label="Mostrar senha">
@@ -73,16 +92,15 @@
 
             <div class="form-terms">
                 <input type="radio" id="termos" name="termos" required>
-                <label for="termos">Para prosseguir você aceita os <a href="#">Termos e condições</a></label>
+                <label for="termos">Para prosseguir voce aceita os <a href="#">Termos e condicoes</a></label>
             </div>
 
             <button type="submit" class="btn-primary">Criar conta</button>
         </form>
 
         <p class="cadastro-footer">
-            Você já tem uma conta? <a href="<?= BASE_URL ?>/pages/auth/login.php">Fazer login</a>
+            Voce ja tem uma conta? <a href="<?= BASE_URL ?>/index.php?page=login">Fazer login</a>
         </p>
-        </div>
     </section>
     <?php $authContent = ob_get_clean(); ?>
     <?php include __DIR__ . '/../../partials/auth-layout.php'; ?>

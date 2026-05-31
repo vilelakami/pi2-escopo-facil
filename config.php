@@ -34,3 +34,10 @@ function getConnection(): PDO {
     ];
     return new PDO($dsn, DB_USER, DB_PASS, $options);
 }
+
+function appUrl(string $path = ''): string {
+    $path = '/' . ltrim($path, '/');
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    return $scheme . '://' . $host . BASE_URL . $path;
+}

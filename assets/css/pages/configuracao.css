@@ -96,6 +96,26 @@
     gap: var(--spacing-md);
 }
 
+.configuracao-feedback {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.configuracao-feedback--success {
+    background: #e8f7ee;
+    border: 1px solid #9ed8b4;
+    color: #1f6b3a;
+}
+
+.configuracao-feedback--error {
+    background: #fdecec;
+    border: 1px solid #f2b8b8;
+    color: #9f2424;
+}
+
 /* Card */
 .configuracao-card {
     background: var(--color-white);

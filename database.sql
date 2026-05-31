@@ -9,6 +9,8 @@ CREATE TABLE usuarios (
     nome          VARCHAR(150) NOT NULL,
     email         VARCHAR(255) NOT NULL UNIQUE,
     senha         VARCHAR(255) NOT NULL,
+    email_verificado TINYINT(1) NOT NULL DEFAULT 0,
+    email_verificado_em DATETIME DEFAULT NULL,
     cargo         ENUM(
                     'dev-frontend',
                     'dev-backend',
@@ -82,6 +84,19 @@ CREATE TABLE tokens_redefinicao (
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE tokens_confirmacao_email (
+    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    usuario_id  INT UNSIGNED NOT NULL,
+    token       VARCHAR(255) NOT NULL UNIQUE,
+    expira_em   DATETIME NOT NULL,
+    usado       TINYINT(1) NOT NULL DEFAULT 0,
+    criado_em   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_tokens_email_usuario
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE INDEX idx_tarefas_projeto_status ON tarefas(projeto_id, status);
 CREATE INDEX idx_tarefas_prazo          ON tarefas(prazo);
 CREATE INDEX idx_tokens_expira          ON tokens_redefinicao(expira_em);
+CREATE INDEX idx_tokens_email_expira    ON tokens_confirmacao_email(expira_em);
