@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/session.php';
 require_once __DIR__ . '/../../models/Projeto.php';
 require_once __DIR__ . '/../../models/ProjetoMembro.php';
 
+// Apesar do nome antigo, este arquivo monta dados reais para a tela de projetos.
 $usuarioId = usuarioLogado();
 
 // Dados do usuário logado

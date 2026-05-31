@@ -25,7 +25,7 @@
             <h1 class="title">Senha alterada com sucesso!</h1>
             <p class="subtitle">Pronto! Agora você já pode usar sua nova senha para acessar a conta.</p>
         </div>
-        <a href="<?= BASE_URL ?>/pages/auth/login.php" class="btn-primary">Voltar para o login</a>
+        <a href="<?= BASE_URL ?>/index.php?page=login" class="btn-primary">Voltar para o login</a>
     </section>
 
     <?php $authContent = ob_get_clean(); ?>

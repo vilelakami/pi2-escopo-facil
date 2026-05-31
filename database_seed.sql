@@ -7,6 +7,7 @@ USE escopo_facil;
 
 -- Limpa dados existentes (ordem respeita FKs)
 DELETE FROM tokens_redefinicao;
+DELETE FROM tokens_confirmacao_email;
 DELETE FROM tarefas;
 DELETE FROM projeto_membros;
 DELETE FROM projetos;
@@ -42,6 +43,8 @@ INSERT INTO usuarios (nome, email, senha, cargo) VALUES
 ('Otávio Pereira',     'otavio@email.com',     '$2y$12$n4cyvxoci7onXEUOsQVwiOUmEf./o4gjIiMlXg1o9kISttCa5EeCG', 'qa-testes'),
 ('Patrícia Gomes',     'patricia@email.com',   '$2y$12$n4cyvxoci7onXEUOsQVwiOUmEf./o4gjIiMlXg1o9kISttCa5EeCG', 'dev-fullstack'),
 ('Rafael Cardoso',     'rafael@email.com',     '$2y$12$n4cyvxoci7onXEUOsQVwiOUmEf./o4gjIiMlXg1o9kISttCa5EeCG', 'dev-frontend');
+
+UPDATE usuarios SET email_verificado = 1, email_verificado_em = NOW();
 
 -- ---------------------------------------------
 -- 4 Projetos

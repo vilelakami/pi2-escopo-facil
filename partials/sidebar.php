@@ -24,7 +24,7 @@
     </nav>
 
     <div class="sidebar-logout">
-        <a href="<?= BASE_URL ?>/index.php?page=login" class="sidebar-link">
+        <a href="<?= BASE_URL ?>/actions/auth/logout.php" class="sidebar-link">
             <img src="<?= BASE_URL ?>/assets/icon/logout.svg" alt=""> Sair
         </a>
     </div>

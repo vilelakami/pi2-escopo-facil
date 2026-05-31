@@ -232,3 +232,69 @@ Expiração: 1 hora — `date('Y-m-d H:i:s', strtotime('+1 hour'))`
 | 2 — Tarefas | Abrir projeto → clicar em tarefas → criar tarefa → recarregar página → tarefa persiste no banco |
 | 3 — Configuração | Editar nome/cargo → recarregar → dados atualizados; trocar senha → logout → login com nova senha funciona |
 | 4 — Reset senha | Submeter email → copiar URL exibida → acessar URL → definir nova senha → login com nova senha funciona |
+
+---
+
+## Migracoes e configuracoes adicionadas
+
+### Confirmacao de email no cadastro
+
+O cadastro agora cria usuarios com email pendente de confirmacao.
+
+Campos adicionados na tabela `usuarios`:
+```sql
+email_verificado TINYINT(1) NOT NULL DEFAULT 0
+email_verificado_em DATETIME DEFAULT NULL
+```
+
+Tabela adicionada:
+```sql
+tokens_confirmacao_email (
+  id, usuario_id, token,
+  expira_em, usado, criado_em
+)
+```
+
+Quem ja possui o banco criado localmente deve rodar:
+```bash
+php scripts/migrar-confirmacao-email.php
+```
+
+Esse script:
+- adiciona os campos de confirmacao na tabela `usuarios`, se ainda nao existirem;
+- marca usuarios existentes como confirmados;
+- cria a tabela `tokens_confirmacao_email`, se ainda nao existir;
+- cria o indice `idx_tokens_email_expira`, se ainda nao existir.
+
+### Variaveis de email
+
+Adicionar no `.env`:
+```env
+MAIL_FROM=no-reply@escopofacil.local
+MAIL_FROM_NAME=Escopo Facil
+MAIL_DEBUG_TOKEN_URL=true
+MAIL_DEBUG_CONFIRMATION_URL=true
+```
+
+Em ambiente local/XAMPP, o PHP normalmente nao envia email sem SMTP configurado. Por isso, as variaveis `MAIL_DEBUG_*` ficam como `true` para exibir as URLs de teste na tela.
+
+Em producao, depois de configurar envio real de email, usar:
+```env
+MAIL_DEBUG_TOKEN_URL=false
+MAIL_DEBUG_CONFIRMATION_URL=false
+```
+
+### Fluxos de email
+
+Confirmacao de cadastro:
+1. Usuario cria conta.
+2. Sistema gera token em `tokens_confirmacao_email`.
+3. Sistema envia link de confirmacao por email.
+4. Ao clicar no link, o usuario e redirecionado para o login com a mensagem:
+   `Confirmacao realizada com sucesso! Faca o login para continuar.`
+
+Recuperacao de senha:
+1. Usuario informa email.
+2. Sistema gera token em `tokens_redefinicao`.
+3. Sistema envia link de redefinicao por email.
+4. Ao redefinir a senha, o token e marcado como usado.

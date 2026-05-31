@@ -39,6 +39,8 @@ Armazena os dados de todos os usuários/cadastros do sistema.
 | `nome`         | VARCHAR(150)      | NOT NULL                          | Nome completo                      |
 | `email`        | VARCHAR(255)      | NOT NULL, UNIQUE                  | E-mail (usado no login)           |
 | `senha`        | VARCHAR(255)      | NOT NULL                          | Senha com hash (bcrypt)           |
+| `email_verificado` | TINYINT(1)   | NOT NULL, DEFAULT 0               | 0 = pendente, 1 = confirmado      |
+| `email_verificado_em` | DATETIME  | DEFAULT NULL                      | Data/hora da confirmacao do email |
 | `cargo`        | ENUM(...)         | NOT NULL                          | Cargo profissional                 |
 | `avatar`       | VARCHAR(500)      | DEFAULT NULL                      | Caminho da imagem de perfil       |
 | `criado_em`    | DATETIME          | DEFAULT CURRENT_TIMESTAMP         | Data de criação da conta          |
@@ -118,6 +120,21 @@ Armazena tokens temporários para o fluxo de redefinição de senha.
 | `expira_em`    | DATETIME          | NOT NULL                          | Validade do token                  |
 | `usado`        | TINYINT(1)        | NOT NULL, DEFAULT 0               | 0 = não usado, 1 = já utilizado   |
 | `criado_em`    | DATETIME          | DEFAULT CURRENT_TIMESTAMP         | Data de criação                    |
+
+---
+
+### 6. `tokens_confirmacao_email`
+
+Armazena tokens temporarios para confirmacao de email no cadastro.
+
+| Coluna         | Tipo              | Restricoes                        | Descricao                          |
+|----------------|-------------------|-----------------------------------|------------------------------------|
+| `id`           | INT UNSIGNED      | PK, AUTO_INCREMENT                | Identificador unico                |
+| `usuario_id`   | INT UNSIGNED      | NOT NULL, FK -> usuarios.id       | Usuario que precisa confirmar email|
+| `token`        | VARCHAR(255)      | NOT NULL, UNIQUE                  | Token aleatorio seguro             |
+| `expira_em`    | DATETIME          | NOT NULL                          | Validade do token                  |
+| `usado`        | TINYINT(1)        | NOT NULL, DEFAULT 0               | 0 = nao usado, 1 = ja utilizado    |
+| `criado_em`    | DATETIME          | DEFAULT CURRENT_TIMESTAMP         | Data de criacao                    |
 
 ---
 
@@ -283,6 +300,38 @@ CREATE INDEX idx_tarefas_projeto_status ON tarefas(projeto_id, status);
 CREATE INDEX idx_tarefas_prazo          ON tarefas(prazo);
 CREATE INDEX idx_tokens_expira          ON tokens_redefinicao(expira_em);
 CREATE INDEX idx_tokens_token           ON tokens_redefinicao(token);
+```
+
+---
+
+## Atualizacoes recentes do schema
+
+Para a confirmacao de email no cadastro, foram adicionados:
+
+```sql
+ALTER TABLE usuarios
+  ADD COLUMN email_verificado TINYINT(1) NOT NULL DEFAULT 0 AFTER senha,
+  ADD COLUMN email_verificado_em DATETIME DEFAULT NULL AFTER email_verificado;
+
+CREATE TABLE tokens_confirmacao_email (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT UNSIGNED NOT NULL,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    expira_em DATETIME NOT NULL,
+    usado TINYINT(1) NOT NULL DEFAULT 0,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_tokens_email_usuario
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX idx_tokens_email_expira ON tokens_confirmacao_email(expira_em);
+```
+
+Quem ja possui o banco criado deve rodar:
+
+```bash
+php scripts/migrar-confirmacao-email.php
 ```
 
 ---

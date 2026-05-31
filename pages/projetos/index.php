@@ -55,7 +55,7 @@
             </div>
             <div class="projeto-card-separator"></div>
             <div class="projeto-card-actions">
-                <button class="projeto-btn-ver">Ver tarefas</button>
+                <a class="projeto-btn-ver" href="<?= BASE_URL ?>/index.php?page=tarefas&projeto_id=<?= (int) $projeto['id'] ?>">Ver tarefas</a>
                 <?php if ($isAdmin): ?>
                     <button class="projeto-btn-gerenciar" data-index="<?= $index ?>">Gerenciar</button>
                 <?php else: ?>
