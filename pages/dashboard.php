@@ -78,7 +78,7 @@ $performanceJson = json_encode([1, 3, 2, 5, 4, 3, 2]);
 window.addEventListener('load', function() {
     const cores = ['#a31545', '#64748b', '#10b981'];
 
-    // --- GRÁFICO DE ROSCA (Status) ---
+    // GRÁFICO DE ROSCA (Status)
     const ctxStatus = document.getElementById('tasksChart');
     if (ctxStatus) {
         new Chart(ctxStatus, {
@@ -101,12 +101,12 @@ window.addEventListener('load', function() {
                         labels: { padding: 30, font: { size: 15, weight: '50' } }
                     }
                 },
-                cutout: '70%' // Deixa a rosca mais elegante/fina
+                cutout: '70%'
             }
         });
     }
 
-    // --- GRÁFICO DE LINHA (Ritmo) ---
+    // GRÁFICO DE LINHA (Ritmo) 
     const ctxLine = document.getElementById('lineChart');
     if (ctxLine) {
         new Chart(ctxLine, {

@@ -49,7 +49,7 @@ if (in_array($page, $authPages) && file_exists(__DIR__ . '/pages/auth/' . $page 
     <script src="<?= BASE_URL ?>/assets/js/app.js"></script>
 
     <?php if (file_exists(__DIR__ . '/assets/js/pages/' . $page . '.js')): ?>
-        <script src="<?= BASE_URL ?>/assets/js/pages/<?= $page ?>.js?v=<?= time()?>.js"></script>
+        <script src="<?= BASE_URL ?>/assets/js/pages/<?= $page ?>.js?v=<?= time()?>."></script>
     <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

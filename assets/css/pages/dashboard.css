@@ -24,7 +24,7 @@
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
+    border-color: #cbd5e1;
 }
 
 .stat-card h3 {
