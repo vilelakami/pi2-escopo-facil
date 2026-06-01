@@ -2,9 +2,9 @@
 
     <div class="modal">
 
-        <form action="<?= BASE_URL ?>/controllers/criar-tarefa.php" method="POST" id="formNovaTarefa">
-            
-            <input type="hidden" name="projeto_id" value="<?= $projeto_id ?>">
+        <form action="<?= BASE_URL ?>/actions/tarefas/criar.php" method="POST" id="formNovaTarefa">
+
+            <input type="hidden" name="projeto_id" value="<?= $projetoId ?? 0 ?>">
             <input type="hidden" name="taskPriority" id="hiddenPriority" value="1">
             <input type="hidden" name="taskStatus" id="hiddenStatus" value="1">
 
@@ -92,7 +92,7 @@
 
             <div class="modal-footer">
                 <button type="button" id="closeModal">Cancelar</button>
-                <button type="submit" class="btn-save" id="saveTask">
+                <button type="button" class="btn-save" id="saveTask">
                     <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+">
                     Salvar Tarefa
                 </button>

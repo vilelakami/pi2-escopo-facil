@@ -1,177 +1,184 @@
 <?php
-// conexão com o banco e variáveis globais
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../includes/auth_guard.php';
+require_once __DIR__ . '/../../models/Projeto.php';
+require_once __DIR__ . '/../../models/ProjetoMembro.php';
+require_once __DIR__ . '/../../models/Tarefa.php';
+require_once __DIR__ . '/../../models/Usuario.php';
 
-// pegar o id do projeto vindo da url
-$projeto_id = isset($_GET['projeto_id']) ? (int)$_GET['projeto_id'] : 1;
+$usuarioId = (int) usuarioLogado();
+$projetoId = (int) ($_GET['projeto_id'] ?? 0);
+$usuario = Usuario::buscarPorId($usuarioId);
+$projeto = $projetoId ? Projeto::buscarPorId($projetoId) : false;
+$isMembro = $projetoId ? ProjetoMembro::jaEMembro($projetoId, $usuarioId) : false;
+$tarefas = ($projeto && $isMembro) ? Tarefa::listarPorProjeto($projetoId) : [];
+require_once __DIR__ . '/../../includes/avatar.php';
+$avatarStr = $usuario['avatar'] ?? '';
 
-global $pdo;
+$prioridades = [
+    1 => ['texto' => 'Baixa', 'classe' => 'low', 'icone' => 'grafico-baixa.svg'],
+    2 => ['texto' => 'Media', 'classe' => 'medium', 'icone' => 'grafico-media.svg'],
+    3 => ['texto' => 'Alta', 'classe' => 'high', 'icone' => 'grafico-alta.svg'],
+];
 
-if(!isset($pdo)){
-    die("Erro: A conexão com o banco de dados (\$pdo) não foi inicializada no config.php.");
+function tarefasPorStatus(array $tarefas, int $status): array
+{
+    return array_values(array_filter($tarefas, fn ($tarefa) => (int) $tarefa['status'] === $status));
 }
 
-$nomeProjeto = "Projeto Sem Nome";
-// buscando o nome do projeto atual
-try {
-    $stmtProjeto = $pdo->prepare("SELECT titulo FROM projetos WHERE id = :id");
-    $stmtProjeto->execute([':id' => $projeto_id]);
-    $projeto = $stmtProjeto->fetch(PDO::FETCH_ASSOC);
-    $nomeProjeto = $projeto ? $projeto['titulo'] : "Projeto não encontrado.";
-} catch (PDOException $e){
-    $nomeProjeto = 'Erro: ' . $e->getMessage();
-}
-
-// buscando as tarefas do projet0
-$tarefas = [];
-try{
-    $stmtTarefas = $pdo->prepare("SELECT id, titulo, descricao, prioridade, status, prazo, criado_em FROM tarefas WHERE projeto_id = :projeto_id");
-    $stmtTarefas->execute([':projeto_id' => $projeto_id]);
-    $tarefas = $stmtTarefas->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Erro no banco: " . $e->getMessage());
-}
-
-function renderizarCardTarefa($tarefa) {
-    $prioridadeClasse = 'low';
-    $prioridadeTexto = 'Baixa';
-    $prioridadeGrafico = 'grafico-baixa.svg';
-
-    if ($tarefa['prioridade'] == 2) {
-        $prioridadeClasse = 'medium';
-        $prioridadeTexto = 'Média';
-        $prioridadeGrafico = 'grafico-media.svg';
-    } elseif ($tarefa['prioridade'] == 3) {
-        $prioridadeClasse = 'high';
-        $prioridadeTexto = 'Alta';
-        $prioridadeGrafico = 'grafico-alta.svg';
+function formatarPrazo(?string $prazo): string
+{
+    if (!$prazo) {
+        return 'Sem prazo';
     }
 
-    // Formata a data para o padrão brasileiro de forma segura se houver prazo
-    $dataFormatada = $tarefa['prazo'] ? date('d/m/Y', strtotime($tarefa['prazo'])) : 'Sem prazo';
-    ?>
-    <div class="task-card" draggable="true" data-id="<?= $tarefa['id'] ?>">
-        <div class="task-description">
-            <h3><?= htmlspecialchars($tarefa['titulo']) ?></h3>
-            <div>
-                <p><?= htmlspecialchars($tarefa['descricao']) ?></p>
-            </div>
-            <div class="task-status">
-                <div class="priority-tag <?= $prioridadeClasse ?>">
-                    <p>Prioridade: <?= $prioridadeTexto ?></p>
-                    <img src="<?= BASE_URL ?>/assets/icon/<?= $prioridadeGrafico ?>" alt="gráfico de prioridade">
-                </div>
-                <div class="datetime-priority">
-                    <p>Prazo:</p>
-                    <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendário">
-                    <input 
-                        type="text" 
-                        value="<?= $dataFormatada ?>" 
-                        class="input-deadline" 
-                        readonly
-                    >
-                </div>
-            </div>
-            <div class="task-btn">
-                <a href="editar-tarefa.php?id=<?= $tarefa['id'] ?>" class="btn-edit">
-                    <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar"> Editar
-                </a>
-                <a href="excluir-tarefa.php?id=<?= $tarefa['id'] ?>" class="btn-delete" onclick="return confirm('Deseja excluir esta tarefa?')">
-                    Excluir
-                </a>
-            </div>
-        </div>
-    </div>
-    <?php
+    return date('d/m/Y', strtotime($prazo));
 }
 ?>
 
-<section class="page-content">
+<section class="page-content" data-projeto-id="<?= $projetoId ?>">
 
     <div class="page-header">
-        <h1 class="headline">Projeto: <?= htmlspecialchars($nomeProjeto)?></h1>
+        <h1 class="headline">
+            <?= $projeto ? 'Projeto: ' . htmlspecialchars($projeto['titulo']) : 'Tarefas' ?>
+        </h1>
+
 
         <div class="header-actions">
             <div class="notification-icon">
-                <img src="<?= BASE_URL ?>/assets/icon/bells.svg" alt="notificações">
+                <img src="<?= BASE_URL ?>/assets/icon/bells.svg" alt="notificacoes">
             </div>
 
-            <div class="member-profile">
-                <img src="<?= BASE_URL ?>/assets/icon/avatar.svg" alt="foto de perfil" class="avatar">
+            <div class="member-profile user-menu-trigger" style="padding:6px 8px;border-radius:8px">
+                <?= renderAvatar($avatarStr, $usuario['nome'] ?? 'U', 'avatar') ?>
+
                 <div class="member-info">
-                    <p class="member-name">Natan Oliveira</p>
-                    <p class="member-category">Membro</p>
+                    <p class="member-name"><?= htmlspecialchars($usuario['nome'] ?? 'Usuario') ?></p>
+                    <p class="member-category"><?= htmlspecialchars($usuario['cargo'] ?? 'Membro') ?></p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="task-search-container">
-        <div class="search-input-wrapper">
-            <img src="<?= BASE_URL ?>/assets/icon/search.svg" alt="lupa de pesquisa">
-            <input 
-                type="text" 
-                placeholder="Busque por prioridade, data ou título da tarefa"
-            >
+    <?php if (!$projetoId): ?>
+        <?php $meusProjetos = Projeto::listarPorUsuario($usuarioId); ?>
+        <div class="no-project-message">
+            <?php if (empty($meusProjetos)): ?>
+                <p>Você não participa de nenhum projeto ainda.</p>
+                <a href="<?= BASE_URL ?>/index.php?page=projetos" class="no-project-btn">Ir para Projetos</a>
+            <?php else: ?>
+                <div class="input-select-wrapper no-project-select-wrapper">
+                    <select class="no-project-select" onchange="if(this.value) window.location.href='<?= BASE_URL ?>/index.php?page=tarefas&projeto_id='+this.value">
+                        <option value="" disabled selected>Selecione um projeto…</option>
+                        <?php foreach ($meusProjetos as $p): ?>
+                        <option value="<?= (int)$p['id'] ?>">
+                            <?= htmlspecialchars($p['titulo']) ?> (<?= $p['role'] === 'admin' ? 'Admin' : 'Membro' ?>)
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <?php endif; ?>
         </div>
-
-        <button class="btn-new-task-main">
-            <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+">
-            Nova tarefa
-        </button>
-    </div>
-
-    <div class="kanban">
-
-        <div class="kanban-column" id="col-1">
-            <div class="task-title">
-                <h3 class="title">A Fazer</h3>
-                <img src="<?= BASE_URL ?>/assets/icon/a-fazer.svg" alt="A Fazer">
+    <?php elseif (!$projeto): ?>
+        <div class="no-project-message">
+            <p>Projeto nao encontrado.</p>
+        </div>
+    <?php elseif (!$isMembro): ?>
+        <div class="no-project-message">
+            <p>Voce nao tem acesso as tarefas deste projeto.</p>
+        </div>
+    <?php else: ?>
+        <div class="task-search-container">
+            <div class="search-input-wrapper">
+                <img src="<?= BASE_URL ?>/assets/icon/search.svg" alt="lupa de pesquisa">
+                <input
+                    type="text"
+                    placeholder="Busque por prioridade, data ou titulo da tarefa"
+                >
             </div>
-            <?php
-            foreach ($tarefas as $tarefa){
-                if($tarefa['status'] == 1){ 
-                    renderizarCardTarefa($tarefa);
-                }
-            }
-            ?>
+
+
+            <button class="btn-new-task-main">
+                <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+">
+                Nova tarefa
+            </button>
         </div>
 
-        <div class="kanban-column" id="col-2">
-            <div class="task-title">
-                <h3 class="title">Em Andamento</h3>
-                <img src="<?= BASE_URL ?>/assets/icon/loading.svg" alt="Carregando">
-            </div>
+        <div class="kanban">
             <?php
-            foreach($tarefas as $tarefa){
-                if($tarefa['status'] == 2){
-                    renderizarCardTarefa($tarefa);
-                }
-            }
+                $colunas = [
+                    1 => ['titulo' => 'A Fazer', 'icone' => 'a-fazer.svg', 'alt' => 'A Fazer'],
+                    2 => ['titulo' => 'Em Andamento', 'icone' => 'loading.svg', 'alt' => 'Em Andamento'],
+                    3 => ['titulo' => 'Concluido', 'icone' => 'concluido.svg', 'alt' => 'Concluido'],
+                ];
             ?>
+
+            <?php foreach ($colunas as $status => $coluna): ?>
+                <div class="kanban-column" id="col-<?= $status ?>" data-status="<?= $status ?>">
+                    <div class="task-title">
+                        <h3 class="title"><?= $coluna['titulo'] ?></h3>
+                        <img src="<?= BASE_URL ?>/assets/icon/<?= $coluna['icone'] ?>" alt="<?= $coluna['alt'] ?>">
+                    </div>
+
+                    <?php foreach (tarefasPorStatus($tarefas, $status) as $tarefa):
+                        $prioridadeId = (int) $tarefa['prioridade'];
+                        $prioridade = $prioridades[$prioridadeId] ?? $prioridades[1];
+                    ?>
+                        <div
+                            class="task-card"
+                            draggable="true"
+                            data-id="<?= (int) $tarefa['id'] ?>"
+                            data-titulo="<?= htmlspecialchars($tarefa['titulo']) ?>"
+                            data-descricao="<?= htmlspecialchars($tarefa['descricao'] ?? '') ?>"
+                            data-prioridade="<?= $prioridadeId ?>"
+                            data-status="<?= (int) $tarefa['status'] ?>"
+                            data-prazo="<?= htmlspecialchars($tarefa['prazo'] ?? '') ?>"
+                        >
+                            <div class="task-description">
+                                <h3><?= htmlspecialchars($tarefa['titulo']) ?></h3>
+
+                                <div class="background-description">
+                                    <p><?= nl2br(htmlspecialchars($tarefa['descricao'] ?? '')) ?></p>
+                                </div>
+
+                                <div class="task-status">
+                                    <div class="priority-tag <?= $prioridade['classe'] ?>">
+                                        <p>Prioridade: <?= $prioridade['texto'] ?></p>
+                                        <img src="<?= BASE_URL ?>/assets/icon/<?= $prioridade['icone'] ?>" alt="prioridade">
+                                    </div>
+
+                                    <div class="datetime-priority">
+                                        <p>Prazo:</p>
+                                        <img src="<?= BASE_URL ?>/assets/icon/calendar.svg" alt="calendario">
+                                        <span class="deadline-text"><?= formatarPrazo($tarefa['prazo'] ?? null) ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="task-btn">
+                                    <button class="btn-edit">
+                                        <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
+                                        Editar
+                                    </button>
+
+                                    <button class="btn-delete">Excluir</button>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
         </div>
 
-        <div class="kanban-column" id="col-3">
-            <div class="task-title">
-                <h3 class="title">Concluído</h3>
-                <img src="<?= BASE_URL ?>/assets/icon/concluido.svg" alt="Concluído">
-            </div>
-            <?php
-            foreach($tarefas as $tarefa){
-                if($tarefa['status'] == 3){
-                    renderizarCardTarefa($tarefa);
-                }
-            }
-            ?>
+        <div id="no-tasks-message" style="display: none; text-align: center; padding: 20px; color: #666;">
+            <p>Nenhuma tarefa encontrada com este termo.</p>
         </div>
 
-    </div>
-
-    <div id="no-tasks-message" style="display: none; text-align: center; padding: 20px; color: #666;">
-        <p>Nenhuma tarefa encontrada com este termo.</p>
-    </div>
-
+        <?php include __DIR__ . '/nova-tarefa.php'; ?>
+    <?php endif; ?>
 </section>
 
-<?php include __DIR__ . '/nova-tarefa.php'; ?>
+<script>
+    window.projetoId = <?= json_encode($projetoId) ?>;
+    window.tarefasData = <?= json_encode($tarefas, JSON_UNESCAPED_UNICODE) ?>;
+</script>
 <script src="<?= BASE_URL ?>/assets/js/pages/tarefas.js"></script>
+

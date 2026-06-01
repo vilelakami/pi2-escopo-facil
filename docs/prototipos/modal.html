@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Variações de Modais — Projetos</title>
+  <style>
+    :root {
+      --primary: #8B0836;
+      --primary-dark: #6f062b;
+      --bg: #f7f4ea;
+      --surface: #FCF9E8;
+      --card: #ffffff;
+      --border: #e9e2d2;
+      --text: #030303;
+      --text-soft: #6f6a62;
+      --success: #2e9b63;
+      --warning: #d29b28;
+      --danger: #d45c5c;
+      --shadow: 0 20px 60px rgba(20, 21, 30, 0.12);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --font: Outfit, Inter, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      padding: 32px;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero,
+    .panel,
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 28px;
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      max-width: 860px;
+      line-height: 1.5;
+      color: var(--text-soft);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .btn,
+    .btn-outline,
+    .btn-subtle,
+    .icon-btn {
+      min-height: 46px;
+      border-radius: 14px;
+      border: none;
+      padding: 0 18px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: inherit;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: var(--surface);
+    }
+
+    .btn:hover { background: var(--primary-dark); }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-subtle {
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--primary);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .panel h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .panel p {
+      color: var(--text-soft);
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    .project-grid,
+    .variation-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .project-card {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .project-badge {
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge-admin { background: rgba(139, 8, 54, 0.08); color: var(--primary); }
+    .badge-member { background: rgba(46, 155, 99, 0.12); color: var(--success); }
+
+    .project-card h3 {
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+
+    .project-card p {
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .variation-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      background: #fff;
+    }
+
+    .variation-item h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .variation-item p {
+      color: var(--text-soft);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 16, 20, 0.48);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 30;
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal,
+    .drawer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal {
+      width: min(680px, 100%);
+      border-radius: 28px;
+    }
+
+    .modal.sm { width: min(480px, 100%); }
+    .modal.lg { width: min(860px, 100%); }
+
+    .drawer {
+      width: min(980px, 100%);
+      max-height: 90vh;
+      border-radius: 28px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .drawer-sidebar {
+      background: rgba(139, 8, 54, 0.05);
+      border-right: 1px solid var(--border);
+      padding: 22px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .drawer-tab {
+      min-height: 48px;
+      border-radius: 14px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      padding: 0 14px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .drawer-tab.active {
+      background: var(--primary);
+      color: var(--surface);
+    }
+
+    .drawer-content {
+      max-height: 90vh;
+      overflow: auto;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+      padding: 22px 24px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h2 {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .modal-header p {
+      color: var(--text-soft);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .close-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .modal-body {
+      display: grid;
+      gap: 16px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field,
+    .fake-input,
+    .member-row,
+    .permission-card,
+    .warning-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .field {
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 13px;
+      color: var(--text-soft);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 15px;
+      color: var(--text);
+      width: 100%;
+    }
+
+    .field textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .helper {
+      color: var(--text-soft);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .member-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .member-row {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .member-row h4 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .member-row p {
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .role-pill {
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .permission-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .permission-card {
+      padding: 16px;
+    }
+
+    .permission-card h4 {
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .permission-card p {
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .warning-box {
+      padding: 16px;
+      background: rgba(212, 92, 92, 0.06);
+      border-color: rgba(212, 92, 92, 0.18);
+    }
+
+    .warning-box h4 {
+      color: var(--danger);
+      margin-bottom: 8px;
+    }
+
+    .warning-box p {
+      color: #7e4747;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .drawer {
+        grid-template-columns: 1fr;
+      }
+
+      .drawer-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 18px; }
+      .field-grid,
+      .permission-grid,
+      .drawer-sidebar {
+        grid-template-columns: 1fr;
+      }
+      .member-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Variações de modais da tela de Projetos</h1>
+      <p>
+        Base de usabilidade para manter toda a operação de projeto concentrada na mesma tela: criar, gerenciar,
+        adicionar membros, alterar papéis e confirmar ações sensíveis sem abrir novas rotas desnecessárias.
+      </p>
+      <div class="toolbar">
+        <button class="btn" data-open="create-project">Criar projeto</button>
+        <button class="btn-outline" data-open="manage-project">Gerenciar projeto</button>
+        <button class="btn-outline" data-open="add-member">Adicionar membro</button>
+        <button class="btn-outline" data-open="change-role">Alterar papel</button>
+        <button class="btn-outline" data-open="leave-project">Sair do projeto</button>
+        <button class="btn-outline" data-open="archive-project">Arquivar projeto</button>
+      </div>
+    </section>
+
+    <section class="layout">
+      <section class="panel">
+        <h2>Tela central de Projetos</h2>
+        <p>Ideia central: a tela lista os projetos e os modais resolvem as ações pontuais. Isso reduz rotas, mantém contexto e simplifica o MVP.</p>
+        <div class="project-grid">
+          <article class="project-card">
+            <div class="project-top">
+              <div>
+                <h3>Escopo Fácil</h3>
+                <p>Projeto principal do PI. Usuário atual é admin e pode gerenciar membros e dados gerais.</p>
+              </div>
+              <span class="project-badge badge-admin">Admin</span>
+            </div>
+            <div class="inline-actions">
+              <button class="btn-outline">Abrir</button>
+              <button class="btn-subtle" data-open="manage-project">Gerenciar</button>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-top">
+              <div>
+                <h3>Portal Clínico</h3>
+                <p>Projeto em que o usuário participa como membro. Pode consultar e trabalhar, sem gerenciar pessoas.</p>
+              </div>
+              <span class="project-badge badge-member">Membro</span>
+            </div>
+            <div class="inline-actions">
+              <button class="btn-outline">Abrir</button>
+              <button class="btn-subtle" data-open="leave-project">Sair</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <h2>Variações necessárias</h2>
+        <p>Essas são as variações mínimas para a tela de projetos não depender de uma rota separada de configuração.</p>
+        <div class="variation-grid">
+          <article class="variation-item">
+            <h3>1. Criar projeto</h3>
+            <p>Modal curto para criar projeto com nome e descrição.</p>
+            <button class="btn" data-open="create-project">Abrir variação</button>
+          </article>
+          <article class="variation-item">
+            <h3>2. Gerenciar projeto</h3>
+            <p>Drawer/modal grande com abas: Geral, Membros e Permissões.</p>
+            <button class="btn" data-open="manage-project">Abrir variação</button>
+          </article>
+          <article class="variation-item">
+            <h3>3. Adicionar membro</h3>
+            <p>Modal curto com e-mail e papel inicial no projeto.</p>
+            <button class="btn" data-open="add-member">Abrir variação</button>
+          </article>
+          <article class="variation-item">
+            <h3>4. Alterar papel</h3>
+            <p>Confirmação leve para promover membro a admin ou rebaixar admin.</p>
+            <button class="btn" data-open="change-role">Abrir variação</button>
+          </article>
+          <article class="variation-item">
+            <h3>5. Sair do projeto</h3>
+            <p>Confirmação de saída para membro comum.</p>
+            <button class="btn" data-open="leave-project">Abrir variação</button>
+          </article>
+          <article class="variation-item">
+            <h3>6. Arquivar projeto</h3>
+            <p>Ação sensível para admin. Melhor tratar com modal de risco.</p>
+            <button class="btn" data-open="archive-project">Abrir variação</button>
+          </article>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="modalOverlay" class="overlay"></div>
+
+  <template id="tpl-create-project">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Criar projeto</h2>
+          <p>Fluxo rápido para quem acabou de entrar no sistema ou quer iniciar um novo projeto sem sair da tela atual.</p>
+        </div>
+        <button class="close-btn" data-close>✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-grid">
+          <div class="field">
+            <label>Nome do projeto</label>
+            <input type="text" placeholder="Ex: Escopo Fácil" />
+          </div>
+          <div class="field">
+            <label>Visibilidade</label>
+            <select>
+              <option>Privado</option>
+              <option>Equipe</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Descrição</label>
+          <textarea placeholder="Descreva brevemente o objetivo do projeto."></textarea>
+          <span class="helper">Descrição curta. Só o suficiente para identificar o projeto rapidamente.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" data-close>Cancelar</button>
+        <button class="btn">Criar projeto</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-add-member">
+    <div class="modal sm">
+      <div class="modal-header">
+        <div>
+          <h2>Adicionar membro</h2>
+          <p>Usar apenas para admin. Fluxo direto: localizar usuário existente e definir papel inicial no projeto.</p>
+        </div>
+        <button class="close-btn" data-close>✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>E-mail do usuário</label>
+          <input type="email" placeholder="usuario@empresa.com" />
+        </div>
+        <div class="field">
+          <label>Papel no projeto</label>
+          <select>
+            <option>Membro</option>
+            <option>Administrador</option>
+          </select>
+          <span class="helper">No MVP, o padrão ideal é adicionar como membro. Promover para admin deve ser decisão mais consciente.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" data-close>Cancelar</button>
+        <button class="btn">Adicionar</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-change-role">
+    <div class="modal sm">
+      <div class="modal-header">
+        <div>
+          <h2>Alterar papel no projeto</h2>
+          <p>Variação para promover membro a admin ou redefinir papel no contexto do projeto.</p>
+        </div>
+        <button class="close-btn" data-close>✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="member-row">
+          <div class="avatar">CG</div>
+          <div>
+            <h4>Camila Gomes</h4>
+            <p>camila@escopofacil.com</p>
+          </div>
+          <div>
+            <span class="role-pill">Membro</span>
+            <p class="helper">Papel atual</p>
+          </div>
+        </div>
+        <div class="field">
+          <label>Novo papel</label>
+          <select>
+            <option>Administrador</option>
+            <option selected>Membro</option>
+          </select>
+        </div>
+        <div class="warning-box">
+          <h4>Ação sensível</h4>
+          <p>Promover alguém para administrador libera gestão de projeto, membros e permissões. Não deve ser uma ação banal.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" data-close>Cancelar</button>
+        <button class="btn">Salvar alteração</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-leave-project">
+    <div class="modal sm">
+      <div class="modal-header">
+        <div>
+          <h2>Sair do projeto</h2>
+          <p>Confirmação simples para membro comum. Não precisa virar página separada.</p>
+        </div>
+        <button class="close-btn" data-close>✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-box" style="background: rgba(210, 155, 40, 0.08); border-color: rgba(210, 155, 40, 0.18);">
+          <h4 style="color: #9a6e10;">Você perderá acesso ao projeto</h4>
+          <p style="color: #7a6331;">Ao sair, você deixa de ver membros, tarefas e progresso deste projeto até ser adicionado novamente.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" data-close>Cancelar</button>
+        <button class="btn-danger">Sair do projeto</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-archive-project">
+    <div class="modal sm">
+      <div class="modal-header">
+        <div>
+          <h2>Arquivar projeto</h2>
+          <p>Tratamento de ação crítica. Melhor resolver com confirmação forte em vez de virar nova tela.</p>
+        </div>
+        <button class="close-btn" data-close>✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-box">
+          <h4>Confirmação obrigatória</h4>
+          <p>Arquivar o projeto o remove do fluxo principal da equipe. Essa ação deve ficar restrita a administradores.</p>
+        </div>
+        <div class="field">
+          <label>Digite o nome do projeto para confirmar</label>
+          <input type="text" placeholder="Escopo Fácil" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" data-close>Cancelar</button>
+        <button class="btn-danger">Arquivar projeto</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-manage-project">
+    <div class="drawer">
+      <aside class="drawer-sidebar">
+        <button class="drawer-tab active" data-tab="general">Geral</button>
+        <button class="drawer-tab" data-tab="members">Membros</button>
+        <button class="drawer-tab" data-tab="permissions">Permissões</button>
+      </aside>
+      <section class="drawer-content">
+        <div class="modal-header">
+          <div>
+            <h2>Gerenciar projeto</h2>
+            <p>Painel maior para manter a gestão do projeto na própria tela de Projetos, sem precisar criar rota separada de configuração.</p>
+          </div>
+          <button class="close-btn" data-close>✕</button>
+        </div>
+
+        <div class="modal-body tab-content" data-content="general">
+          <div class="field-grid">
+            <div class="field">
+              <label>Nome do projeto</label>
+              <input type="text" value="Escopo Fácil" />
+            </div>
+            <div class="field">
+              <label>Status</label>
+              <select>
+                <option>Ativo</option>
+                <option>Arquivado</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Descrição</label>
+            <textarea>Projeto principal do PI com foco em gestão de tarefas e organização do fluxo de equipe.</textarea>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label>Criado por</label>
+              <input type="text" value="Natan Oliveira" />
+            </div>
+            <div class="field">
+              <label>Data de criação</label>
+              <input type="text" value="14/03/2026" />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body tab-content hidden" data-content="members">
+          <div class="inline-actions" style="justify-content: space-between; margin-bottom: 4px;">
+            <div>
+              <strong>Membros do projeto</strong>
+              <p class="helper">Admin gerencia entradas e papéis aqui dentro.</p>
+            </div>
+            <button class="btn" data-open="add-member">Adicionar membro</button>
+          </div>
+          <div class="member-list">
+            <article class="member-row">
+              <div class="avatar">NO</div>
+              <div>
+                <h4>Natan Oliveira</h4>
+                <p>natan@escopofacil.com</p>
+              </div>
+              <div>
+                <span class="role-pill">Administrador</span>
+                <div class="inline-actions">
+                  <button class="btn-subtle">Transferir</button>
+                </div>
+              </div>
+            </article>
+            <article class="member-row">
+              <div class="avatar">CG</div>
+              <div>
+                <h4>Camila Gomes</h4>
+                <p>camila@escopofacil.com</p>
+              </div>
+              <div>
+                <span class="role-pill">Membro</span>
+                <div class="inline-actions">
+                  <button class="btn-outline" data-open="change-role">Promover</button>
+                  <button class="btn-subtle">Remover</button>
+                </div>
+              </div>
+            </article>
+            <article class="member-row">
+              <div class="avatar">NS</div>
+              <div>
+                <h4>Nicolas Souza</h4>
+                <p>nicolas@escopofacil.com</p>
+              </div>
+              <div>
+                <span class="role-pill">Membro</span>
+                <div class="inline-actions">
+                  <button class="btn-outline" data-open="change-role">Promover</button>
+                  <button class="btn-subtle">Remover</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="modal-body tab-content hidden" data-content="permissions">
+          <div class="permission-grid">
+            <article class="permission-card">
+              <h4>Administrador</h4>
+              <p>Pode editar dados do projeto, adicionar e remover membros, alterar papéis e arquivar o projeto.</p>
+            </article>
+            <article class="permission-card">
+              <h4>Membro</h4>
+              <p>Pode acessar o projeto, ver tarefas e trabalhar no fluxo operacional, sem governança do projeto.</p>
+            </article>
+          </div>
+          <div class="warning-box">
+            <h4>Regra de produto</h4>
+            <p>Admin não é atributo global do usuário. É papel dentro de um projeto específico. Isso precisa ficar claro na UI para não virar bagunça.</p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-outline" data-close>Fechar</button>
+          <button class="btn">Salvar alterações</button>
+        </div>
+      </section>
+    </div>
+  </template>
+
+  <script>
+    const overlay = document.getElementById('modalOverlay');
+
+    function bindOverlayActions() {
+      overlay.querySelectorAll('[data-close]').forEach(button => {
+        button.addEventListener('click', closeModal);
+      });
+
+      overlay.querySelectorAll('[data-open]').forEach(button => {
+        button.addEventListener('click', () => openModal(button.dataset.open));
+      });
+
+      overlay.querySelectorAll('.drawer-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.tab;
+          overlay.querySelectorAll('.drawer-tab').forEach(item => item.classList.toggle('active', item === tab));
+          overlay.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.toggle('hidden', content.dataset.content !== target);
+          });
+        });
+      });
+    }
+
+    function openModal(type) {
+      const tpl = document.getElementById(`tpl-${type}`);
+      if (!tpl) return;
+      overlay.innerHTML = '';
+      overlay.appendChild(tpl.content.cloneNode(true));
+      overlay.classList.add('open');
+      bindOverlayActions();
+    }
+
+    function closeModal() {
+      overlay.classList.remove('open');
+      overlay.innerHTML = '';
+    }
+
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) closeModal();
+    });
+
+    document.querySelectorAll('[data-open]').forEach(button => {
+      button.addEventListener('click', () => openModal(button.dataset.open));
+    });
+  </script>
+</body>
+</html>
