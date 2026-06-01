@@ -37,52 +37,62 @@ $mensagensSucesso = [
 
     <?php ob_start(); ?>
     <section class="login">
-        <div class="login-header">
-            <img src="<?= BASE_URL ?>/assets/images/logo.png" alt="Escopo Facil" class="login-logo">
-            <h1 class="login-title">Acesse sua conta</h1>
-            <p class="subtitle">Entre com seu e-mail e senha para continuar.</p>
+        <div class="login-content" data-login-content>
+            <div class="login-header">
+                <img src="<?= BASE_URL ?>/assets/images/logo.png" alt="Escopo Facil" class="login-logo">
+                <h1 class="login-title">Acesse sua conta</h1>
+                <p class="subtitle">Entre com seu e-mail e senha para continuar.</p>
+            </div>
+
+            <div class="auth-feedback auth-feedback--error login-feedback" data-login-feedback hidden></div>
+
+            <?php if ($erro && isset($mensagensErro[$erro])): ?>
+                <div class="auth-feedback auth-feedback--error">
+                    <?= htmlspecialchars($mensagensErro[$erro]) ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($sucesso && isset($mensagensSucesso[$sucesso])): ?>
+                <div class="auth-feedback auth-feedback--success">
+                    <?= htmlspecialchars($mensagensSucesso[$sucesso]) ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($confirmacaoUrl): ?>
+                <div class="auth-feedback auth-feedback--success">
+                    URL de confirmacao local: <a href="<?= htmlspecialchars($confirmacaoUrl) ?>"><?= htmlspecialchars($confirmacaoUrl) ?></a>
+                </div>
+            <?php endif; ?>
+
+            <form class="login-form" action="<?= BASE_URL ?>/actions/auth/login.php" method="POST" data-login-form>
+                <div class="form-group">
+                    <label for="email">Email<span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="seuemail@senac.edu.br" required>
+                </div>
+                <div class="form-group">
+                    <label for="senha">Senha<span class="required">*</span></label>
+                    <div class="input-password-wrapper">
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" minlength="6" required>
+                        <button type="button" class="btn-toggle-password" data-target="senha" aria-label="Mostrar senha">
+                            <img src="<?= BASE_URL ?>/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
+                        </button>
+                    </div>
+                </div>
+                <div class="esqueci-senha">
+                    <a href="<?= BASE_URL ?>/index.php?page=esqueci-senha">Esqueceu a senha?</a>
+                </div>
+                <button type="submit" class="btn-primary" data-login-submit>Entrar na conta</button>
+            </form>
+            <p class="login-footer">
+                Ainda nao tem uma conta?<a href="<?= BASE_URL ?>/index.php?page=cadastro"> Criar Conta</a>
+            </p>
         </div>
 
-        <?php if ($erro && isset($mensagensErro[$erro])): ?>
-            <div class="auth-feedback auth-feedback--error">
-                <?= htmlspecialchars($mensagensErro[$erro]) ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($sucesso && isset($mensagensSucesso[$sucesso])): ?>
-            <div class="auth-feedback auth-feedback--success">
-                <?= htmlspecialchars($mensagensSucesso[$sucesso]) ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($confirmacaoUrl): ?>
-            <div class="auth-feedback auth-feedback--success">
-                URL de confirmacao local: <a href="<?= htmlspecialchars($confirmacaoUrl) ?>"><?= htmlspecialchars($confirmacaoUrl) ?></a>
-            </div>
-        <?php endif; ?>
-
-        <form class="login-form" action="<?= BASE_URL ?>/actions/auth/login.php" method="POST">
-            <div class="form-group">
-                <label for="email">Email<span class="required">*</span></label>
-                <input type="email" id="email" name="email" placeholder="seuemail@senac.edu.br" required>
-            </div>
-            <div class="form-group">
-                <label for="senha">Senha<span class="required">*</span></label>
-                <div class="input-password-wrapper">
-                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" minlength="6" required>
-                    <button type="button" class="btn-toggle-password" data-target="senha" aria-label="Mostrar senha">
-                        <img src="<?= BASE_URL ?>/assets/icon/eye-off.svg" alt="Mostrar senha" width="24" height="24">
-                    </button>
-                </div>
-            </div>
-            <div class="esqueci-senha">
-                <a href="<?= BASE_URL ?>/index.php?page=esqueci-senha">Esqueceu a senha?</a>
-            </div>
-            <button type="submit" class="btn-primary">Entrar na conta</button>
-        </form>
-        <p class="login-footer">
-            Ainda nao tem uma conta?<a href="<?= BASE_URL ?>/index.php?page=cadastro"> Criar Conta</a>
-        </p>
+        <div class="login-animation" data-login-animation hidden>
+            <video class="login-animation-video" muted playsinline preload="auto">
+                <source src="<?= BASE_URL ?>/assets/videos/animacao_Escopo_Facil.webm" type="video/webm">
+            </video>
+        </div>
     </section>
     <?php $authContent = ob_get_clean(); ?>
     <?php include __DIR__ . '/../../partials/auth-layout.php'; ?>
