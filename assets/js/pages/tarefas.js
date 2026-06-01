@@ -240,7 +240,8 @@ document.addEventListener('click', (e) => {
 });
 
 if (btnSalvar) {
-    btnSalvar.addEventListener('click', () => {
+    btnSalvar.addEventListener('click', (e) => {
+        e.preventDefault();
         if (inputTitulo.value.trim() === '') {
             alert('O titulo e obrigatorio!');
             return;

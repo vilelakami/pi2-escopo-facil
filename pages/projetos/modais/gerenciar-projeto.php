@@ -47,9 +47,17 @@
             <!-- Form inline: adicionar membro -->
             <div class="adicionar-membro-inline" id="adicionar-membro-inline" style="display:none;">
                 <div class="adicionar-membro-row">
-                    <input type="email" id="adicionar-membro-email" placeholder="Email do membro" class="adicionar-membro-input">
-                    <button type="button" id="btn-confirmar-adicionar-membro" class="modal-btn-salvar adicionar-membro-btn">Adicionar</button>
+                    <div class="adicionar-membro-search-wrapper">
+                        <input type="text"
+                               id="adicionar-membro-busca"
+                               placeholder="Buscar por nome ou email…"
+                               class="adicionar-membro-input"
+                               autocomplete="off">
+                        <ul class="adicionar-membro-sugestoes" id="adicionar-membro-sugestoes" hidden></ul>
+                    </div>
+                    <button type="button" id="btn-confirmar-adicionar-membro" class="modal-btn-salvar adicionar-membro-btn" disabled>Adicionar</button>
                 </div>
+                <input type="hidden" id="adicionar-membro-email" value="">
                 <span class="adicionar-membro-erro" id="adicionar-membro-erro"></span>
             </div>
 
@@ -82,7 +90,7 @@
             </div>
         </div>
         <div class="membro-card-info">
-            <img src="" alt="Avatar" class="membro-card-avatar">
+            <div class="membro-card-avatar"></div>
             <div class="membro-card-texts">
                 <span class="membro-card-nome"></span>
                 <span class="membro-card-email"></span>

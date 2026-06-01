@@ -25,11 +25,13 @@ $mensagensSucesso = [
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/assets/icon/logo/Vector%20(3).svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Escopo Facil</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/auth.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/components.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/toast.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/login.css?v=<?= time() ?>">
 </head>
 
@@ -93,13 +95,13 @@ $mensagensSucesso = [
                 <source src="<?= BASE_URL ?>/assets/videos/animacao_Escopo_Facil.webm" type="video/webm">
             </video>
         </div>
+
     </section>
     <?php $authContent = ob_get_clean(); ?>
     <?php include __DIR__ . '/../../partials/auth-layout.php'; ?>
 
-    <script>
-        window.BASE_URL = '<?= BASE_URL ?>';
-    </script>
+    <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
+    <script src="<?= BASE_URL ?>/assets/js/toast.js"></script>
     <script src="<?= BASE_URL ?>/assets/js/auth/login.js?v=<?= time() ?>"></script>
 </body>
 

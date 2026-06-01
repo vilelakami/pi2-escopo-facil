@@ -1,4 +1,7 @@
-<?php include __DIR__ . '/mocks.php'; ?>
+<?php
+include __DIR__ . '/mocks.php';
+require_once __DIR__ . '/../../includes/avatar.php';
+?>
 
 <div class="projetos">
     <!-- Header -->
@@ -9,8 +12,8 @@
                 <img src="<?= BASE_URL ?>/assets/icon/bell.svg" alt="Notificações">
                 <span class="notification-dot"></span>
             </div>
-            <div class="projetos-user">
-                <img src="<?= htmlspecialchars($usuario['avatar']) ?>" alt="Avatar" class="projetos-avatar">
+            <div class="projetos-user user-menu-trigger" style="padding:6px 8px;gap:10px">
+                <?= renderAvatar($usuario['avatar'], $usuario['nome'], 'projetos-avatar') ?>
                 <div class="projetos-user-info">
                     <span class="projetos-user-name"><?= htmlspecialchars($usuario['nome']) ?></span>
                     <span class="projetos-user-role"><?= htmlspecialchars($usuario['role']) ?></span>
@@ -23,7 +26,7 @@
     <div class="projetos-toolbar">
         <div class="projetos-search">
             <img src="<?= BASE_URL ?>/assets/icon/search.svg" alt="Buscar" class="projetos-search-icon">
-            <input type="text" placeholder="Busque por prioridade, data ou titulo da tarefa" class="projetos-search-input">
+            <input type="text" placeholder="Busque por título ou descrição do projeto…" class="projetos-search-input" id="projetos-search-input">
         </div>
         <button class="projetos-btn-criar">
             <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+" class="projetos-btn-icon"> Criar projeto
@@ -38,7 +41,7 @@
             $icon = $isAdmin ? BASE_URL . '/assets/icon/user-key.svg' : BASE_URL . '/assets/icon/user-lock.svg';
             $badgeText = $isAdmin ? 'Admin' : 'Membro';
         ?>
-        <div class="projeto-card">
+        <div class="projeto-card" data-search="<?= htmlspecialchars(strtolower($projeto['titulo'] . ' ' . $projeto['descricao'] . ' ' . $badgeText), ENT_QUOTES) ?>">
             <div class="projeto-card-top">
                 <div class="projeto-card-icon projeto-card-icon--<?= $roleClass ?>">
                     <img src="<?= $icon ?>" alt="<?= $badgeText ?>">
@@ -48,7 +51,9 @@
             <h2 class="projeto-card-title"><?= htmlspecialchars($projeto['titulo']) ?></h2>
             <p class="projeto-card-desc"><?= htmlspecialchars($projeto['descricao']) ?></p>
             <div class="projeto-card-avatars">
-                <img src="<?= BASE_URL ?>/assets/images/Avatar Group.png" alt="Membros">
+                <?php foreach (array_slice($projeto['membros'], 0, 4) as $membro): ?>
+                    <?= renderAvatar($membro['avatar'], $membro['nome'], 'projeto-card-avatar-item') ?>
+                <?php endforeach; ?>
                 <?php if ($projeto['membros_extra'] > 0): ?>
                     <span class="projeto-card-extra">+<?= $projeto['membros_extra'] ?></span>
                 <?php endif; ?>
