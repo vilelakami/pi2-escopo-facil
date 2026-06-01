@@ -42,6 +42,7 @@ function formatarPrazo(?string $prazo): string
             <?= $projeto ? 'Projeto: ' . htmlspecialchars($projeto['titulo']) : 'Tarefas' ?>
         </h1>
 
+
         <div class="header-actions">
             <div class="notification-icon">
                 <img src="<?= BASE_URL ?>/assets/icon/bells.svg" alt="notificacoes">
@@ -59,8 +60,23 @@ function formatarPrazo(?string $prazo): string
     </div>
 
     <?php if (!$projetoId): ?>
+        <?php $meusProjetos = Projeto::listarPorUsuario($usuarioId); ?>
         <div class="no-project-message">
-            <p>Selecione um projeto para visualizar as tarefas.</p>
+            <?php if (empty($meusProjetos)): ?>
+                <p>Você não participa de nenhum projeto ainda.</p>
+                <a href="<?= BASE_URL ?>/index.php?page=projetos" class="no-project-btn">Ir para Projetos</a>
+            <?php else: ?>
+                <div class="input-select-wrapper no-project-select-wrapper">
+                    <select class="no-project-select" onchange="if(this.value) window.location.href='<?= BASE_URL ?>/index.php?page=tarefas&projeto_id='+this.value">
+                        <option value="" disabled selected>Selecione um projeto…</option>
+                        <?php foreach ($meusProjetos as $p): ?>
+                        <option value="<?= (int)$p['id'] ?>">
+                            <?= htmlspecialchars($p['titulo']) ?> (<?= $p['role'] === 'admin' ? 'Admin' : 'Membro' ?>)
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <?php endif; ?>
         </div>
     <?php elseif (!$projeto): ?>
         <div class="no-project-message">
@@ -79,6 +95,7 @@ function formatarPrazo(?string $prazo): string
                     placeholder="Busque por prioridade, data ou titulo da tarefa"
                 >
             </div>
+
 
             <button class="btn-new-task-main">
                 <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+">
@@ -163,3 +180,5 @@ function formatarPrazo(?string $prazo): string
     window.projetoId = <?= json_encode($projetoId) ?>;
     window.tarefasData = <?= json_encode($tarefas, JSON_UNESCAPED_UNICODE) ?>;
 </script>
+<script src="<?= BASE_URL ?>/assets/js/pages/tarefas.js"></script>
+

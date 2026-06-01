@@ -623,3 +623,100 @@ button {
         font-size: 20px;
     }
 }
+/* ── Seleção de projeto ── */
+.no-project-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 8px 0;
+}
+
+.no-project-message > p {
+    font-size: 15px;
+    color: var(--color-text-secondary, #697386);
+}
+
+.no-project-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 38px;
+    padding: 0 20px;
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+
+.no-project-btn:hover { opacity: 0.88; }
+
+.no-project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 480px;
+}
+
+.no-project-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--color-white, #fff);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: box-shadow 0.15s;
+}
+
+.no-project-item:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.no-project-item-nome {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-strong, #1a1a2e);
+}
+
+.no-project-item-role {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 5px;
+}
+
+.no-project-item-role.admin {
+    background: var(--color-badge-admin-bg, #fde8e8);
+    color: var(--color-badge-admin-text, #c0392b);
+}
+
+.no-project-item-role.membro {
+    background: var(--color-badge-membro-bg, #e8eaf6);
+    color: var(--color-badge-membro-text, #3949ab);
+}
+
+.no-project-select-wrapper {
+    width: 320px;
+}
+
+.no-project-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: var(--color-text-strong, #1a1a2e);
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.no-project-select:focus {
+    border-color: var(--color-primary);
+}
