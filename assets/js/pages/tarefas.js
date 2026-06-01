@@ -77,10 +77,11 @@ function montarFormDataDoCard(card, statusOverride = null) {
 // MODAL
 // =====================
 
-function abrirModalNovo() {
+function abrirModalNovo(statusInicial = '1') {
     cardEditando = null;
     modalTitulo.textContent = 'Nova Tarefa';
     limparCamposModal();
+    setCustomSelectValue(selectStatus, String(statusInicial));
     modal.classList.add('active');
 }
 
@@ -135,11 +136,124 @@ function setCustomSelectValue(select, value) {
     select.dataset.value = value;
 
     const options = select.querySelectorAll('li');
-
     options.forEach((opt) => {
         opt.classList.toggle('selected', opt.dataset.value === value);
+        if (opt.dataset.value === value) {
+            const icon = select.querySelector('.custom-select-icon');
+            const text = select.querySelector('.custom-select-text');
+            if (icon) icon.src = opt.dataset.icon || '';
+            if (text) text.textContent = opt.textContent.trim();
+        }
     });
 }
+
+// =====================
+// CUSTOM SELECT TOGGLE
+// =====================
+
+document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.custom-select-trigger');
+    const option = e.target.closest('.custom-select-options li');
+
+    if (trigger) {
+        const select = trigger.closest('.custom-select');
+        document.querySelectorAll('.custom-select.open').forEach((s) => {
+            if (s !== select) s.classList.remove('open');
+        });
+        select.classList.toggle('open');
+        e.stopPropagation();
+        return;
+    }
+
+    if (option) {
+        const select = option.closest('.custom-select');
+        setCustomSelectValue(select, option.dataset.value);
+        select.classList.remove('open');
+        e.stopPropagation();
+        return;
+    }
+
+    document.querySelectorAll('.custom-select.open').forEach((s) => s.classList.remove('open'));
+});
+
+// =====================
+// CARD DETAIL MODAL
+// =====================
+
+const cardDetailOverlay = document.getElementById('cardDetailOverlay');
+const detailTitleInput = document.getElementById('detailTitle');
+const detailDescriptionInput = document.getElementById('detailDescription');
+const detailPrioritySelect = document.getElementById('detailPriority');
+const detailStatusSelect = document.getElementById('detailStatus');
+const detailPrazoInput = document.getElementById('detailPrazo');
+const btnCloseDetail = document.getElementById('closeCardDetail');
+const btnSaveDetail = document.getElementById('saveCardDetail');
+const btnDeleteDetail = document.getElementById('deleteCardDetail');
+
+let cardDetalhe = null;
+
+function abrirDetalhe(card) {
+    cardDetalhe = card;
+    detailTitleInput.value = card.dataset.titulo || '';
+    detailDescriptionInput.value = card.dataset.descricao || '';
+    detailPrazoInput.value = card.dataset.prazo || '';
+    setCustomSelectValue(detailPrioritySelect, card.dataset.prioridade || '1');
+    setCustomSelectValue(detailStatusSelect, card.dataset.status || '1');
+    cardDetailOverlay.classList.add('active');
+}
+
+function fecharDetalhe() {
+    cardDetailOverlay.classList.remove('active');
+    cardDetalhe = null;
+}
+
+btnCloseDetail?.addEventListener('click', fecharDetalhe);
+
+cardDetailOverlay?.addEventListener('click', (e) => {
+    if (e.target === cardDetailOverlay) fecharDetalhe();
+});
+
+btnSaveDetail?.addEventListener('click', () => {
+    if (!cardDetalhe) return;
+
+    const formData = new FormData();
+    formData.append('projeto_id', projetoId);
+    formData.append('tarefa_id', cardDetalhe.dataset.id);
+    formData.append('titulo', detailTitleInput.value.trim());
+    formData.append('descricao', detailDescriptionInput.value.trim());
+    formData.append('prioridade', detailPrioritySelect.dataset.value || '1');
+    formData.append('status', detailStatusSelect.dataset.value || '1');
+    formData.append('prazo', detailPrazoInput.value || '');
+
+    postTarefa('editar', formData)
+        .then((res) => {
+            if (!res.ok) throw new Error();
+            recarregar();
+        })
+        .catch(() => alert('Erro ao salvar'));
+});
+
+btnDeleteDetail?.addEventListener('click', () => {
+    if (!cardDetalhe) return;
+    if (!confirm('Deseja excluir esta tarefa?')) return;
+
+    const formData = new FormData();
+    formData.append('tarefa_id', cardDetalhe.dataset.id);
+
+    fetch(baseUrl + '/actions/tarefas/deletar.php', { method: 'POST', body: formData })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) recarregar();
+            else alert(data.message || 'Erro ao excluir');
+        })
+        .catch(() => alert('Erro ao excluir'));
+});
+
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.btn-delete') || e.target.closest('.btn-add-card')) return;
+    const card = e.target.closest('.task-card');
+    if (card) abrirDetalhe(card);
+});
 
 // =====================
 // EVENTOS
@@ -147,7 +261,11 @@ function setCustomSelectValue(select, value) {
 
 searchInput2?.addEventListener('input', filtrarTarefas);
 searchIcon2?.addEventListener('click', filtrarTarefas);
-btnNovaTarefa2?.addEventListener('click', abrirModalNovo);
+btnNovaTarefa2?.addEventListener('click', () => abrirModalNovo('1'));
+
+document.querySelectorAll('.btn-add-card').forEach((btn) => {
+    btn.addEventListener('click', () => abrirModalNovo(btn.dataset.status));
+});
 btnCancelar?.addEventListener('click', fecharModal);
 btnVoltar?.addEventListener('click', fecharModal);
 
@@ -212,33 +330,90 @@ document.addEventListener('click', (event) => {
 // DRAG AND DROP
 // =====================
 
+let placeholder = null;
+
+function criarPlaceholder() {
+    const el = document.createElement('div');
+    el.className = 'drag-placeholder';
+    return el;
+}
+
+function elementoAposCursor(coluna, y) {
+    const cards = [...coluna.querySelectorAll('.task-card:not(.is-dragging)')];
+    return cards.reduce((closest, card) => {
+        const box = card.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset, element: card };
+        }
+        return closest;
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function limparDrag() {
+    placeholder?.remove();
+    placeholder = null;
+    document.querySelectorAll('.kanban-column').forEach((c) => c.classList.remove('is-drag-over'));
+}
+
 document.addEventListener('dragstart', (e) => {
-    if (e.target.classList.contains('task-card')) {
-        cardArrastado = e.target;
-        e.target.style.opacity = '0.5';
-    }
+    const card = e.target.closest('.task-card');
+    if (!card) return;
+    cardArrastado = card;
+    placeholder = criarPlaceholder();
+    requestAnimationFrame(() => card.classList.add('is-dragging'));
 });
 
 document.addEventListener('dragend', (e) => {
-    if (e.target.classList.contains('task-card')) {
-        e.target.style.opacity = '1';
-    }
+    const card = e.target.closest('.task-card');
+    if (!card) return;
+    card.classList.remove('is-dragging');
+    limparDrag();
 });
 
 document.querySelectorAll('.kanban-column').forEach((coluna) => {
 
-    coluna.addEventListener('dragover', (e) => e.preventDefault());
+    coluna.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!cardArrastado || !placeholder) return;
 
-    coluna.addEventListener('drop', () => {
+        coluna.classList.add('is-drag-over');
+
+        const depois = elementoAposCursor(coluna, e.clientY);
+        const btn = coluna.querySelector('.btn-add-card');
+
+        if (depois) {
+            coluna.insertBefore(placeholder, depois);
+        } else {
+            coluna.insertBefore(placeholder, btn);
+        }
+    });
+
+    coluna.addEventListener('dragleave', (e) => {
+        if (!coluna.contains(e.relatedTarget)) {
+            coluna.classList.remove('is-drag-over');
+        }
+    });
+
+    coluna.addEventListener('drop', (e) => {
+        e.preventDefault();
         if (!cardArrastado) return;
 
         const statusDestino = coluna.dataset.status;
+        const statusOrigem = cardArrastado.dataset.status;
+        const colunaOrigem = cardArrastado.parentElement;
+        const proximoIrmao = cardArrastado.nextSibling;
 
-        coluna.appendChild(cardArrastado);
+        placeholder?.replaceWith(cardArrastado);
+        cardArrastado.dataset.status = statusDestino;
+        limparDrag();
 
         postTarefa('editar', montarFormDataDoCard(cardArrastado, statusDestino))
-            .then(() => recarregar())
-            .catch(() => alert('Erro ao mover tarefa'));
+            .catch(() => {
+                cardArrastado.dataset.status = statusOrigem;
+                colunaOrigem?.insertBefore(cardArrastado, proximoIrmao);
+                alert('Erro ao mover tarefa');
+            });
     });
 
 });

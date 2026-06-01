@@ -123,6 +123,7 @@
 .kanban {
     display: flex;
     justify-content: flex-start;
+    align-items: flex-start;
     gap: var(--spacing-md);
     overflow: hidden;
     margin-top: var(--spacing-md);
@@ -143,6 +144,29 @@
 
     background-color: var(--color-white);
     border-radius: 12px;
+    transition: background-color 0.15s ease;
+}
+
+.kanban-column.is-drag-over {
+    background-color: rgba(120, 120, 128, 0.06);
+}
+
+.task-card {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.task-card.is-dragging {
+    opacity: 0.35;
+    transform: scale(0.97);
+}
+
+.drag-placeholder {
+    border-radius: var(--border-radius);
+    border: 2px dashed var(--color-primary);
+    background: rgba(139, 0, 51, 0.04);
+    height: 72px;
+    flex-shrink: 0;
+    transition: height 0.1s ease;
 }
 
 .kanban-column .task-title {
@@ -159,7 +183,7 @@
     padding-bottom: var(--spacing-xs);
     margin: -8px -8px 0 -8px;
     padding-right: var(--spacing-xs);
-    padding-left: var(--spacing-xs);
+    padding-left: 16px;
 }
 
 .kanban-column .task-title img {
@@ -178,6 +202,52 @@
     cursor: grab;
 
     background-color: var(--color-white);
+}
+
+.btn-add-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--border-radius);
+    border: none;
+    background-color: var(--color-white);
+    color: var(--color-placeholder, #718096);
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-add-card-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-add-card img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+}
+
+.btn-add-card-left img {
+    filter: invert(1) brightness(0);
+}
+
+.btn-add-card:hover {
+    background-color: rgba(120, 120, 128, 0.08);
+    color: var(--color-text-strong, #1a1a2e);
+}
+
+.btn-add-card:hover img {
+    opacity: 1;
 }
 
 /* título do card */
@@ -539,6 +609,204 @@ button {
     gap: 8px;
     background-color: var(--color-primary);
     color: var(--color-surface);
+}
+
+/* ===== CARD DETAIL MODAL ===== */
+
+.card-detail-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.card-detail-overlay.active {
+    display: flex;
+}
+
+.card-detail {
+    background: var(--color-white);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 780px;
+    height: calc(50vh - 40px);
+    position: relative;
+    padding: 36px 32px 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-detail-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--color-text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: background 0.15s;
+}
+
+.card-detail-close:hover {
+    background: rgba(120, 120, 128, 0.12);
+}
+
+.card-detail-content {
+    display: flex;
+    gap: 28px;
+    flex: 1;
+    min-height: 0;
+}
+
+.card-detail-main {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card-detail-main .card-detail-section:has(.card-detail-textarea) {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-detail-title-input {
+    font-family: var(--font-family);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text-strong);
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    padding: 4px 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.15s;
+}
+
+.card-detail-title-input:focus {
+    border-bottom-color: var(--color-primary);
+}
+
+.card-detail-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+}
+
+.card-detail-textarea {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    border: 1px solid rgba(120, 120, 128, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    color: var(--color-text-strong);
+    resize: none;
+    outline: none;
+    background: rgba(120, 120, 128, 0.05);
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.card-detail-textarea:focus {
+    border-color: var(--color-primary);
+    background: var(--color-white);
+}
+
+.card-detail-sidebar {
+    width: 176px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 4px;
+}
+
+.card-detail-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-detail-date-input {
+    border: 1px solid rgba(120, 120, 128, 0.2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: var(--font-family);
+    font-size: 13px;
+    color: var(--color-text-strong);
+    outline: none;
+    background: transparent;
+    width: 100%;
+}
+
+.card-detail-date-input:focus {
+    border-color: var(--color-primary);
+}
+
+.card-detail-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.btn-save-detail {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-save-detail:hover {
+    opacity: 0.88;
+}
+
+.btn-delete-detail {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid rgba(120, 120, 128, 0.25);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: var(--font-family);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-delete-detail:hover {
+    background: #fff0f0;
+    border-color: #e53e3e;
+    color: #e53e3e;
 }
 
 /* ================= RESPONSIVIDADE ======================== */

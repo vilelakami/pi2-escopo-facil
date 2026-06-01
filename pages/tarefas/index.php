@@ -141,16 +141,19 @@ function formatarPrazo(?string $prazo): string
                                 </div>
 
                                 <div class="task-btn">
-                                    <button class="btn-edit">
-                                        <img src="<?= BASE_URL ?>/assets/icon/edit.svg" alt="editar">
-                                        Editar
-                                    </button>
-
                                     <button class="btn-delete">Excluir</button>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
+
+                    <button class="btn-add-card" data-status="<?= $status ?>">
+                        <span class="btn-add-card-left">
+                            <img src="<?= BASE_URL ?>/assets/icon/plus.svg" alt="+">
+                            Adicionar cartão
+                        </span>
+                        <img src="<?= BASE_URL ?>/assets/icon/tarefas.svg" alt="" class="btn-add-card-icon-right">
+                    </button>
                 </div>
             <?php endforeach; ?>
         </div>
