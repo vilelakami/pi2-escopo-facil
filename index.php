@@ -101,7 +101,7 @@ if (estaLogado()) {
     <script src="<?= BASE_URL ?>/assets/js/user-menu.js"></script>
 
     <?php if (file_exists(__DIR__ . '/assets/js/pages/' . $page . '.js')): ?>
-        <script src="<?= BASE_URL ?>/assets/js/pages/<?= $page ?>.js?v=<?= time()?>.js"></script>
+        <script src="<?= BASE_URL ?>/assets/js/pages/<?= $page ?>.js?v=<?= time()?>"></script>
     <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

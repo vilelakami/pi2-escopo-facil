@@ -1,16 +1,34 @@
 <?php
-session_start();
+
+header('Content-Type: application/json');
+
 require_once __DIR__ . '/../../config.php';
-require_once __DIR__ . '/../../controllers/TarefaController.php';
 
-if (!isset($_SESSION['usuario_id'])) {
-    header('Location: ' . BASE_URL . '/?page=login');
+$tarefa_id = $_POST['tarefa_id'] ?? null;
+
+if (!$tarefa_id) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'ID não enviado'
+    ]);
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ' . BASE_URL . '/?page=tarefas');
-    exit;
-}
+try {
 
-(new TarefaController())->deletar();
+    $pdo = getConnection();
+
+    $stmt = $pdo->prepare("DELETE FROM tarefas WHERE id = ?");
+    $stmt->execute([$tarefa_id]);
+
+    echo json_encode([
+        'success' => true
+    ]);
+
+} catch (Throwable $e) {
+
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getMessage()
+    ]);
+}

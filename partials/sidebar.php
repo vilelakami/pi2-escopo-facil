@@ -1,4 +1,16 @@
-<?php $page = $_GET['page'] ?? 'dashboard'; ?>
+<?php 
+$page = $_GET['page'] ?? 'dashboard';
+// Quando estiver vendo tarefas de um projeto, marcar "Projetos" como ativo
+$ativoProjetosQuandoTarefas = ($page === 'tarefas' && !empty($_GET['projeto_id']) && (int)$_GET['projeto_id'] > 0);
+$activeClass = function($pageName) use ($page, $ativoProjetosQuandoTarefas) {
+    // Se está vendo tarefas com projeto_id, apenas Projetos fica ativo
+    if ($ativoProjetosQuandoTarefas) {
+        return $pageName === 'projetos' ? 'active' : '';
+    }
+    // Caso contrário, usar a lógica normal
+    return $pageName === $page ? 'active' : '';
+};
+?>
 
 <aside class="sidebar">
     <div class="sidebar-logo">
@@ -6,16 +18,13 @@
     </div>
 
     <nav class="sidebar-nav">
-        <a href="<?= BASE_URL ?>/index.php?page=dashboard" class="sidebar-link <?= $page === 'dashboard' ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>/index.php?page=dashboard" class="sidebar-link <?= $activeClass('dashboard') ?>">
             <img src="<?= BASE_URL ?>/assets/icon/dashboard.svg" alt=""> Dashboard
         </a>
-        <a href="<?= BASE_URL ?>/index.php?page=projetos" class="sidebar-link <?= $page === 'projetos' ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>/index.php?page=projetos" class="sidebar-link <?= $activeClass('projetos') ?>">
             <img src="<?= BASE_URL ?>/assets/icon/folder-search.svg" alt=""> Projetos
         </a>
-        <a href="<?= BASE_URL ?>/index.php?page=tarefas" class="sidebar-link <?= $page === 'tarefas' ? 'active' : '' ?>">
-            <img src="<?= BASE_URL ?>/assets/icon/tarefas.svg" alt=""> Tarefas
-        </a>
-<a href="<?= BASE_URL ?>/index.php?page=configuracao" class="sidebar-link <?= $page === 'configuracao' ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>/index.php?page=configuracao" class="sidebar-link <?= $activeClass('configuracao') ?>">
             <img src="<?= BASE_URL ?>/assets/icon/configurações.svg" alt=""> Configuração
         </a>
     </nav>

@@ -1,12 +1,13 @@
-// Tarefas - integracao com backend
+'use strict';
 
 const baseUrl = document.body.dataset.baseUrl || '';
-const projetoId = window.projetoId || document.querySelector('.page-content')?.dataset.projetoId || '';
+const projetoId = document.querySelector('.page-content')?.dataset.projetoId || '';
 
-const searchInput = document.querySelector('.search-input-wrapper input');
-const noTasksMessage = document.getElementById('no-tasks-message');
-const searchIcon = document.querySelector('.search-input-wrapper img');
-const btnNovaTarefa = document.querySelector('.btn-new-task-main');
+// ELEMENTOS
+const searchInput2 = document.querySelector('.search-input-wrapper input');
+const noTasksMessage2 = document.getElementById('no-tasks-message');
+const searchIcon2 = document.querySelector('.search-input-wrapper img');
+const btnNovaTarefa2 = document.querySelector('.btn-new-task-main');
 const modal = document.querySelector('.modal-overlay');
 const btnCancelar = document.querySelector('#closeModal');
 const btnSalvar = document.querySelector('#saveTask');
@@ -22,15 +23,28 @@ const modalTitulo = document.querySelector('#modalTitulo');
 let cardArrastado = null;
 let cardEditando = null;
 
+// =====================
+// FUNÇÕES 
+// =====================
+
 function postTarefa(action, data) {
-    return fetch(baseUrl + '/actions/tarefas/' + action + '.php', {
+    return fetch(`${baseUrl}/actions/tarefas/${action}.php`, {
         method: 'POST',
         body: data
     });
 }
 
+function recarregar() {
+    window.location.reload();
+}
+
+// =====================
+// FORM DATA
+// =====================
+
 function montarFormData(statusOverride = null) {
     const formData = new FormData();
+
     formData.append('projeto_id', projetoId);
     formData.append('titulo', inputTitulo.value.trim());
     formData.append('descricao', inputDescricao.value.trim());
@@ -47,6 +61,7 @@ function montarFormData(statusOverride = null) {
 
 function montarFormDataDoCard(card, statusOverride = null) {
     const formData = new FormData();
+
     formData.append('projeto_id', projetoId);
     formData.append('tarefa_id', card.dataset.id);
     formData.append('titulo', card.dataset.titulo || '');
@@ -54,12 +69,13 @@ function montarFormDataDoCard(card, statusOverride = null) {
     formData.append('prioridade', card.dataset.prioridade || '1');
     formData.append('status', statusOverride || card.dataset.status || '1');
     formData.append('prazo', card.dataset.prazo || '');
+
     return formData;
 }
 
-function recarregar() {
-    window.location.reload();
-}
+// =====================
+// MODAL
+// =====================
 
 function abrirModalNovo() {
     cardEditando = null;
@@ -71,110 +87,130 @@ function abrirModalNovo() {
 function fecharModal() {
     modal.classList.remove('active');
     cardEditando = null;
-    modalTitulo.textContent = 'Nova Tarefa';
     limparCamposModal();
-}
-
-function filtrarTarefas() {
-    if (!searchInput || !noTasksMessage) return;
-
-    const termo = searchInput.value.toLowerCase();
-    const tarefas = document.querySelectorAll('.task-card');
-    let encontrouAlguma = false;
-
-    tarefas.forEach((tarefa) => {
-        const titulo = (tarefa.dataset.titulo || '').toLowerCase();
-        const descricao = (tarefa.dataset.descricao || '').toLowerCase();
-        const prioridade = tarefa.querySelector('.priority-tag p')?.innerText.toLowerCase() || '';
-        const prazo = tarefa.querySelector('.deadline-text')?.innerText.toLowerCase() || '';
-        const encontrou = termo === '' || titulo.includes(termo) || descricao.includes(termo) || prioridade.includes(termo) || prazo.includes(termo);
-
-        tarefa.style.display = encontrou ? 'block' : 'none';
-        if (encontrou) encontrouAlguma = true;
-    });
-
-    noTasksMessage.style.display = encontrouAlguma ? 'none' : 'block';
-}
-
-function setCustomSelectValue(select, value) {
-    if (!select) return;
-
-    select.dataset.value = value;
-    const options = select.querySelectorAll('.custom-select-options li');
-
-    options.forEach((opt) => {
-        opt.classList.remove('selected');
-        if (opt.dataset.value === value) {
-            opt.classList.add('selected');
-            select.querySelector('.custom-select-text').textContent = opt.textContent.trim();
-            select.querySelector('.custom-select-icon').src = opt.dataset.icon;
-        }
-    });
-}
-
-function resetCustomSelect(select, defaultValue) {
-    setCustomSelectValue(select, defaultValue);
-    select?.classList.remove('open');
 }
 
 function limparCamposModal() {
     inputTitulo.value = '';
     inputDescricao.value = '';
     inputPrazo.value = '';
-    resetCustomSelect(selectPrioridade, '1');
-    resetCustomSelect(selectStatus, '1');
+    setCustomSelectValue(selectPrioridade, '1');
+    setCustomSelectValue(selectStatus, '1');
 }
 
-if (searchInput) searchInput.addEventListener('input', filtrarTarefas);
-if (searchIcon) searchIcon.addEventListener('click', filtrarTarefas);
-if (btnNovaTarefa) btnNovaTarefa.addEventListener('click', abrirModalNovo);
-if (btnCancelar) btnCancelar.addEventListener('click', fecharModal);
-if (btnVoltar) btnVoltar.addEventListener('click', fecharModal);
+// =====================
+// FILTRO
+// =====================
 
-if (modal) {
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) fecharModal();
+function filtrarTarefas() {
+    if (!searchInput2 || !noTasksMessage2) return;
+
+    const termo = searchInput2.value.toLowerCase();
+    const tarefas = document.querySelectorAll('.task-card');
+
+    let encontrou = false;
+
+    tarefas.forEach((tarefa) => {
+        const texto = (
+            (tarefa.dataset.titulo || '') +
+            (tarefa.dataset.descricao || '')
+        ).toLowerCase();
+
+        const match = texto.includes(termo);
+
+        tarefa.style.display = match ? 'block' : 'none';
+        if (match) encontrou = true;
     });
+
+    noTasksMessage2.style.display = encontrou ? 'none' : 'block';
 }
 
-if (iconCalendario && inputPrazo) {
-    iconCalendario.addEventListener('click', () => inputPrazo.showPicker());
-}
+// =====================
+// CUSTOM SELECT
+// =====================
 
-document.querySelectorAll('.modal .custom-select').forEach((select) => {
-    const trigger = select.querySelector('.custom-select-trigger');
-    const options = select.querySelectorAll('.custom-select-options li');
-    const iconEl = select.querySelector('.custom-select-icon');
-    const textEl = select.querySelector('.custom-select-text');
+function setCustomSelectValue(select, value) {
+    if (!select) return;
+
+    select.dataset.value = value;
+
+    const options = select.querySelectorAll('li');
 
     options.forEach((opt) => {
-        if (opt.dataset.value === select.dataset.value) opt.classList.add('selected');
+        opt.classList.toggle('selected', opt.dataset.value === value);
     });
+}
 
-    trigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        document.querySelectorAll('.custom-select.open').forEach((item) => {
-            if (item !== select) item.classList.remove('open');
-        });
-        select.classList.toggle('open');
-    });
+// =====================
+// EVENTOS
+// =====================
 
-    options.forEach((opt) => {
-        opt.addEventListener('click', (e) => {
-            e.stopPropagation();
-            select.dataset.value = opt.dataset.value;
-            textEl.textContent = opt.textContent.trim();
-            iconEl.src = opt.dataset.icon;
-            options.forEach((item) => item.classList.remove('selected'));
-            opt.classList.add('selected');
-            select.classList.remove('open');
-        });
-    });
+searchInput2?.addEventListener('input', filtrarTarefas);
+searchIcon2?.addEventListener('click', filtrarTarefas);
+btnNovaTarefa2?.addEventListener('click', abrirModalNovo);
+btnCancelar?.addEventListener('click', fecharModal);
+btnVoltar?.addEventListener('click', fecharModal);
+
+iconCalendario?.addEventListener('click', () => inputPrazo.showPicker());
+
+// =====================
+// SALVAR
+// =====================
+
+btnSalvar?.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    if (!inputTitulo.value.trim()) {
+        alert('O titulo é obrigatório');
+        return;
+    }
+
+    const action = cardEditando ? 'editar' : 'criar';
+
+    postTarefa(action, montarFormData())
+        .then((res) => {
+            if (!res.ok) throw new Error();
+            recarregar();
+        })
+        .catch(() => alert('Erro ao salvar'));
 });
 
-document.addEventListener('click', () => {
-    document.querySelectorAll('.custom-select.open').forEach((select) => select.classList.remove('open'));
+// =====================
+// DELETE
+// =====================
+
+document.addEventListener('click', (event) => {
+    const btn = event.target.closest('.btn-delete');
+    if (!btn) return;
+
+    const card = btn.closest('.task-card');
+    if (!card) return;
+
+    if (!confirm('Deseja realmente excluir esta tarefa?')) return;
+
+    const formData = new FormData();
+    formData.append('tarefa_id', card.dataset.id);
+
+    fetch(baseUrl + '/actions/tarefas/deletar.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+    console.log(data);
+
+    if (data.success) {
+        recarregar();
+    } else {
+        alert(data.message || 'Erro ao excluir');
+    }
+})
+    .catch(() => alert('Erro ao excluir'));
 });
+
+// =====================
+// DRAG AND DROP
+// =====================
 
 document.addEventListener('dragstart', (e) => {
     if (e.target.classList.contains('task-card')) {
@@ -183,99 +219,26 @@ document.addEventListener('dragstart', (e) => {
     }
 });
 
-document.querySelectorAll('.kanban-column').forEach((coluna) => {
-    coluna.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        coluna.classList.add('drag-over');
-    });
-
-    coluna.addEventListener('dragleave', () => {
-        coluna.classList.remove('drag-over');
-    });
-
-    coluna.addEventListener('drop', () => {
-        coluna.classList.remove('drag-over');
-        if (!cardArrastado) return;
-
-        const statusDestino = coluna.dataset.status || coluna.id.replace('col-', '');
-        const statusAtual = cardArrastado.dataset.status;
-
-        coluna.appendChild(cardArrastado);
-
-        if (statusDestino !== statusAtual) {
-            postTarefa('editar', montarFormDataDoCard(cardArrastado, statusDestino))
-                .then((response) => {
-                    if (!response.ok) throw new Error('Erro ao mover tarefa.');
-                    cardArrastado.dataset.status = statusDestino;
-                })
-                .catch(() => {
-                    alert('Nao foi possivel atualizar o status da tarefa.');
-                    recarregar();
-                });
-        }
-    });
-});
-
 document.addEventListener('dragend', (e) => {
     if (e.target.classList.contains('task-card')) {
         e.target.style.opacity = '1';
     }
 });
 
-document.addEventListener('click', (e) => {
-    const btnEditar = e.target.closest('.btn-edit');
-    if (!btnEditar) return;
+document.querySelectorAll('.kanban-column').forEach((coluna) => {
 
-    const card = btnEditar.closest('.task-card');
-    if (!card) return;
+    coluna.addEventListener('dragover', (e) => e.preventDefault());
 
-    cardEditando = card;
-    modalTitulo.textContent = 'Editar Tarefa';
-    inputTitulo.value = card.dataset.titulo || '';
-    inputDescricao.value = card.dataset.descricao || '';
-    inputPrazo.value = card.dataset.prazo || '';
-    setCustomSelectValue(selectPrioridade, card.dataset.prioridade || '1');
-    setCustomSelectValue(selectStatus, card.dataset.status || '1');
-    modal.classList.add('active');
-});
+    coluna.addEventListener('drop', () => {
+        if (!cardArrastado) return;
 
-if (btnSalvar) {
-    btnSalvar.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (inputTitulo.value.trim() === '') {
-            alert('O titulo e obrigatorio!');
-            return;
-        }
+        const statusDestino = coluna.dataset.status;
 
-        const action = cardEditando ? 'editar' : 'criar';
-        postTarefa(action, montarFormData())
-            .then((response) => {
-                if (!response.ok) throw new Error('Erro ao salvar tarefa.');
-                recarregar();
-            })
-            .catch(() => {
-                alert('Nao foi possivel salvar a tarefa.');
-            });
+        coluna.appendChild(cardArrastado);
+
+        postTarefa('editar', montarFormDataDoCard(cardArrastado, statusDestino))
+            .then(() => recarregar())
+            .catch(() => alert('Erro ao mover tarefa'));
     });
-}
 
-document.addEventListener('click', (event) => {
-    const btn = event.target.closest('.btn-delete');
-    if (!btn) return;
-
-    event.preventDefault();
-    const card = btn.closest('.task-card');
-    if (!card || !confirm('Deseja realmente excluir esta tarefa?')) return;
-
-    const formData = new FormData();
-    formData.append('tarefa_id', card.dataset.id);
-
-    postTarefa('deletar', formData)
-        .then((response) => {
-            if (!response.ok) throw new Error('Erro ao excluir tarefa.');
-            recarregar();
-        })
-        .catch(() => {
-            alert('Nao foi possivel excluir a tarefa.');
-        });
 });

@@ -1,1 +1,0 @@
-// Confirmação — Scripts
