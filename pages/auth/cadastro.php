@@ -17,6 +17,7 @@ $mensagensErro = [
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/assets/icon/logo/Vector%20(3).svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Escopo Facil</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
@@ -35,11 +36,6 @@ $mensagensErro = [
             <h1 class="cadastro-title">Crie sua conta</h1>
         </div>
 
-        <?php if ($erro && isset($mensagensErro[$erro])): ?>
-            <div class="auth-feedback auth-feedback--error">
-                <?= htmlspecialchars($mensagensErro[$erro]) ?>
-            </div>
-        <?php endif; ?>
 
         <form class="cadastro-form" action="<?= BASE_URL ?>/actions/auth/cadastro.php" method="POST">
             <div class="form-row">
@@ -108,6 +104,8 @@ $mensagensErro = [
     <script>
         window.BASE_URL = '<?= BASE_URL ?>';
     </script>
+    <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
+    <script src="<?= BASE_URL ?>/assets/js/toast.js"></script>
     <script src="<?= BASE_URL ?>/assets/js/auth/cadastro.js"></script>
 </body>
 

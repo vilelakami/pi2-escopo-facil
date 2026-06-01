@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/auth_guard.php';
+require_once __DIR__ . '/../includes/avatar.php';
 require_once __DIR__ . '/../models/Usuario.php';
 
 $usuario = Usuario::buscarPorId((int) usuarioLogado());
@@ -9,25 +10,27 @@ if (!$usuario) {
     exit;
 }
 
-$avatar = $usuario['avatar'] ?: BASE_URL . '/assets/images/Avatar (1).png';
+$avatarStr = $usuario['avatar'] ?? '';
 $sucesso = $_GET['sucesso'] ?? '';
 $erro = $_GET['erro'] ?? '';
 
 $mensagensSucesso = [
     'perfil-atualizado' => 'Dados atualizados com sucesso.',
-    'senha-alterada' => 'Senha alterada com sucesso.',
-    '1' => 'Alteracao salva com sucesso.',
+    'senha-alterada'    => 'Senha alterada com sucesso.',
+    'avatar-atualizado' => 'Avatar atualizado com sucesso.',
+    '1'                 => 'Alteracao salva com sucesso.',
 ];
 
 $mensagensErro = [
-    'campos-obrigatorios' => 'Preencha todos os campos obrigatorios.',
-    'email-invalido' => 'Informe um email valido.',
-    'email-em-uso' => 'Este email ja esta em uso.',
-    'cargo-invalido' => 'Selecione um cargo valido.',
-    'senha-curta' => 'A nova senha deve ter pelo menos 8 caracteres.',
-    'senhas-diferentes' => 'A confirmacao precisa ser igual a nova senha.',
-    'senha-atual-incorreta' => 'A senha atual esta incorreta.',
-    'erro-ao-atualizar' => 'Nao foi possivel atualizar os dados.',
+    'campos-obrigatorios'  => 'Preencha todos os campos obrigatorios.',
+    'email-invalido'       => 'Informe um email valido.',
+    'email-em-uso'         => 'Este email ja esta em uso.',
+    'cargo-invalido'       => 'Selecione um cargo valido.',
+    'senha-curta'          => 'A nova senha deve ter pelo menos 8 caracteres.',
+    'senhas-diferentes'    => 'A confirmacao precisa ser igual a nova senha.',
+    'senha-atual-incorreta'=> 'A senha atual esta incorreta.',
+    'erro-ao-atualizar'    => 'Nao foi possivel atualizar os dados.',
+    'avatar-invalido'      => 'Avatar invalido.',
 ];
 
 function cargoSelecionado(string $cargoUsuario, string $cargoOption): string
@@ -46,8 +49,8 @@ function cargoSelecionado(string $cargoUsuario, string $cargoOption): string
                 <img src="<?= BASE_URL ?>/assets/icon/bell.svg" alt="Notificações">
                 <span class="notification-dot"></span>
             </div>
-            <div class="configuracao-user">
-                <img src="<?= htmlspecialchars($avatar) ?>" alt="Avatar" class="configuracao-avatar">
+            <div class="configuracao-user user-menu-trigger" style="padding:6px 8px;border-radius:8px">
+                <?= renderAvatar($avatarStr, $usuario['nome'], 'configuracao-avatar') ?>
                 <div class="configuracao-user-info">
                     <span class="configuracao-user-name"><?= htmlspecialchars($usuario['nome']) ?></span>
                     <span class="configuracao-user-role"><?= htmlspecialchars($usuario['cargo']) ?></span>
@@ -58,17 +61,6 @@ function cargoSelecionado(string $cargoUsuario, string $cargoOption): string
 
     <!-- Conteúdo principal -->
     <div class="configuracao-body">
-        <?php if ($sucesso && isset($mensagensSucesso[$sucesso])): ?>
-            <div class="configuracao-feedback configuracao-feedback--success">
-                <?= htmlspecialchars($mensagensSucesso[$sucesso]) ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($erro && isset($mensagensErro[$erro])): ?>
-            <div class="configuracao-feedback configuracao-feedback--error">
-                <?= htmlspecialchars($mensagensErro[$erro]) ?>
-            </div>
-        <?php endif; ?>
 
         <!-- Card: Dados pessoais -->
         <div class="configuracao-card">
@@ -155,6 +147,22 @@ function cargoSelecionado(string $cargoUsuario, string $cargoOption): string
                 <div class="configuracao-form-actions">
                     <button type="button" class="configuracao-btn-cancelar">Cancelar</button>
                     <button type="submit" class="configuracao-btn-salvar">Alterar senha</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Card: Avatar -->
+        <div class="configuracao-card">
+            <div class="configuracao-card-header">
+                <h2 class="configuracao-card-title">Avatar</h2>
+                <p class="configuracao-card-desc">Escolha uma cor e um padrão para seu perfil.</p>
+            </div>
+
+            <form class="configuracao-form" action="<?= BASE_URL ?>/actions/usuario/atualizar-avatar.php" method="POST">
+                <?= avatarPickerHtml($avatarStr) ?>
+                <div class="configuracao-form-actions">
+                    <button type="button" class="configuracao-btn-cancelar">Cancelar</button>
+                    <button type="submit" class="configuracao-btn-salvar">Salvar avatar</button>
                 </div>
             </form>
         </div>

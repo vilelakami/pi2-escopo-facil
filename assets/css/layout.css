@@ -1,13 +1,14 @@
 /* Layout base */
 .layout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    height: 100vh;
+    height: calc(100vh - 2 * var(--spacing-sm));
     position: sticky;
     top: 0;
     background: var(--color-sidebar-bg);
@@ -74,7 +75,7 @@
     margin-top: auto;
     margin-bottom: var(--spacing-sm);
     padding: 20px 16px 16px;
-    background: url('../images/freepik__abstract-liquid-gradient-background-with-smooth-fl__39537 1.jpg') center/cover no-repeat;
+    background: linear-gradient(145deg, #5C0A24 0%, #8B0836 45%, #6B1030 100%);
     border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
@@ -86,8 +87,9 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.18);
+    background: radial-gradient(ellipse at top left, rgba(255,255,255,0.06) 0%, transparent 60%);
     border-radius: var(--border-radius);
+    pointer-events: none;
 }
 
 .sidebar-banner > * {
@@ -98,11 +100,12 @@
 .sidebar-banner-icon {
     width: 48px;
     height: 48px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.12);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 6px;
 }
 
 .sidebar-banner-globe {
@@ -126,8 +129,10 @@
 }
 
 .sidebar-banner-btn {
-    display: block;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     background: #fff;
     color: var(--color-primary);
     font-size: 14px;
@@ -148,6 +153,8 @@
 .main {
     flex: 1;
     padding: var(--spacing-md);
+    overflow-y: auto;
+    height: 100vh;
 }
 
 .page-title {

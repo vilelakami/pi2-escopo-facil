@@ -11,7 +11,8 @@ $usuario = Usuario::buscarPorId($usuarioId);
 $projeto = $projetoId ? Projeto::buscarPorId($projetoId) : false;
 $isMembro = $projetoId ? ProjetoMembro::jaEMembro($projetoId, $usuarioId) : false;
 $tarefas = ($projeto && $isMembro) ? Tarefa::listarPorProjeto($projetoId) : [];
-$avatar = ($usuario && !empty($usuario['avatar'])) ? $usuario['avatar'] : BASE_URL . '/assets/icon/avatar.svg';
+require_once __DIR__ . '/../../includes/avatar.php';
+$avatarStr = $usuario['avatar'] ?? '';
 
 $prioridades = [
     1 => ['texto' => 'Baixa', 'classe' => 'low', 'icone' => 'grafico-baixa.svg'],
@@ -46,8 +47,8 @@ function formatarPrazo(?string $prazo): string
                 <img src="<?= BASE_URL ?>/assets/icon/bells.svg" alt="notificacoes">
             </div>
 
-            <div class="member-profile">
-                <img src="<?= htmlspecialchars($avatar) ?>" alt="foto de perfil" class="avatar">
+            <div class="member-profile user-menu-trigger" style="padding:6px 8px;border-radius:8px">
+                <?= renderAvatar($avatarStr, $usuario['nome'] ?? 'U', 'avatar') ?>
 
                 <div class="member-info">
                     <p class="member-name"><?= htmlspecialchars($usuario['nome'] ?? 'Usuario') ?></p>

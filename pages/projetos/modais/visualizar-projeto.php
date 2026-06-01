@@ -60,7 +60,7 @@
             <span class="membro-card-cargo"></span>
         </div>
         <div class="membro-card-info">
-            <img src="" alt="Avatar" class="membro-card-avatar">
+            <div class="membro-card-avatar"></div>
             <div class="membro-card-texts">
                 <span class="membro-card-nome"></span>
                 <span class="membro-card-email"></span>

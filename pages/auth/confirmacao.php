@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/assets/icon/logo/Vector%20(3).svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmação — Escopo Fácil</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">

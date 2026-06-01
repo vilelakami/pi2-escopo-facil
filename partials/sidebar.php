@@ -22,15 +22,15 @@
 
     <div class="sidebar-banner">
         <div class="sidebar-banner-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.75">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/>
-            </svg>
+            <img src="<?= BASE_URL ?>/assets/icon/logo/Vector%20(3).svg" alt="Escopo Fácil" width="32" height="32">
         </div>
         <p class="sidebar-banner-title">Acesse nosso site</p>
         <p class="sidebar-banner-desc">Conheça planos, recursos e novidades do Escopo Fácil.</p>
         <a href="https://magenta-potato-409547.framer.app/" target="_blank" rel="noopener noreferrer" class="sidebar-banner-btn">
-            Visitar site →
+            Visitar site
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1);flex-shrink:0">
+                <path d="M19 12H5"/><path d="M12 19L5 12L12 5"/>
+            </svg>
         </a>
     </div>
 

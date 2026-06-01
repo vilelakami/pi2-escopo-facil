@@ -25,11 +25,13 @@ $mensagensSucesso = [
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/assets/icon/logo/Vector%20(3).svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Escopo Facil</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/auth.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/components.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/toast.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/auth/login.css?v=<?= time() ?>">
 </head>
 
@@ -43,21 +45,9 @@ $mensagensSucesso = [
             <p class="subtitle">Entre com seu e-mail e senha para continuar.</p>
         </div>
 
-        <?php if ($erro && isset($mensagensErro[$erro])): ?>
-            <div class="auth-feedback auth-feedback--error">
-                <?= htmlspecialchars($mensagensErro[$erro]) ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($sucesso && isset($mensagensSucesso[$sucesso])): ?>
-            <div class="auth-feedback auth-feedback--success">
-                <?= htmlspecialchars($mensagensSucesso[$sucesso]) ?>
-            </div>
-        <?php endif; ?>
-
         <?php if ($confirmacaoUrl): ?>
-            <div class="auth-feedback auth-feedback--success">
-                URL de confirmacao local: <a href="<?= htmlspecialchars($confirmacaoUrl) ?>"><?= htmlspecialchars($confirmacaoUrl) ?></a>
+            <div class="auth-feedback auth-feedback--success" style="font-size:12px;word-break:break-all">
+                URL de confirmação: <a href="<?= htmlspecialchars($confirmacaoUrl) ?>"><?= htmlspecialchars($confirmacaoUrl) ?></a>
             </div>
         <?php endif; ?>
 
@@ -87,9 +77,8 @@ $mensagensSucesso = [
     <?php $authContent = ob_get_clean(); ?>
     <?php include __DIR__ . '/../../partials/auth-layout.php'; ?>
 
-    <script>
-        window.BASE_URL = '<?= BASE_URL ?>';
-    </script>
+    <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
+    <script src="<?= BASE_URL ?>/assets/js/toast.js"></script>
     <script src="<?= BASE_URL ?>/assets/js/auth/login.js?v=<?= time() ?>"></script>
 </body>
 

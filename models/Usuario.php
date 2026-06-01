@@ -78,4 +78,14 @@ class Usuario
             'id'    => $id,
         ]);
     }
+
+    public static function atualizarAvatar(int $id, string $avatar): void
+    {
+        $pdo = getConnection();
+        $stmt = $pdo->prepare("UPDATE usuarios SET avatar = :avatar WHERE id = :id");
+        $stmt->execute([
+            'avatar' => $avatar,
+            'id'     => $id,
+        ]);
+    }
 }

@@ -15,13 +15,8 @@ $dadosUsuario = $stmtUser->fetch();
 $usuario = [
     'nome'   => $dadosUsuario['nome'] ?? 'Usuário',
     'role'   => $dadosUsuario['cargo'] ?? '',
-    'avatar' => $dadosUsuario['avatar'] ?? BASE_URL . '/assets/images/Avatar (1).png',
+    'avatar' => $dadosUsuario['avatar'] ?? '',
 ];
-
-// Fallback de avatar
-if (empty($usuario['avatar'])) {
-    $usuario['avatar'] = BASE_URL . '/assets/images/Avatar (1).png';
-}
 
 // Projetos do usuário logado
 $projetosRaw = Projeto::listarPorUsuario($usuarioId);
@@ -32,17 +27,13 @@ foreach ($projetosRaw as $p) {
     $membrosFormatados = [];
 
     foreach ($membros as $m) {
-        $avatar = $m['avatar'];
-        if (empty($avatar)) {
-            $avatar = BASE_URL . '/assets/images/Avatar (1).png';
-        }
         $membrosFormatados[] = [
             'id'     => $m['usuario_id'],
             'nome'   => $m['nome'],
             'email'  => $m['email'],
             'cargo'  => $m['cargo'],
             'role'   => $m['role'],
-            'avatar' => $avatar,
+            'avatar' => $m['avatar'] ?? '',
         ];
     }
 
