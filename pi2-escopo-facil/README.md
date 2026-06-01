@@ -1,1 +1,0 @@
-# pi2-escopo-facil
