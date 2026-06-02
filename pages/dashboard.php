@@ -1,29 +1,59 @@
 <?php
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/session.php';
+require_once __DIR__ . '/../includes/avatar.php';
 $pdo = getConnection();
 
-// 1. Dados para os indicadores
-$totalProjetos = $pdo->query("SELECT COUNT(*) FROM projetos")->fetchColumn();
-$tarefasConcluidas = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 'concluido'")->fetchColumn();
-$tarefasPendentes = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 'a-fazer'")->fetchColumn();
-$tarefasFazendo = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 'fazendo'")->fetchColumn();
+$usuarioId   = (int) usuarioLogado();
+$stmtUser    = $pdo->prepare("SELECT nome, cargo, avatar FROM usuarios WHERE id = :id");
+$stmtUser->execute(['id' => $usuarioId]);
+$dadosUsuario = $stmtUser->fetch();
+$usuario = [
+    'nome'   => $dadosUsuario['nome']   ?? 'Usuário',
+    'role'   => $dadosUsuario['cargo']  ?? '',
+    'avatar' => $dadosUsuario['avatar'] ?? '',
+];
 
-$counts = ['a-fazer' => $tarefasPendentes, 'fazendo' => $tarefasFazendo, 'concluido' => $tarefasConcluidas];
-$totalTarefas = array_sum($counts);
-$progresso = ($totalTarefas > 0) ? round(($tarefasConcluidas / $totalTarefas) * 100) : 0;
+$totalProjetos      = $pdo->query("SELECT COUNT(*) FROM projetos")->fetchColumn();
+$tarefasConcluidas  = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 3")->fetchColumn();
+$tarefasPendentes   = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 1")->fetchColumn();
+$tarefasFazendo     = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 2")->fetchColumn();
 
-// 2. Atividades recentes
-$recentes = $pdo->query("SELECT titulo, status FROM tarefas ORDER BY id DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+$totalTarefas = (int)$tarefasPendentes + (int)$tarefasFazendo + (int)$tarefasConcluidas;
+$progresso    = $totalTarefas > 0 ? round(($tarefasConcluidas / $totalTarefas) * 100) : 0;
 
-// 3. Dados para o gráfico de linha (Simulando 7 dias)
-$labelsDias = json_encode(['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']);
+$recentes = $pdo->query("
+    SELECT t.titulo, t.status
+    FROM tarefas t
+    ORDER BY t.id DESC
+    LIMIT 5
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$statusLabel = [1 => 'A Fazer', 2 => 'Em Andamento', 3 => 'Concluído'];
+$statusClass = [1 => 'a-fazer', 2 => 'fazendo', 3 => 'concluido'];
+
+$labelsDias     = json_encode(['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']);
 $performanceJson = json_encode([1, 3, 2, 5, 4, 3, 2]);
 ?>
 
-<h1 class="page-title">Dashboard</h1>
+<div class="page-header">
+    <h1 class="headline">Olá, <?= htmlspecialchars(explode(' ', $usuario['nome'])[0]) ?> 👋</h1>
+    <div class="header-actions">
+        <div class="notification-icon">
+            <img src="<?= BASE_URL ?>/assets/icon/bells.svg" alt="notificacoes">
+        </div>
+        <div class="member-profile user-menu-trigger" style="padding:6px 8px;border-radius:8px">
+            <?= renderAvatar($usuario['avatar'], $usuario['nome'], 'avatar') ?>
+            <div class="member-info">
+                <p class="member-name"><?= htmlspecialchars($usuario['nome']) ?></p>
+                <p class="member-category"><?= htmlspecialchars($usuario['role']) ?></p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="dashboard-container">
-    
+
     <div class="stats-grid">
         <div class="stat-card">
             <h3>Projetos Ativos</h3>
@@ -31,7 +61,7 @@ $performanceJson = json_encode([1, 3, 2, 5, 4, 3, 2]);
         </div>
         <div class="stat-card warning">
             <h3>Tarefas Pendentes</h3>
-            <p class="number"><?= $counts['a-fazer'] ?></p>
+            <p class="number"><?= $tarefasPendentes ?></p>
         </div>
         <div class="stat-card success">
             <h3>Conclusão do Escopo</h3>
@@ -42,43 +72,50 @@ $performanceJson = json_encode([1, 3, 2, 5, 4, 3, 2]);
         </div>
     </div>
 
-    <div class="stat-card" style="margin-top: 25px; padding: 30px;">
-        <h3>Distribuição de Tarefas</h3>
-        <div style="height: 350px; width: 100%; position: relative; margin-top: 20px;">
-            <canvas id="tasksChart"></canvas>
-        </div>
-    </div>
+    <div class="dashboard-bottom">
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
-        
-        <div class="stat-card">
-            <h3>Atividades Recentes</h3>
-            <ul class="activity-list" style="list-style: none; padding: 0; margin-top: 15px;">
-                <?php foreach ($recentes as $item): ?>
-                    <li class="activity-item" style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
-                        <strong style="color: #1e293b;"><?= htmlspecialchars($item['titulo']) ?></strong>
-                        <span class="status-tag <?= $item['status'] ?>"><?= $item['status'] ?></span>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-
-        <div class="stat-card">
-            <h3>Ritmo de Trabalho</h3>
-            <div style="height: 250px; width: 100%; position: relative; margin-top: 15px;">
-                <canvas id="lineChart"></canvas>
+        <div class="stat-card dashboard-chart-card">
+            <h3>Distribuição de Tarefas</h3>
+            <div class="chart-wrapper">
+                <canvas id="tasksChart"></canvas>
             </div>
         </div>
 
+        <div class="dashboard-right">
+
+            <div class="stat-card dashboard-activity-card">
+                <h3>Atividades Recentes</h3>
+                <ul class="activity-list">
+                    <?php foreach ($recentes as $item):
+                        $s = (int) $item['status'];
+                    ?>
+                        <li class="activity-item">
+                            <span class="activity-title"><?= htmlspecialchars($item['titulo']) ?></span>
+                            <span class="status-tag <?= $statusClass[$s] ?? '' ?>"><?= $statusLabel[$s] ?? '-' ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                    <?php if (empty($recentes)): ?>
+                        <li class="activity-empty">Nenhuma tarefa ainda.</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+            <div class="stat-card dashboard-line-card">
+                <h3>Ritmo de Trabalho</h3>
+                <div class="chart-wrapper">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 </div>
 
 <script>
-window.addEventListener('load', function() {
-    const cores = ['#a31545', '#64748b', '#10b981'];
+window.addEventListener('load', function () {
+    const cores = ['#8B0836', '#64748b', '#10b981'];
 
-    // --- GRÁFICO DE ROSCA (Status) ---
     const ctxStatus = document.getElementById('tasksChart');
     if (ctxStatus) {
         new Chart(ctxStatus, {
@@ -89,7 +126,7 @@ window.addEventListener('load', function() {
                     data: [<?= $tarefasPendentes ?>, <?= $tarefasFazendo ?>, <?= $tarefasConcluidas ?>],
                     backgroundColor: cores,
                     borderWidth: 0,
-                    hoverOffset: 15
+                    hoverOffset: 10
                 }]
             },
             options: {
@@ -98,15 +135,14 @@ window.addEventListener('load', function() {
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { padding: 30, font: { size: 15, weight: '50' } }
+                        labels: { padding: 20, font: { size: 13 } }
                     }
                 },
-                cutout: '70%' // Deixa a rosca mais elegante/fina
+                cutout: '70%'
             }
         });
     }
 
-    // --- GRÁFICO DE LINHA (Ritmo) ---
     const ctxLine = document.getElementById('lineChart');
     if (ctxLine) {
         new Chart(ctxLine, {
@@ -116,13 +152,13 @@ window.addEventListener('load', function() {
                 datasets: [{
                     label: 'Concluídas',
                     data: <?= $performanceJson ?>,
-                    borderColor: '#a31545',
-                    backgroundColor: 'rgba(163, 21, 69, 0.05)',
+                    borderColor: '#8B0836',
+                    backgroundColor: 'rgba(139, 8, 54, 0.05)',
                     fill: true,
                     tension: 0.4,
-                    borderWidth: 3,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#a31545'
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#8B0836'
                 }]
             },
             options: {

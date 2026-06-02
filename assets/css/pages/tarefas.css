@@ -27,20 +27,6 @@
 }
 
 
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-}
-
-.page-header-left {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 18px;
-}
-
 .back-link {
     display: flex;
     flex-shrink: 0;
@@ -55,35 +41,6 @@
 .back-link img {
     width: 40px;
     height: 40px;
-}
-
-.headline {
-    font-family: var(--font-family);
-    font-weight: 600;
-    font-size: 34px;
-    color: var(--color-text-strong);
-}
-
-.header-actions, .member-profile {
-    display: flex;
-    align-items: center;
-}
-
-.header-actions {
-    gap: 20px;
-}
-
-.member-profile {
-    gap: 10px;
-}
-
-.member-name {
-    font-weight: 600;
-}
-
-.member-info .member-category {
-    font-size: 12px;
-    color: var(--color-text-secondary);
 }
 
 /* barra de busca */

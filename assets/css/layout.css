@@ -1,4 +1,58 @@
-/* Layout base */
+/* ── Page header (compartilhado entre páginas) ── */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.page-header-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+}
+
+.headline {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--color-text-strong);
+}
+
+.header-actions, .member-profile {
+    display: flex;
+    align-items: center;
+}
+
+.header-actions { gap: 20px; }
+.member-profile  { gap: 10px; }
+
+.member-name { font-weight: 600; }
+
+.member-info .member-category {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.notification-icon {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    background: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.notification-icon img {
+    width: 32px;
+    height: 32px;
+}
+
+/* ── Layout base ── */
 .layout {
     display: flex;
     height: 100vh;

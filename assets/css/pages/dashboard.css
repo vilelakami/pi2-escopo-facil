@@ -1,55 +1,49 @@
-/* dashboard.css — estilos específicos da página de dashboard */
-/* Container Principal */
+/* dashboard.css */
+
 .dashboard-container {
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 16px;
 }
 
-/* Grade de Cards de Estatísticas */
+/* ── Stat cards ── */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
 }
 
 .stat-card {
     background: #fff;
-    padding: 25px;
+    padding: 20px 24px;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     border: 1px solid #eef2f7;
-    transition: transform 0.2s;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
 }
 
 .stat-card h3 {
-    font-size: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
     color: #64748b;
-    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 8px;
 }
 
 .stat-card .number {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 700;
     color: #1e293b;
+    line-height: 1;
 }
 
-/* Cores de Destaque para os Cards */
-.stat-card.warning { border-top: 4px solid #f59e0b; }
-.stat-card.success { border-top: 4px solid #10b981; }
 
-/* Barra de Progresso */
 .progress-bar {
     width: 100%;
-    height: 8px;
+    height: 6px;
     background: #e2e8f0;
     border-radius: 10px;
-    margin-top: 15px;
+    margin-top: 12px;
     overflow: hidden;
 }
 
@@ -59,71 +53,99 @@
     transition: width 0.5s ease-in-out;
 }
 
-/* Atividades Recentes */
-.recent-activity {
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+/* ── Bottom section ── */
+.dashboard-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 }
 
+/* Donut chart card */
+.dashboard-chart-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.chart-wrapper {
+    flex: 1;
+    position: relative;
+    min-height: 220px;
+}
+
+/* Right column */
+.dashboard-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+}
+
+.dashboard-activity-card,
+.dashboard-line-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.dashboard-line-card .chart-wrapper {
+    min-height: 120px;
+}
+
+/* ── Activity list ── */
 .activity-list {
     list-style: none;
     padding: 0;
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .activity-item {
-    padding: 15px 0;
+    padding: 9px 0;
     border-bottom: 1px solid #f1f5f9;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .activity-item:last-child { border-bottom: none; }
 
+.activity-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.activity-empty {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    padding: 8px 0;
+}
+
 .status-tag {
-    padding: 4px 10px;
+    padding: 3px 10px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
     background: #f1f5f9;
     color: #64748b;
 }
 
-/* Cores das Tags de Status */
 .status-tag.concluido { background: #dcfce7; color: #166534; }
-.status-tag.fazendo { background: #dbeafe; color: #1e40af; }
-.status-tag.a-fazer { background: #fef3c7; color: #92400e; }
-
-/* Grafico de rosquinha */
-.charts-section {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.chart-container {
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    height: 350px; /* Altura fixa para o gráfico */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.chart-container h3 {
-    align-self: flex-start;
-    margin-bottom: 20px;
-    color: #1e293b;
-}
+.status-tag.fazendo   { background: #dbeafe; color: #1e40af; }
+.status-tag.a-fazer   { background: #fef3c7; color: #92400e; }
 
 canvas {
     max-width: 100% !important;
-    max-height: 2500px !important;
 }
