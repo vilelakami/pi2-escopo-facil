@@ -1,4 +1,5 @@
-const AVATAR_ICON_URL_DIR = (window.BASE_URL || '') + '/assets/icon/avatars/';
+const AVATAR_BASE_URL = window.BASE_URL || document.body?.dataset.baseUrl || '';
+const AVATAR_ICON_URL_DIR = AVATAR_BASE_URL + '/assets/icon/avatars/';
 
 const AVATAR_GRADIENTS = {
     'grad-peach':    'radial-gradient(circle at 40% 35%, #FFF0E8, #F5CEB4)',
