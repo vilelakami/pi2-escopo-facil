@@ -22,7 +22,7 @@ Utilitários disponíveis:
 | Guard de autenticação | `includes/auth_guard.php` — incluir no topo de toda página protegida |
 | Variáveis de ambiente | `.env` (DB_HOST, DB_NAME, DB_USER, DB_PASS) |
 
-Schema do banco: `database.sql`
+Schema do banco: `database/schema.sql`
 
 ---
 
@@ -32,7 +32,7 @@ Schema do banco: `database.sql`
 > A UI do kanban já existe em `pages/tarefas/index.php` e `assets/js/pages/tarefas.js`.  
 > O JS é 100% client-side hoje — nenhum dado é salvo no banco.
 
-### Schema relevante (`database.sql`)
+### Schema relevante (`database/schema.sql`)
 
 ```sql
 tarefas (
@@ -168,7 +168,7 @@ Métodos necessários: `buscarPorId()`, `atualizar()`, `alterarSenha()`.
 > As páginas `esqueci-senha.php` e `redefinir-senha.php` já existem com UI pronta mas `action="#"`.  
 > O schema `tokens_redefinicao` já está no banco.
 
-### Schema relevante (`database.sql`)
+### Schema relevante (`database/schema.sql`)
 
 ```sql
 tokens_redefinicao (

@@ -1037,7 +1037,7 @@ Para testar localmente:
 
 1. Abrir Apache e MySQL no XAMPP.
 2. Criar o banco `escopo_facil`.
-3. Importar `database.sql`.
+3. Importar `database/schema.sql`.
 4. Configurar `.env`.
 5. Acessar o projeto pelo navegador.
 

@@ -200,11 +200,13 @@ function abrirDetalhe(card) {
     setCustomSelectValue(detailPrioritySelect, card.dataset.prioridade || '1');
     setCustomSelectValue(detailStatusSelect, card.dataset.status || '1');
     cardDetailOverlay.classList.add('active');
+    carregarChecklist(card.dataset.id);
 }
 
 function fecharDetalhe() {
     cardDetailOverlay.classList.remove('active');
     cardDetalhe = null;
+    if (checklistList) checklistList.innerHTML = '';
 }
 
 btnCloseDetail?.addEventListener('click', fecharDetalhe);
@@ -250,7 +252,7 @@ btnDeleteDetail?.addEventListener('click', () => {
 });
 
 document.addEventListener('click', (e) => {
-    if (e.target.closest('.btn-delete') || e.target.closest('.btn-add-card')) return;
+    if (e.target.closest('.btn-add-card')) return;
     const card = e.target.closest('.task-card');
     if (card) abrirDetalhe(card);
 });
@@ -293,38 +295,6 @@ btnSalvar?.addEventListener('click', (e) => {
         .catch(() => alert('Erro ao salvar'));
 });
 
-// =====================
-// DELETE
-// =====================
-
-document.addEventListener('click', (event) => {
-    const btn = event.target.closest('.btn-delete');
-    if (!btn) return;
-
-    const card = btn.closest('.task-card');
-    if (!card) return;
-
-    if (!confirm('Deseja realmente excluir esta tarefa?')) return;
-
-    const formData = new FormData();
-    formData.append('tarefa_id', card.dataset.id);
-
-    fetch(baseUrl + '/actions/tarefas/deletar.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-    console.log(data);
-
-    if (data.success) {
-        recarregar();
-    } else {
-        alert(data.message || 'Erro ao excluir');
-    }
-})
-    .catch(() => alert('Erro ao excluir'));
-});
 
 // =====================
 // DRAG AND DROP
@@ -416,4 +386,142 @@ document.querySelectorAll('.kanban-column').forEach((coluna) => {
             });
     });
 
+});
+
+// =====================
+// CHECKLIST
+// =====================
+
+const checklistList        = document.getElementById('checklistList');
+const checklistInput       = document.getElementById('checklistInput');
+const checklistAddBtn      = document.getElementById('checklistAddBtn');
+const checklistFraction    = document.getElementById('checklistFraction');
+const checklistProgressFill = document.getElementById('checklistProgressFill');
+
+function escapeHtmlJS(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function postChecklist(action, data) {
+    return fetch(`${baseUrl}/actions/checklist/${action}.php`, { method: 'POST', body: data })
+        .then((res) => res.json());
+}
+
+function renderChecklistItem(item) {
+    const li = document.createElement('li');
+    li.className = 'checklist-item' + (item.concluido == 1 ? ' done' : '');
+    li.dataset.id = item.id;
+    li.innerHTML = `
+        <label class="checklist-item-label">
+            <input type="checkbox" class="checklist-check" ${item.concluido == 1 ? 'checked' : ''}>
+            <span class="checklist-item-text">${escapeHtmlJS(item.texto)}</span>
+        </label>
+        <button type="button" class="checklist-delete-btn" title="Remover">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    `;
+    return li;
+}
+
+function updateChecklistUI() {
+    if (!checklistList) return;
+    const items = checklistList.querySelectorAll('.checklist-item');
+    const total = items.length;
+    const done  = checklistList.querySelectorAll('.checklist-item.done').length;
+    const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+
+    if (checklistFraction) checklistFraction.textContent = `${done}/${total}`;
+    if (checklistProgressFill) checklistProgressFill.style.width = `${pct}%`;
+
+    if (cardDetalhe) {
+        cardDetalhe.dataset.checklistTotal = total;
+        cardDetalhe.dataset.checklistDone  = done;
+        const badge    = cardDetalhe.querySelector('.checklist-badge');
+        const countEl  = badge?.querySelector('.checklist-badge-count');
+        if (badge)   badge.dataset.total = total;
+        if (badge)   badge.dataset.done  = done;
+        if (countEl) countEl.textContent = `${done}/${total}`;
+    }
+}
+
+function carregarChecklist(tarefaId) {
+    if (!checklistList) return;
+    checklistList.innerHTML = '<li class="checklist-loading">Carregando...</li>';
+
+    fetch(`${baseUrl}/actions/checklist/listar.php?tarefa_id=${tarefaId}`)
+        .then((res) => res.json())
+        .then((data) => {
+            checklistList.innerHTML = '';
+            if (data.success) {
+                data.items.forEach((item) => checklistList.appendChild(renderChecklistItem(item)));
+            }
+            updateChecklistUI();
+        })
+        .catch(() => { checklistList.innerHTML = ''; });
+}
+
+function adicionarChecklistItem() {
+    if (!cardDetalhe) return;
+    const texto = checklistInput?.value.trim();
+    if (!texto) return;
+
+    const formData = new FormData();
+    formData.append('tarefa_id', cardDetalhe.dataset.id);
+    formData.append('texto', texto);
+
+    postChecklist('criar', formData).then((data) => {
+        if (data.success && data.item) {
+            checklistList.appendChild(renderChecklistItem(data.item));
+            updateChecklistUI();
+            checklistInput.value = '';
+            checklistInput.focus();
+        }
+    });
+}
+
+checklistAddBtn?.addEventListener('click', adicionarChecklistItem);
+
+checklistInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); adicionarChecklistItem(); }
+});
+
+checklistList?.addEventListener('change', (e) => {
+    const checkbox = e.target.closest('.checklist-check');
+    if (!checkbox || !cardDetalhe) return;
+    const li = checkbox.closest('.checklist-item');
+    if (!li) return;
+
+    const formData = new FormData();
+    formData.append('item_id', li.dataset.id);
+    formData.append('tarefa_id', cardDetalhe.dataset.id);
+
+    postChecklist('toggle', formData).then((data) => {
+        if (data.success) {
+            li.classList.toggle('done', data.concluido == 1);
+            checkbox.checked = data.concluido == 1;
+            updateChecklistUI();
+        } else {
+            checkbox.checked = !checkbox.checked;
+        }
+    });
+});
+
+checklistList?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.checklist-delete-btn');
+    if (!btn || !cardDetalhe) return;
+    const li = btn.closest('.checklist-item');
+    if (!li) return;
+
+    const formData = new FormData();
+    formData.append('item_id', li.dataset.id);
+    formData.append('tarefa_id', cardDetalhe.dataset.id);
+
+    postChecklist('deletar', formData).then((data) => {
+        if (data.success) { li.remove(); updateChecklistUI(); }
+    });
 });

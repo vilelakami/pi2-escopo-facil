@@ -11,6 +11,23 @@
                     <span class="card-detail-label">Descrição</span>
                     <textarea class="card-detail-textarea" id="detailDescription" placeholder="Adicione uma descrição detalhada..."></textarea>
                 </div>
+
+                <div class="card-detail-section">
+                    <div class="checklist-header">
+                        <span class="card-detail-label">Checklist</span>
+                        <span class="checklist-fraction" id="checklistFraction">0/0</span>
+                    </div>
+                    <div class="checklist-progress-bar">
+                        <div class="checklist-progress-fill" id="checklistProgressFill"></div>
+                    </div>
+                    <ul class="checklist-list" id="checklistList"></ul>
+                    <div class="checklist-add">
+                        <input type="text" id="checklistInput" placeholder="Novo item..." maxlength="200" autocomplete="off">
+                        <button type="button" id="checklistAddBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="card-detail-sidebar">

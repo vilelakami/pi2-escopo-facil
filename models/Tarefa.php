@@ -8,7 +8,11 @@ class Tarefa
     {
         $pdo = getConnection();
         $stmt = $pdo->prepare("
-            SELECT t.*, u.nome AS criado_por_nome
+            SELECT t.*,
+                   u.nome AS criado_por_nome,
+                   u.avatar AS criado_por_avatar,
+                   (SELECT COUNT(*) FROM checklist_items ci WHERE ci.tarefa_id = t.id) AS checklist_total,
+                   (SELECT COALESCE(SUM(ci.concluido), 0) FROM checklist_items ci WHERE ci.tarefa_id = t.id) AS checklist_done
             FROM tarefas t
             LEFT JOIN usuarios u ON u.id = t.criado_por
             WHERE t.projeto_id = :projeto_id

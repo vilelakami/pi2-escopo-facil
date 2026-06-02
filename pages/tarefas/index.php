@@ -38,9 +38,16 @@ function formatarPrazo(?string $prazo): string
 <section class="page-content" data-projeto-id="<?= $projetoId ?>">
 
     <div class="page-header">
-        <h1 class="headline">
-            <?= $projeto ? 'Projeto: ' . htmlspecialchars($projeto['titulo']) : 'Tarefas' ?>
-        </h1>
+        <div class="page-header-left">
+            <?php if ($projeto): ?>
+                <a href="<?= BASE_URL ?>/index.php?page=projetos" class="back-link">
+                    <img src="<?= BASE_URL ?>/assets/icon/arrow.svg" alt="voltar">
+                </a>
+            <?php endif; ?>
+            <h1 class="headline">
+                <?= $projeto ? htmlspecialchars($projeto['titulo']) : 'Tarefas' ?>
+            </h1>
+        </div>
 
 
         <div class="header-actions">
@@ -119,6 +126,10 @@ function formatarPrazo(?string $prazo): string
                             data-prioridade="<?= $prioridadeId ?>"
                             data-status="<?= (int) $tarefa['status'] ?>"
                             data-prazo="<?= htmlspecialchars($tarefa['prazo'] ?? '') ?>"
+                            data-criado-por-nome="<?= htmlspecialchars($tarefa['criado_por_nome'] ?? '') ?>"
+                            data-criado-por-avatar="<?= htmlspecialchars($tarefa['criado_por_avatar'] ?? '') ?>"
+                            data-checklist-total="<?= (int)($tarefa['checklist_total'] ?? 0) ?>"
+                            data-checklist-done="<?= (int)($tarefa['checklist_done'] ?? 0) ?>"
                         >
                             <div class="task-description">
                                 <h3><?= htmlspecialchars($tarefa['titulo']) ?></h3>
@@ -140,8 +151,19 @@ function formatarPrazo(?string $prazo): string
                                     </div>
                                 </div>
 
+                                <?php
+                                    $clTotal = (int)($tarefa['checklist_total'] ?? 0);
+                                    $clDone  = (int)($tarefa['checklist_done'] ?? 0);
+                                ?>
                                 <div class="task-btn">
-                                    <button class="btn-delete">Excluir</button>
+                                    <div class="task-btn-left">
+                                        <svg class="card-open-hint" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+                                        <div class="checklist-badge" data-total="<?= $clTotal ?>" data-done="<?= $clDone ?>">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="9 12 11 14 15 10"/></svg>
+                                            <span class="checklist-badge-count"><?= $clDone ?>/<?= $clTotal ?></span>
+                                        </div>
+                                    </div>
+                                    <?= renderAvatar($tarefa['criado_por_avatar'] ?? '', $tarefa['criado_por_nome'] ?? 'U', 'avatar-card') ?>
                                 </div>
                             </div>
                         </div>
