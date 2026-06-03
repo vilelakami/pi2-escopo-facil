@@ -4,6 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/assets/icon/logo/Vector%20(3).svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmação — Escopo Fácil</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/global.css">
@@ -25,7 +26,7 @@
             <h1 class="title">Senha alterada com sucesso!</h1>
             <p class="subtitle">Pronto! Agora você já pode usar sua nova senha para acessar a conta.</p>
         </div>
-        <a href="<?= BASE_URL ?>/pages/auth/login.php" class="btn-primary">Voltar para o login</a>
+        <a href="<?= BASE_URL ?>/index.php?page=login" class="btn-primary">Voltar para o login</a>
     </section>
 
     <?php $authContent = ob_get_clean(); ?>

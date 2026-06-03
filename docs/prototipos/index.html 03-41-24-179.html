@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapeamento de Fluxo — Login, Cadastro e Redefinição</title>
+  <style>
+    :root {
+      --bg: #f7f4ea;
+      --surface: #fcf9e8;
+      --surface-2: #fffdf4;
+      --primary: #8b0836;
+      --primary-soft: #b64a6f;
+      --text: #030303;
+      --text-soft: #5f5a55;
+      --border: #e6dcc1;
+      --success: #1f7a4d;
+      --warning: #b56a00;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      --space-1: 8px;
+      --space-2: 12px;
+      --space-3: 16px;
+      --space-4: 20px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 40px;
+      --font: Outfit, Inter, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background: linear-gradient(180deg, var(--bg) 0%, #f2eddc 100%);
+      color: var(--text);
+      padding: 32px;
+    }
+
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      gap: 28px;
+    }
+
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--text-soft);
+      line-height: 1.55;
+      max-width: 900px;
+    }
+
+    .flow-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .flow-step {
+      background: #fff;
+      border: 1px dashed var(--border);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .screen {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 760px;
+    }
+
+    .screen__top {
+      padding: 18px 20px;
+      background: rgba(139, 8, 54, 0.05);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .screen__eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .screen__title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .screen__subtitle {
+      color: var(--text-soft);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .screen__body {
+      padding: 24px 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      flex: 1;
+    }
+
+    .logo-placeholder {
+      width: 160px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(139, 8, 54, 0.1);
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px 14px;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .input-help {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    .link-row,
+    .footer-links {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .text-link {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .text-link:hover {
+      text-decoration: underline;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.45;
+    }
+
+    .checkbox input {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn--primary {
+      background: var(--primary);
+      color: var(--surface);
+    }
+
+    .btn--secondary {
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--primary);
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .card-note,
+    .success-card,
+    .security-card {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .card-note h4,
+    .security-card h4,
+    .success-card h4 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .card-note ul,
+    .security-card ul {
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .success-card {
+      background: rgba(31, 122, 77, 0.06);
+      border-color: rgba(31, 122, 77, 0.18);
+    }
+
+    .success-card p {
+      color: #24543a;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      background: rgba(31, 122, 77, 0.08);
+      color: var(--success);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .map-footer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .map-footer h3 {
+      margin-bottom: 14px;
+      font-size: 20px;
+    }
+
+    .map-footer ul {
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+      color: var(--text-soft);
+      line-height: 1.45;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 18px;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .screen {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Mapeamento do fluxo de autenticação</h1>
+      <p>
+        Base visual para Figma. Este arquivo não é tela final do sistema: ele serve para mapear as etapas,
+        os campos e a navegação ideal entre login, cadastro e redefinição de senha.
+      </p>
+
+      <div class="flow-bar">
+        <span class="flow-step">1. Login</span>
+        <span class="flow-step">2. Esqueci minha senha</span>
+        <span class="flow-step">3. Nova senha</span>
+        <span class="flow-step">4. Confirmação</span>
+        <span class="flow-step">5. Cadastro inicial</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="screen" id="screen-login">
+        <div class="screen__top">
+          <p class="screen__eyebrow">Tela 01</p>
+          <h2 class="screen__title">Login</h2>
+          <p class="screen__subtitle">Entrada principal do sistema para usuário já cadastrado.</p>
+        </div>
+        <div class="screen__body">
+          <div class="logo-placeholder">Logo / Marca</div>
+
+          <div class="form-group">
+            <label for="login-email">E-mail</label>
+            <input id="login-email" type="email" placeholder="seuemail@instituicao.com" />
+            <span class="input-help">Validar formato de e-mail e campo obrigatório.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input id="login-password" type="password" placeholder="Digite sua senha" />
+            <span class="input-help">Campo obrigatório. Exibir erro se estiver vazio ou incorreto.</span>
+          </div>
+
+          <div class="link-row">
+            <label class="checkbox">
+              <input type="checkbox" />
+              <span>Lembrar acesso neste dispositivo</span>
+            </label>
+            <a class="text-link" href="#screen-forgot">Esqueci minha senha</a>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn--primary" data-action="login">Entrar</button>
+          </div>
+
+          <div class="footer-links">
+            <span class="input-help">Ainda não possui cadastro?</span>
+            <a class="text-link" href="#screen-register">Criar conta</a>
+          </div>
+
+          <div class="card-note">
+            <h4>Validações esperadas</h4>
+            <ul>
+              <li>E-mail obrigatório e com formato válido.</li>
+              <li>Senha obrigatória.</li>
+              <li>Mensagem de erro clara em credenciais inválidas.</li>
+              <li>Ao logar com sucesso, redireciona para o sistema.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen" id="screen-forgot">
+        <div class="screen__top">
+          <p class="screen__eyebrow">Tela 02</p>
+          <h2 class="screen__title">Esqueci minha senha</h2>
+          <p class="screen__subtitle">Fluxo inicial para recuperação segura de acesso.</p>
+        </div>
+        <div class="screen__body">
+          <div class="logo-placeholder">Logo / Marca</div>
+
+          <div class="form-group">
+            <label for="forgot-email">E-mail cadastrado</label>
+            <input id="forgot-email" type="email" placeholder="Digite seu e-mail" />
+            <span class="input-help">Enviar link ou código de redefinição apenas para e-mails válidos.</span>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn--primary" data-action="send-reset">Enviar instruções</button>
+            <a class="btn btn--secondary" href="#screen-login">Voltar para login</a>
+          </div>
+
+          <div class="security-card">
+            <h4>Regras de segurança</h4>
+            <ul>
+              <li>Não revelar se o e-mail existe ou não no sistema.</li>
+              <li>Mensagem neutra: “Se o e-mail estiver cadastrado, enviaremos as instruções”.</li>
+              <li>Token de redefinição com expiração.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen" id="screen-reset">
+        <div class="screen__top">
+          <p class="screen__eyebrow">Tela 03</p>
+          <h2 class="screen__title">Redefinir senha</h2>
+          <p class="screen__subtitle">Tela aberta após clique no link seguro de recuperação.</p>
+        </div>
+        <div class="screen__body">
+          <div class="pill">Token válido para redefinição</div>
+
+          <div class="form-group">
+            <label for="new-password">Nova senha</label>
+            <input id="new-password" type="password" placeholder="Crie uma nova senha" />
+            <span class="input-help">Mínimo sugerido: 8 caracteres, com letras e números.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Confirmar nova senha</label>
+            <input id="confirm-password" type="password" placeholder="Repita a nova senha" />
+            <span class="input-help">As senhas devem coincidir.</span>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn--primary" data-action="reset-password">Salvar nova senha</button>
+          </div>
+
+          <div class="card-note">
+            <h4>Validações esperadas</h4>
+            <ul>
+              <li>Token válido e não expirado.</li>
+              <li>Nova senha obrigatória.</li>
+              <li>Confirmação obrigatória e igual à nova senha.</li>
+              <li>Ao finalizar, direcionar para confirmação.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen" id="screen-confirmation">
+        <div class="screen__top">
+          <p class="screen__eyebrow">Tela 04</p>
+          <h2 class="screen__title">Confirmação de redefinição</h2>
+          <p class="screen__subtitle">Tela de sucesso após atualização segura da senha.</p>
+        </div>
+        <div class="screen__body">
+          <div class="success-card">
+            <h4>Senha redefinida com sucesso</h4>
+            <p>
+              Sua senha foi atualizada. Agora você já pode voltar para a tela de login
+              e acessar o sistema com as novas credenciais.
+            </p>
+          </div>
+
+          <div class="btn-row">
+            <a class="btn btn--primary" href="#screen-login">Voltar para login</a>
+          </div>
+
+          <div class="card-note">
+            <h4>Objetivo da tela</h4>
+            <ul>
+              <li>Fechar o fluxo com feedback claro.</li>
+              <li>Evitar deixar o usuário perdido após trocar a senha.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen" id="screen-register">
+        <div class="screen__top">
+          <p class="screen__eyebrow">Tela 05</p>
+          <h2 class="screen__title">Cadastro inicial</h2>
+          <p class="screen__subtitle">Fluxo separado do login, usando apenas os campos mínimos definidos no projeto.</p>
+        </div>
+        <div class="screen__body">
+          <div class="logo-placeholder">Logo / Marca</div>
+
+          <div class="form-group">
+            <label for="register-name">Nome completo</label>
+            <input id="register-name" type="text" placeholder="Digite seu nome completo" />
+          </div>
+
+          <div class="form-group">
+            <label for="register-email">E-mail</label>
+            <input id="register-email" type="email" placeholder="Digite seu e-mail" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="register-password">Senha</label>
+              <input id="register-password" type="password" placeholder="Crie uma senha" />
+            </div>
+            <div class="form-group">
+              <label for="register-role">Cargo</label>
+              <select id="register-role">
+                <option selected disabled>Selecione</option>
+                <option>Desenvolvedor Frontend</option>
+                <option>Desenvolvedor Backend</option>
+                <option>Desenvolvedor Full Stack</option>
+                <option>UI/UX Designer</option>
+                <option>Product Owner</option>
+                <option>Scrum Master</option>
+                <option>Tech Lead</option>
+                <option>QA / Testes</option>
+                <option>DevOps</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="checkbox">
+            <input type="checkbox" />
+            <span>Li e aceito os termos e condições de uso do sistema.</span>
+          </label>
+
+          <div class="btn-row">
+            <button class="btn btn--primary" data-action="register">Criar conta</button>
+          </div>
+
+          <div class="footer-links">
+            <span class="input-help">Já possui cadastro?</span>
+            <a class="text-link" href="#screen-login">Ir para login</a>
+          </div>
+
+          <div class="card-note">
+            <h4>Campos do cadastro inicial</h4>
+            <ul>
+              <li>Nome, e-mail, senha e cargo.</li>
+              <li>Status, id e datas são preenchidos pelo sistema.</li>
+              <li>Dados complementares ficam para perfil/configurações depois.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="map-footer">
+      <h3>Resumo do fluxo</h3>
+      <ul>
+        <li>Usuário entra pela tela de login.</li>
+        <li>Se esqueceu a senha, vai para recuperação e depois redefine a senha em tela segura.</li>
+        <li>Após redefinir, recebe uma confirmação e volta ao login.</li>
+        <li>Se ainda não possui conta, vai para cadastro inicial.</li>
+        <li>O cadastro pede apenas os dados mínimos; perfil completo fica para etapa posterior.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    document.querySelectorAll('[data-action]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const labels = {
+          login: 'Ação simulada: autenticar usuário e redirecionar para o sistema.',
+          'send-reset': 'Ação simulada: enviar instruções de redefinição para o e-mail informado.',
+          'reset-password': 'Ação simulada: validar token e salvar nova senha.',
+          register: 'Ação simulada: criar conta com os dados mínimos do cadastro inicial.'
+        };
+
+        alert(labels[button.dataset.action] || 'Ação simulada');
+      });
+    });
+  </script>
+</body>
+</html>

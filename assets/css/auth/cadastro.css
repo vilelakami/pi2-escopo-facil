@@ -28,6 +28,57 @@
     gap: var(--spacing-md);
 }
 
+/* --- Avatar field (wrapper neutro, sem height fixo do .form-group) --- */
+.avatar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.avatar-field-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #697386;
+}
+
+/* Override light theme para o picker dentro da auth */
+.avatar-field .avatar-picker-toggle-icons {
+    background: #F7F8FA;
+    border-color: #E2E8F0;
+    color: #2D3748;
+}
+
+.avatar-field .avatar-picker-toggle-icons:hover {
+    background: #EDF2F7;
+}
+
+.avatar-field .avatar-picker-toggle-chevron {
+    color: #697386;
+}
+
+.avatar-field .avatar-picker-icons-panel {
+    background: #F7F8FA;
+    border-color: #E2E8F0;
+}
+
+.avatar-field .avatar-picker-search {
+    background: #fff;
+    border-color: #E2E8F0;
+    color: #2D3748;
+}
+
+.avatar-field .avatar-picker-icon:hover {
+    background: #EDF2F7;
+}
+
+.avatar-field .avatar-picker-icon--selected {
+    background: rgba(99,102,241,0.08);
+}
+
+.avatar-field .avatar-picker-icons-grid::-webkit-scrollbar-thumb {
+    background: #CBD5E0;
+}
+
 /* --- Footer --- */
 .cadastro-footer {
     font-family: var(--font-family);

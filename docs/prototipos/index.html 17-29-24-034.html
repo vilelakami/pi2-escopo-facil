@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock da Plataforma — Projetos, Tarefas, Membros e Configurações</title>
+  <style>
+    :root {
+      --color-primary: #8B0836;
+      --color-primary-strong: #6f062b;
+      --color-background: #f7f4ea;
+      --color-surface: #FCF9E8;
+      --color-card: #ffffff;
+      --color-border: #ece5d6;
+      --color-text: #030303;
+      --color-text-soft: #6e6a63;
+      --color-success: #2e9b63;
+      --color-warning: #d39a1f;
+      --color-info: #4d7ae6;
+      --color-danger: #d35d5d;
+      --sidebar-width: 256px;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow-soft: 0 14px 40px rgba(22, 24, 35, 0.06);
+      --font-main: Outfit, Inter, Arial, sans-serif;
+      --spacing-1: 8px;
+      --spacing-2: 12px;
+      --spacing-3: 16px;
+      --spacing-4: 20px;
+      --spacing-5: 24px;
+      --spacing-6: 32px;
+      --spacing-7: 40px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--color-background);
+      color: var(--color-text);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+    }
+
+    .sidebar {
+      background: var(--color-surface);
+      border-right: 1px solid var(--color-border);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .logo {
+      width: 185px;
+      height: 66px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: 28px;
+      background: rgba(139, 8, 54, 0.06);
+      flex-shrink: 0;
+    }
+
+    .sidebar-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-soft);
+      margin-bottom: 10px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nav-item {
+      min-height: 56px;
+      width: 100%;
+      border-radius: 16px;
+      border: none;
+      background: transparent;
+      color: #030303;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      font-size: 16px;
+      font-weight: 400;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav-item.active {
+      background: var(--color-primary);
+      color: var(--color-surface);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-projects {
+      display: grid;
+      gap: 10px;
+    }
+
+    .project-chip {
+      min-height: 44px;
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--color-border);
+      background: #fff;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .project-chip.active {
+      border-color: rgba(139, 8, 54, 0.28);
+      background: rgba(139, 8, 54, 0.06);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .project-chip-role {
+      font-size: 11px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(139, 8, 54, 0.1);
+      color: var(--color-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid var(--color-border);
+      padding-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .profile-mini {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--color-border);
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(139, 8, 54, 0.18), rgba(139, 8, 54, 0.06));
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .profile-mini strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .profile-mini span {
+      display: block;
+      color: var(--color-text-soft);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .main {
+      padding: 28px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .page-title h1 {
+      font-size: 36px;
+      line-height: 1.08;
+      margin-bottom: 10px;
+    }
+
+    .page-title p {
+      color: var(--color-text-soft);
+      max-width: 820px;
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button,
+    .button-outline,
+    .button-subtle,
+    .icon-button {
+      min-height: 48px;
+      border-radius: 14px;
+      border: none;
+      padding: 0 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .button {
+      background: var(--color-primary);
+      color: var(--color-surface);
+      font-weight: 700;
+    }
+
+    .button:hover {
+      background: var(--color-primary-strong);
+    }
+
+    .button-outline {
+      border: 1px solid var(--color-border);
+      background: #fff;
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .button-subtle {
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .icon-button {
+      width: 48px;
+      padding: 0;
+      background: #fff;
+      border: 1px solid var(--color-border);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr auto;
+      gap: 16px;
+    }
+
+    .surface-input,
+    .surface-card,
+    .view,
+    .panel,
+    .stat,
+    .table-wrap,
+    .column,
+    .member-card,
+    .settings-card,
+    .project-card,
+    .empty-state,
+    .activity-card,
+    .detail-card {
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .surface-input {
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      color: var(--color-text-soft);
+    }
+
+    .surface-input strong {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat {
+      padding: 18px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--color-text-soft);
+      margin-bottom: 10px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-helper {
+      font-size: 13px;
+      color: var(--color-text-soft);
+    }
+
+    .view {
+      padding: 22px;
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .panel-header h2 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .panel-header p {
+      color: var(--color-text-soft);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .panel-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .activity-card,
+    .detail-card,
+    .project-card,
+    .member-card,
+    .settings-card {
+      padding: 18px;
+    }
+
+    .activity-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: start;
+      gap: 14px;
+    }
+
+    .activity-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .activity-card h3,
+    .detail-card h3,
+    .project-card h3,
+    .member-card h3,
+    .settings-card h3 {
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+
+    .muted {
+      color: var(--color-text-soft);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .small-muted {
+      color: var(--color-text-soft);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .badge-row,
+    .meta-row,
+    .settings-row,
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .badge {
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.primary { background: rgba(139, 8, 54, 0.08); color: var(--color-primary); }
+    .badge.success { background: rgba(46, 155, 99, 0.12); color: var(--color-success); }
+    .badge.warning { background: rgba(211, 154, 31, 0.14); color: #9a6700; }
+    .badge.info { background: rgba(77, 122, 230, 0.12); color: var(--color-info); }
+    .badge.danger { background: rgba(211, 93, 93, 0.12); color: var(--color-danger); }
+
+    .kanban {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .column {
+      padding: 18px;
+      min-height: 560px;
+      background: var(--color-surface);
+    }
+
+    .column-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .column-header h3 {
+      font-size: 18px;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .task-card {
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .task-card h4 {
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .task-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: var(--color-text-soft);
+      font-size: 12px;
+    }
+
+    .member-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .member-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .member-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin-bottom: 8px;
+      color: var(--color-text-soft);
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    thead th {
+      text-align: left;
+      color: var(--color-text-soft);
+      font-weight: 700;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--color-border);
+      background: rgba(139, 8, 54, 0.03);
+    }
+
+    tbody td {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .project-card {
+      display: grid;
+      gap: 14px;
+    }
+
+    .project-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .project-visual {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .settings-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .settings-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .empty-state {
+      padding: 28px;
+      text-align: center;
+      display: grid;
+      gap: 10px;
+      place-items: center;
+    }
+
+    .empty-state-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      background: rgba(139, 8, 54, 0.08);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--color-border);
+      margin: 12px 0;
+    }
+
+    @media (max-width: 1320px) {
+      .stats-grid,
+      .project-grid,
+      .grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .kanban {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+      }
+
+      .grid-2,
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .main {
+        padding: 18px;
+      }
+
+      .stats-grid,
+      .project-grid,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .member-card,
+      .activity-card,
+      .settings-card {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">escopo</div>
+
+      <div>
+        <p class="sidebar-section-title">Projeto atual</p>
+        <div id="sidebarProjects" class="sidebar-projects"></div>
+      </div>
+
+      <div>
+        <p class="sidebar-section-title">Navegação</p>
+        <nav class="nav">
+          <button class="nav-item active" data-view="dashboard">
+            <span class="nav-icon">◫</span>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-item" data-view="projects">
+            <span class="nav-icon">◆</span>
+            <span>Projetos</span>
+          </button>
+          <button class="nav-item" data-view="tasks">
+            <span class="nav-icon">▣</span>
+            <span>Tarefas</span>
+          </button>
+          <button class="nav-item" data-view="members">
+            <span class="nav-icon">◎</span>
+            <span>Membros</span>
+          </button>
+          <button class="nav-item" data-view="project-settings">
+            <span class="nav-icon">⚙</span>
+            <span>Config. do projeto</span>
+          </button>
+          <button class="nav-item" data-view="profile">
+            <span class="nav-icon">◉</span>
+            <span>Meu perfil</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="profile-mini">
+          <div class="avatar" id="sidebarAvatar">NO</div>
+          <div>
+            <strong id="sidebarUserName">Natan Oliveira</strong>
+            <span id="sidebarUserRole">Admin do projeto atual</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="page-title">
+          <h1 id="mainTitle">Dashboard</h1>
+          <p id="mainDescription">Visão geral do projeto atual, resumo de tarefas, membros e ações disponíveis de acordo com a role do usuário neste projeto.</p>
+        </div>
+
+        <div class="topbar-actions">
+          <button id="roleToggle" class="button-outline">Trocar visualização: admin</button>
+          <button id="projectShortcut" class="button-subtle">Criar projeto</button>
+        </div>
+      </header>
+
+      <section class="toolbar">
+        <div class="surface-input">🔎 <span>Busque por tarefa, membro, projeto ou ação</span></div>
+        <div class="surface-input">📁 <strong id="currentProjectLabel">Projeto atual: Escopo Fácil</strong></div>
+        <button class="button" id="contextActionButton">Nova tarefa</button>
+      </section>
+
+      <section class="stats-grid" id="statsGrid"></section>
+
+      <section id="dashboard" class="view active"></section>
+      <section id="projects" class="view"></section>
+      <section id="tasks" class="view"></section>
+      <section id="members" class="view"></section>
+      <section id="project-settings" class="view"></section>
+      <section id="profile" class="view"></section>
+    </main>
+  </div>
+
+  <script>
+    const user = {
+      id: 1,
+      name: 'Natan Oliveira',
+      initials: 'NO',
+      email: 'natan@escopofacil.com',
+      cargo: 'Desenvolvedor Full Stack',
+      status: 'Ativo'
+    };
+
+    const projects = [
+      {
+        id: 1,
+        name: 'Escopo Fácil',
+        description: 'Projeto principal do PI com foco em gestão de tarefas e colaboração.',
+        role: 'admin',
+        membersCount: 6,
+        tasksCount: 14,
+        progress: '68% concluído'
+      },
+      {
+        id: 2,
+        name: 'Portal Clínico',
+        description: 'Projeto secundário usado para validar múltiplos contextos de projeto.',
+        role: 'member',
+        membersCount: 4,
+        tasksCount: 9,
+        progress: '42% concluído'
+      },
+      {
+        id: 3,
+        name: 'App Mobile Field',
+        description: 'Mock de terceiro projeto para testar seleção de projeto e papéis distintos.',
+        role: 'member',
+        membersCount: 5,
+        tasksCount: 11,
+        progress: '31% concluído'
+      }
+    ];
+
+    const membersByProject = {
+      1: [
+        { name: 'Natan Oliveira', initials: 'NO', email: 'natan@escopofacil.com', cargo: 'Desenvolvedor Full Stack', role: 'admin', status: 'ativo' },
+        { name: 'Camila Gomes', initials: 'CG', email: 'camila@escopofacil.com', cargo: 'UI/UX Designer', role: 'member', status: 'ativo' },
+        { name: 'Nicolas Souza', initials: 'NS', email: 'nicolas@escopofacil.com', cargo: 'Desenvolvedor Backend', role: 'member', status: 'ativo' },
+        { name: 'Guilherme Lima', initials: 'GL', email: 'guilherme@escopofacil.com', cargo: 'Desenvolvedor Frontend', role: 'member', status: 'ativo' },
+        { name: 'Marina Pires', initials: 'MP', email: 'marina@escopofacil.com', cargo: 'QA / Testes', role: 'member', status: 'pendente' },
+        { name: 'Caio Rocha', initials: 'CR', email: 'caio@escopofacil.com', cargo: 'Product Owner', role: 'member', status: 'ativo' }
+      ],
+      2: [
+        { name: 'Natan Oliveira', initials: 'NO', email: 'natan@escopofacil.com', cargo: 'Desenvolvedor Full Stack', role: 'member', status: 'ativo' },
+        { name: 'Letícia Silva', initials: 'LS', email: 'leticia@portalclinico.com', cargo: 'Product Owner', role: 'admin', status: 'ativo' },
+        { name: 'Camila Gomes', initials: 'CG', email: 'camila@escopofacil.com', cargo: 'UI/UX Designer', role: 'member', status: 'ativo' },
+        { name: 'Bruno Reis', initials: 'BR', email: 'bruno@portalclinico.com', cargo: 'QA / Testes', role: 'member', status: 'ativo' }
+      ],
+      3: [
+        { name: 'Natan Oliveira', initials: 'NO', email: 'natan@escopofacil.com', cargo: 'Desenvolvedor Full Stack', role: 'member', status: 'ativo' },
+        { name: 'Paula Costa', initials: 'PC', email: 'paula@mobilefield.com', cargo: 'Tech Lead', role: 'admin', status: 'ativo' },
+        { name: 'Miguel Azevedo', initials: 'MA', email: 'miguel@mobilefield.com', cargo: 'Desenvolvedor Backend', role: 'member', status: 'ativo' },
+        { name: 'Júlia Nunes', initials: 'JN', email: 'julia@mobilefield.com', cargo: 'UI/UX Designer', role: 'member', status: 'ativo' },
+        { name: 'Diego Prado', initials: 'DP', email: 'diego@mobilefield.com', cargo: 'DevOps', role: 'member', status: 'pendente' }
+      ]
+    };
+
+    const tasksByProject = {
+      1: [
+        { title: 'Definir estrutura final da tabela de usuários', status: 'a_fazer', priority: 'alta', due: 'Hoje', owner: 'Nicolas Souza' },
+        { title: 'Refinar wireframe da tela de membros', status: 'a_fazer', priority: 'média', due: 'Amanhã', owner: 'Natan Oliveira' },
+        { title: 'Implementar layout da tela de tarefas', status: 'em_andamento', priority: 'alta', due: 'Hoje', owner: 'Camila Gomes' },
+        { title: 'Validar fluxo de login e redefinição', status: 'em_andamento', priority: 'média', due: 'Hoje', owner: 'Guilherme Lima' },
+        { title: 'Documentar regras de papéis no projeto', status: 'concluido', priority: 'alta', due: 'Concluído', owner: 'Natan Oliveira' },
+        { title: 'Modelar projeto_membros no banco', status: 'concluido', priority: 'alta', due: 'Concluído', owner: 'Nicolas Souza' }
+      ],
+      2: [
+        { title: 'Revisar backlog do módulo clínico', status: 'a_fazer', priority: 'média', due: 'Sexta', owner: 'Letícia Silva' },
+        { title: 'Desenhar estados de faturamento', status: 'em_andamento', priority: 'alta', due: 'Quinta', owner: 'Camila Gomes' },
+        { title: 'Planejar sincronização offline', status: 'concluido', priority: 'alta', due: 'Concluído', owner: 'Natan Oliveira' }
+      ],
+      3: [
+        { title: 'Criar estrutura inicial de navegação mobile', status: 'a_fazer', priority: 'alta', due: 'Sexta', owner: 'Paula Costa' },
+        { title: 'Mapear fluxo de cadastro em campo', status: 'em_andamento', priority: 'média', due: 'Quarta', owner: 'Júlia Nunes' },
+        { title: 'Definir estratégia de release', status: 'concluido', priority: 'baixa', due: 'Concluído', owner: 'Paula Costa' }
+      ]
+    };
+
+    let currentProjectId = 1;
+    let currentView = 'dashboard';
+    let currentRoleOverride = null;
+
+    const viewMeta = {
+      dashboard: {
+        title: 'Dashboard',
+        description: 'Resumo do projeto atual com indicadores, próximas ações, tarefas em andamento e visão rápida dos membros.',
+        actionLabel: 'Nova tarefa'
+      },
+      projects: {
+        title: 'Projetos',
+        description: 'Visão de projetos acessíveis pelo usuário, com diferenciação entre projetos em que ele é admin e projetos em que atua como membro.',
+        actionLabel: 'Criar projeto'
+      },
+      tasks: {
+        title: 'Tarefas',
+        description: 'Kanban interno do projeto atual, já pensando em responsáveis, prioridades e status vinculados ao contexto do projeto.',
+        actionLabel: 'Nova tarefa'
+      },
+      members: {
+        title: 'Membros',
+        description: 'Lista de participantes do projeto atual. Admin gerencia entradas e papéis; membro comum apenas consulta.',
+        actionLabel: 'Adicionar membro'
+      },
+      'project-settings': {
+        title: 'Configurações do projeto',
+        description: 'Área administrativa do projeto para editar dados gerais, regras básicas e visibilidade. Deve aparecer apenas para admin.',
+        actionLabel: 'Salvar alterações'
+      },
+      profile: {
+        title: 'Meu perfil',
+        description: 'Dados do usuário logado, independentes do projeto atual. Aqui ficam informações pessoais e preferências da conta.',
+        actionLabel: 'Salvar perfil'
+      }
+    };
+
+    function getCurrentProject() {
+      return projects.find(project => project.id === currentProjectId);
+    }
+
+    function getCurrentRole() {
+      if (currentRoleOverride) return currentRoleOverride;
+      return getCurrentProject().role;
+    }
+
+    function isAdmin() {
+      return getCurrentRole() === 'admin';
+    }
+
+    function setView(view) {
+      currentView = view;
+
+      document.querySelectorAll('.nav-item').forEach(button => {
+        button.classList.toggle('active', button.dataset.view === view);
+      });
+
+      document.querySelectorAll('.view').forEach(section => {
+        section.classList.toggle('active', section.id === view);
+      });
+
+      const meta = viewMeta[view];
+      document.getElementById('mainTitle').textContent = meta.title;
+      document.getElementById('mainDescription').textContent = meta.description;
+      document.getElementById('contextActionButton').textContent = meta.actionLabel;
+
+      const projectSettingsNav = document.querySelector('[data-view="project-settings"]');
+      projectSettingsNav.classList.toggle('hidden', !isAdmin());
+
+      if (view === 'project-settings' && !isAdmin()) {
+        currentView = 'dashboard';
+        setView('dashboard');
+        return;
+      }
+    }
+
+    function renderSidebarProjects() {
+      const container = document.getElementById('sidebarProjects');
+      container.innerHTML = projects.map(project => `
+        <button class="project-chip ${project.id === currentProjectId ? 'active' : ''}" data-project-id="${project.id}">
+          <span>${project.name}</span>
+          <span class="project-chip-role">${project.id === currentProjectId ? getCurrentRole() : project.role}</span>
+        </button>
+      `).join('');
+
+      container.querySelectorAll('[data-project-id]').forEach(button => {
+        button.addEventListener('click', () => {
+          currentProjectId = Number(button.dataset.projectId);
+          currentRoleOverride = null;
+          renderAll();
+        });
+      });
+    }
+
+    function renderStats() {
+      const project = getCurrentProject();
+      const members = membersByProject[currentProjectId] || [];
+      const tasks = tasksByProject[currentProjectId] || [];
+      const pendingTasks = tasks.filter(task => task.status === 'a_fazer').length;
+      const doingTasks = tasks.filter(task => task.status === 'em_andamento').length;
+      const doneTasks = tasks.filter(task => task.status === 'concluido').length;
+
+      document.getElementById('statsGrid').innerHTML = `
+        <article class="stat">
+          <div class="stat-label">Projeto atual</div>
+          <div class="stat-value">${project.id.toString().padStart(2, '0')}</div>
+          <div class="stat-helper">${project.name}</div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Tarefas ativas</div>
+          <div class="stat-value">${tasks.length}</div>
+          <div class="stat-helper">${pendingTasks} a fazer · ${doingTasks} em andamento · ${doneTasks} concluídas</div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Membros no projeto</div>
+          <div class="stat-value">${members.length}</div>
+          <div class="stat-helper">Role atual: ${getCurrentRole() === 'admin' ? 'Administrador' : 'Membro'}</div>
+        </article>
+        <article class="stat">
+          <div class="stat-label">Progresso estimado</div>
+          <div class="stat-value">${project.progress.split('%')[0]}%</div>
+          <div class="stat-helper">Baseado nas tarefas concluídas do mock</div>
+        </article>
+      `;
+
+      document.getElementById('currentProjectLabel').textContent = `Projeto atual: ${project.name}`;
+      document.getElementById('sidebarAvatar').textContent = user.initials;
+      document.getElementById('sidebarUserName').textContent = user.name;
+      document.getElementById('sidebarUserRole').textContent = `${getCurrentRole() === 'admin' ? 'Admin' : 'Membro'} de ${project.name}`;
+      document.getElementById('roleToggle').textContent = `Trocar visualização: ${getCurrentRole()}`;
+    }
+
+    function renderDashboard() {
+      const project = getCurrentProject();
+      const tasks = tasksByProject[currentProjectId] || [];
+      const members = membersByProject[currentProjectId] || [];
+      const nextTasks = tasks.slice(0, 3);
+      const admins = members.filter(member => member.role === 'admin');
+
+      document.getElementById('dashboard').innerHTML = `
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Resumo do projeto</h2>
+                <p>Visão inicial para orientar a construção do dashboard do projeto atual.</p>
+              </div>
+              <span class="badge primary">${isAdmin() ? 'Visão admin' : 'Visão membro'}</span>
+            </div>
+
+            <div class="panel-stack">
+              <article class="detail-card">
+                <h3>${project.name}</h3>
+                <p class="muted">${project.description}</p>
+                <div class="badge-row" style="margin-top: 12px;">
+                  <span class="badge info">${project.membersCount} membros</span>
+                  <span class="badge warning">${project.tasksCount} tarefas</span>
+                  <span class="badge success">${project.progress}</span>
+                </div>
+              </article>
+
+              ${nextTasks.map(task => `
+                <article class="activity-card">
+                  <div class="activity-icon">✓</div>
+                  <div>
+                    <h3>${task.title}</h3>
+                    <p class="muted">Responsável: ${task.owner}</p>
+                    <div class="badge-row" style="margin-top: 10px;">
+                      <span class="badge ${task.status === 'concluido' ? 'success' : task.status === 'em_andamento' ? 'warning' : 'info'}">${task.status.replaceAll('_', ' ')}</span>
+                      <span class="badge primary">${task.priority}</span>
+                    </div>
+                  </div>
+                  <span class="small-muted">${task.due}</span>
+                </article>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Leitura de permissão</h2>
+                <p>Esse bloco valida a diferença de experiência entre admin e membro.</p>
+              </div>
+            </div>
+
+            <div class="panel-stack">
+              <article class="detail-card">
+                <h3>Seu papel neste projeto</h3>
+                <p class="muted">${isAdmin() ? 'Você pode editar projeto, adicionar membros e ajustar permissões.' : 'Você pode consultar projeto, membros e tarefas, mas sem ações administrativas.'}</p>
+              </article>
+
+              <article class="detail-card">
+                <h3>Administradores do projeto</h3>
+                <div class="panel-stack" style="margin-top: 12px;">
+                  ${admins.map(admin => `
+                    <div class="meta-row">
+                      <span class="avatar" style="width: 38px; height: 38px; font-size: 14px;">${admin.initials}</span>
+                      <div>
+                        <strong>${admin.name}</strong>
+                        <div class="small-muted">${admin.email}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </article>
+
+              <article class="detail-card">
+                <h3>Próximo passo de UX</h3>
+                <p class="muted">Após esse mapeamento, o Figma pode aprofundar estados vazios, feedbacks, ações de admin, seleção de projeto e experiência de membro comum.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProjects() {
+      const onlyAdminProjects = projects.filter(project => project.role === 'admin');
+      const onlyMemberProjects = projects.filter(project => project.role === 'member');
+
+      document.getElementById('projects').innerHTML = `
+        <div class="panel" style="margin-bottom: 18px;">
+          <div class="panel-header">
+            <div>
+              <h2>Fluxo de projetos</h2>
+              <p>Mapeamento para listar projetos, criar um novo e entrar no contexto de um projeto específico.</p>
+            </div>
+            <button class="button">Criar projeto</button>
+          </div>
+
+          <div class="grid-3">
+            <article class="detail-card">
+              <h3>1. Usuário cria conta</h3>
+              <p class="muted">Depois do login, se ele não participar de nenhum projeto, cai na criação do primeiro projeto.</p>
+            </article>
+            <article class="detail-card">
+              <h3>2. Cria projeto</h3>
+              <p class="muted">Quem cria um projeto vira admin dele. Isso não torna o usuário admin do sistema inteiro.</p>
+            </article>
+            <article class="detail-card">
+              <h3>3. Pode entrar em outros</h3>
+              <p class="muted">O mesmo usuário pode ser membro em outro projeto e admin do projeto que criou.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="panel-stack">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Projetos em que o usuário é admin</h2>
+                <p>Esses projetos liberam configuração e gestão de membros.</p>
+              </div>
+            </div>
+            <div class="project-grid">
+              ${onlyAdminProjects.map(project => projectCard(project)).join('')}
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Projetos em que o usuário é membro</h2>
+                <p>Nesses projetos o usuário consulta conteúdo e trabalha nas tarefas, sem governança do projeto.</p>
+              </div>
+            </div>
+            <div class="project-grid">
+              ${onlyMemberProjects.map(project => projectCard(project)).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function projectCard(project) {
+      return `
+        <article class="project-card">
+          <div class="project-card-top">
+            <div class="project-visual">${project.name.split(' ').map(word => word[0]).slice(0,2).join('')}</div>
+            <span class="badge ${project.role === 'admin' ? 'primary' : 'info'}">${project.role}</span>
+          </div>
+          <div>
+            <h3>${project.name}</h3>
+            <p class="muted">${project.description}</p>
+          </div>
+          <div class="meta-row">
+            <span class="small-muted">${project.membersCount} membros</span>
+            <span class="small-muted">${project.tasksCount} tarefas</span>
+            <span class="small-muted">${project.progress}</span>
+          </div>
+          <div class="inline-actions">
+            <button class="button-outline" data-project-switch="${project.id}">Abrir projeto</button>
+            ${project.role === 'admin' ? '<button class="button-subtle">Gerenciar</button>' : '<button class="button-subtle">Visualizar</button>'}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderTasks() {
+      const tasks = tasksByProject[currentProjectId] || [];
+      const groups = {
+        a_fazer: tasks.filter(task => task.status === 'a_fazer'),
+        em_andamento: tasks.filter(task => task.status === 'em_andamento'),
+        concluido: tasks.filter(task => task.status === 'concluido')
+      };
+
+      document.getElementById('tasks').innerHTML = `
+        <div class="panel" style="margin-bottom: 18px;">
+          <div class="panel-header">
+            <div>
+              <h2>Mapa de usabilidade da tela de tarefas</h2>
+              <p>Estrutura pensada para manter o padrão visual que você já vem usando: toolbar, quadro kanban, responsáveis e priorização.</p>
+            </div>
+            <div class="inline-actions">
+              <button class="button-subtle">Filtrar por responsável</button>
+              <button class="button">Nova tarefa</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="kanban">
+          ${columnTemplate('A fazer', groups.a_fazer, 'info')}
+          ${columnTemplate('Em andamento', groups.em_andamento, 'warning')}
+          ${columnTemplate('Concluído', groups.concluido, 'success')}
+        </div>
+      `;
+    }
+
+    function columnTemplate(title, tasks, badgeClass) {
+      return `
+        <section class="column">
+          <div class="column-header">
+            <h3>${title}</h3>
+            <span class="badge ${badgeClass}">${tasks.length}</span>
+          </div>
+          <div class="task-list">
+            ${tasks.length ? tasks.map(task => `
+              <article class="task-card">
+                <div>
+                  <h4>${task.title}</h4>
+                  <p class="muted" style="margin-top: 8px;">Responsável: ${task.owner}</p>
+                </div>
+                <div class="badge-row">
+                  <span class="badge primary">${task.priority}</span>
+                  <span class="badge ${badgeClass}">${task.status.replaceAll('_', ' ')}</span>
+                </div>
+                <div class="task-footer">
+                  <span>${task.due}</span>
+                  <span>${getCurrentProject().name}</span>
+                </div>
+              </article>
+            `).join('') : `
+              <div class="empty-state">
+                <div class="empty-state-icon">＋</div>
+                <strong>Sem tarefas aqui</strong>
+                <p class="muted">Essa coluna está vazia neste projeto.</p>
+              </div>
+            `}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderMembers() {
+      const members = membersByProject[currentProjectId] || [];
+
+      document.getElementById('members').innerHTML = `
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Membros do projeto atual</h2>
+                <p>Agora a tela faz sentido: lista apenas quem participa do projeto selecionado.</p>
+              </div>
+              ${isAdmin() ? '<button class="button">Adicionar membro</button>' : '<span class="badge info">Somente visualização</span>'}
+            </div>
+
+            <div class="member-list">
+              ${members.map(member => `
+                <article class="member-card">
+                  <div class="avatar">${member.initials}</div>
+                  <div>
+                    <h3>${member.name}</h3>
+                    <div class="member-meta">
+                      <span>${member.email}</span>
+                      <span>${member.cargo}</span>
+                    </div>
+                    <div class="badge-row">
+                      <span class="badge ${member.role === 'admin' ? 'primary' : 'info'}">${member.role}</span>
+                      <span class="badge ${member.status === 'ativo' ? 'success' : 'warning'}">${member.status}</span>
+                    </div>
+                  </div>
+                  ${isAdmin() ? `
+                    <div class="inline-actions">
+                      ${member.role !== 'admin' ? '<button class="button-outline">Promover</button>' : ''}
+                      ${member.name !== user.name ? '<button class="button-subtle">Remover</button>' : '<span class="small-muted">Você</span>'}
+                    </div>
+                  ` : '<div class="small-muted">Consulta</div>'}
+                </article>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="panel-stack">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Lógica da tela</h2>
+                  <p>Resumo do que muda entre admin e membro.</p>
+                </div>
+              </div>
+
+              <div class="settings-list">
+                <article class="settings-card">
+                  <div>
+                    <h3>Admin do projeto</h3>
+                    <p class="muted">Pode adicionar membros, remover membros e promover outro membro para admin.</p>
+                  </div>
+                  <span class="badge primary">admin</span>
+                </article>
+                <article class="settings-card">
+                  <div>
+                    <h3>Membro do projeto</h3>
+                    <p class="muted">Consulta membros e trabalha nas tarefas, sem controle sobre pessoas e configuração.</p>
+                  </div>
+                  <span class="badge info">member</span>
+                </article>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Mapeamento do modal</h2>
+                  <p>Base de usabilidade para depois refinar em Figma.</p>
+                </div>
+              </div>
+
+              <div class="panel-stack">
+                <div class="surface-input">✉️ E-mail do usuário existente</div>
+                <div class="surface-input">👤 Papel no projeto: membro</div>
+                <button class="button ${isAdmin() ? '' : 'hidden'}">Adicionar ao projeto</button>
+                ${!isAdmin() ? '<p class="muted">Esse bloco fica oculto para membros comuns.</p>' : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProjectSettings() {
+      document.getElementById('project-settings').innerHTML = isAdmin() ? `
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Dados gerais do projeto</h2>
+                <p>Tela reservada apenas para administradores do projeto atual.</p>
+              </div>
+            </div>
+
+            <div class="settings-list">
+              <article class="settings-card">
+                <div>
+                  <h3>Nome do projeto</h3>
+                  <p class="muted">${getCurrentProject().name}</p>
+                </div>
+                <button class="button-outline">Editar</button>
+              </article>
+              <article class="settings-card">
+                <div>
+                  <h3>Descrição</h3>
+                  <p class="muted">${getCurrentProject().description}</p>
+                </div>
+                <button class="button-outline">Editar</button>
+              </article>
+              <article class="settings-card">
+                <div>
+                  <h3>Regras do projeto</h3>
+                  <p class="muted">Definir como membros interagem com tarefas, visibilidade e governança mínima.</p>
+                </div>
+                <button class="button-outline">Configurar</button>
+              </article>
+            </div>
+          </div>
+
+          <div class="panel-stack">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Permissões</h2>
+                  <p>Regra validada no documento de arquitetura.</p>
+                </div>
+              </div>
+
+              <div class="panel-stack">
+                <article class="detail-card">
+                  <h3>Administrador</h3>
+                  <p class="muted">Edita o projeto, adiciona e remove membros, promove admins e controla a estrutura do projeto.</p>
+                </article>
+                <article class="detail-card">
+                  <h3>Membro</h3>
+                  <p class="muted">Acessa conteúdo do projeto e opera nas tarefas conforme o fluxo definido, sem governo do projeto.</p>
+                </article>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Ações sensíveis</h2>
+                  <p>Não precisam existir todas no MVP, mas precisam ser pensadas aqui.</p>
+                </div>
+              </div>
+              <div class="settings-list">
+                <article class="settings-card">
+                  <div>
+                    <h3>Transferir administração</h3>
+                    <p class="muted">Mover gestão principal para outro admin do projeto.</p>
+                  </div>
+                  <button class="button-subtle">Mapear</button>
+                </article>
+                <article class="settings-card">
+                  <div>
+                    <h3>Arquivar projeto</h3>
+                    <p class="muted">Ação futura, não obrigatória no MVP, mas importante na arquitetura.</p>
+                  </div>
+                  <button class="button-subtle">Mapear</button>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      ` : `
+        <div class="empty-state">
+          <div class="empty-state-icon">🔒</div>
+          <strong>Acesso restrito</strong>
+          <p class="muted">Configurações do projeto são visíveis apenas para administradores do projeto atual.</p>
+        </div>
+      `;
+    }
+
+    function renderProfile() {
+      document.getElementById('profile').innerHTML = `
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Dados da conta</h2>
+                <p>Informações do usuário, independentes do projeto em que ele está.</p>
+              </div>
+            </div>
+
+            <div class="settings-list">
+              <article class="settings-card">
+                <div>
+                  <h3>Nome completo</h3>
+                  <p class="muted">${user.name}</p>
+                </div>
+                <button class="button-outline">Editar</button>
+              </article>
+              <article class="settings-card">
+                <div>
+                  <h3>E-mail</h3>
+                  <p class="muted">${user.email}</p>
+                </div>
+                <button class="button-outline">Editar</button>
+              </article>
+              <article class="settings-card">
+                <div>
+                  <h3>Cargo</h3>
+                  <p class="muted">${user.cargo}</p>
+                </div>
+                <button class="button-outline">Editar</button>
+              </article>
+              <article class="settings-card">
+                <div>
+                  <h3>Senha</h3>
+                  <p class="muted">Alteração separada por fluxo seguro com redefinição.</p>
+                </div>
+                <button class="button-outline">Alterar</button>
+              </article>
+            </div>
+          </div>
+
+          <div class="panel-stack">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Seus projetos</h2>
+                  <p>Leitura rápida dos contextos em que você atua.</p>
+                </div>
+              </div>
+              <div class="panel-stack">
+                ${projects.map(project => `
+                  <article class="detail-card">
+                    <h3>${project.name}</h3>
+                    <p class="muted">${project.description}</p>
+                    <div class="badge-row" style="margin-top: 10px;">
+                      <span class="badge ${project.role === 'admin' ? 'primary' : 'info'}">${project.role}</span>
+                      <span class="badge success">${project.progress}</span>
+                    </div>
+                  </article>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Leitura de UX</h2>
+                  <p>Essa tela separa corretamente o que é perfil do usuário e o que é configuração do projeto.</p>
+                </div>
+              </div>
+              <article class="detail-card">
+                <h3>Por que separar?</h3>
+                <p class="muted">Misturar dados pessoais com regras do projeto gera confusão. Perfil é da conta; configurações do projeto são do contexto em que o usuário atua.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function bindProjectSwitchButtons() {
+      document.querySelectorAll('[data-project-switch]').forEach(button => {
+        button.addEventListener('click', () => {
+          currentProjectId = Number(button.dataset.projectSwitch);
+          currentRoleOverride = null;
+          setView('dashboard');
+          renderAll();
+        });
+      });
+    }
+
+    function renderAll() {
+      renderSidebarProjects();
+      renderStats();
+      renderDashboard();
+      renderProjects();
+      renderTasks();
+      renderMembers();
+      renderProjectSettings();
+      renderProfile();
+      setView(currentView);
+      bindProjectSwitchButtons();
+    }
+
+    document.querySelectorAll('.nav-item').forEach(button => {
+      button.addEventListener('click', () => setView(button.dataset.view));
+    });
+
+    document.getElementById('roleToggle').addEventListener('click', () => {
+      currentRoleOverride = getCurrentRole() === 'admin' ? 'member' : 'admin';
+      renderAll();
+    });
+
+    document.getElementById('projectShortcut').addEventListener('click', () => {
+      setView('projects');
+    });
+
+    document.getElementById('contextActionButton').addEventListener('click', () => {
+      const labels = {
+        dashboard: 'Ação de mapeamento: criar uma nova tarefa a partir do dashboard.',
+        projects: 'Ação de mapeamento: abrir fluxo de criação de projeto.',
+        tasks: 'Ação de mapeamento: abrir modal de nova tarefa.',
+        members: isAdmin() ? 'Ação de mapeamento: abrir modal de adicionar membro ao projeto.' : 'Membros comuns não adicionam pessoas ao projeto.',
+        'project-settings': isAdmin() ? 'Ação de mapeamento: salvar alterações das configurações do projeto.' : 'Sem acesso às configurações do projeto.',
+        profile: 'Ação de mapeamento: salvar alterações do perfil do usuário.'
+      };
+      alert(labels[currentView]);
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
