@@ -116,6 +116,10 @@ $performanceJson = json_encode([1, 3, 2, 5, 4, 3, 2]);
 window.addEventListener('load', function () {
     const cores = ['#8B0836', '#64748b', '#10b981'];
 
+<<<<<<< HEAD
+    // GRÁFICO DE ROSCA (Status)
+=======
+>>>>>>> c0e151e0fcbfe22b88359596f6375134535fe966
     const ctxStatus = document.getElementById('tasksChart');
     if (ctxStatus) {
         new Chart(ctxStatus, {
@@ -143,6 +147,10 @@ window.addEventListener('load', function () {
         });
     }
 
+<<<<<<< HEAD
+    // GRÁFICO DE LINHA (Ritmo) 
+=======
+>>>>>>> c0e151e0fcbfe22b88359596f6375134535fe966
     const ctxLine = document.getElementById('lineChart');
     if (ctxLine) {
         new Chart(ctxLine, {
