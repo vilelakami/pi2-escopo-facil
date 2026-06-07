@@ -8,7 +8,7 @@ Documentação completa do banco de dados MySQL do projeto **Escopo Fácil**.
 
 ```
 ┌──────────────┐       ┌───────────────────┐       ┌──────────────┐
-│   usuarios   │──1:N──│ projeto_membros    │──N:1──│   projetos   │
+│   usuarios   │──1:N──│ projeto_membros   │──N:1──│   projetos   │
 └──────────────┘       └───────────────────┘       └──────────────┘
        │                                                   │
        │                                                   │
@@ -22,7 +22,7 @@ Documentação completa do banco de dados MySQL do projeto **Escopo Fácil**.
                             │ tokens_     │
                             │ redefinicao │
                             └─────────────┘
-                            (ligado a usuarios)
+                          (ligado a usuarios)
 ```
 
 ---
