@@ -47,11 +47,6 @@
     cursor: pointer;
 }
 
-.notification-icon img {
-    width: 32px;
-    height: 32px;
-}
-
 /* ── Layout base ── */
 .layout {
     display: flex;

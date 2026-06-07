@@ -69,9 +69,13 @@ docs/         Documentação do projeto
 https://magenta-potato-409547.framer.app/
 ```
 
-## Objetivo academico
+## Protótipo no Figma
 
-Este projeto foi desenvolvido como trabalho academico, com foco em aprendizado prático de:
+[Escopo facil](https://www.figma.com/design/r6XBWNskGGCUPOhLBtpp5D/Escopo-facil?node-id=373-112&t=WbsunolnTIE2uQLY-1)
+
+## Objetivo acadêmico
+
+Este projeto foi desenvolvido como trabalho acadêmico, com foco em aprendizado prático de:
 
 - Organização de código;
 - Programação backend com PHP;
