@@ -19,14 +19,11 @@
     border-radius: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     border: 1px solid #eef2f7;
-<<<<<<< HEAD
     transition: transform 0.2s;
 }
 
 .stat-card:hover {
     border-color: #cbd5e1;
-=======
->>>>>>> c0e151e0fcbfe22b88359596f6375134535fe966
 }
 
 .stat-card h3 {
