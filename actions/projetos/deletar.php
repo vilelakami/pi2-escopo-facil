@@ -4,12 +4,12 @@ require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../controllers/ProjetoController.php';
 
 if (!isset($_SESSION['usuario_id'])) {
-    header('Location: /?page=login');
+    header('Location: ' . BASE_URL . '/?page=login');
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /?page=projetos');
+    header('Location: ' . BASE_URL . '/?page=projetos');
     exit;
 }
 

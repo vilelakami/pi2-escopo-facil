@@ -9,8 +9,7 @@ class ProjetoController
     public function criar(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /?page=projetos&erro=metodo-invalido');
-            exit;
+            $this->redirecionar('/?page=projetos&erro=metodo-invalido');
         }
 
         $titulo    = trim($_POST['titulo'] ?? '');
@@ -18,26 +17,23 @@ class ProjetoController
         $usuarioId = usuarioLogado();
 
         if (!$usuarioId) {
-            header('Location: /index.php');
-            exit;
+            $this->redirecionar('/?page=login');
         }
 
         if ($titulo === '') {
-            header('Location: /?page=projetos&erro=titulo-vazio');
-            exit;
+            $this->redirecionar('/?page=projetos&erro=titulo-vazio');
         }
 
         $projetoId = Projeto::criar($titulo, $descricao, $usuarioId);
         ProjetoMembro::adicionar($projetoId, $usuarioId, 'admin');
-        header('Location: /?page=projetos');
-        exit;
+
+        $this->redirecionar('/?page=projetos');
     }
 
     public function editar(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /?page=projetos&erro=metodo-invalido');
-            exit;
+            $this->redirecionar('/?page=projetos&erro=metodo-invalido');
         }
 
         $projetoId = (int) ($_POST['projeto_id'] ?? 0);
@@ -46,47 +42,48 @@ class ProjetoController
         $usuarioId = usuarioLogado();
 
         if (!$projetoId || !$usuarioId) {
-            header('Location: /index.php');
-            exit;
+            $this->redirecionar('/?page=login');
         }
 
         if (!ProjetoMembro::isAdmin($projetoId, $usuarioId)) {
-            header('Location: /?page=projetos&erro=nao-autorizado');
-            exit;
+            $this->redirecionar('/?page=projetos&erro=nao-autorizado');
         }
 
         if ($titulo === '') {
-            header('Location: /?page=projetos&erro=titulo-vazio');
-            exit;
+            $this->redirecionar('/?page=projetos&erro=titulo-vazio');
         }
 
         Projeto::atualizar($projetoId, $titulo, $descricao);
-        header('Location: /?page=projetos');
-        exit;
+
+        $this->redirecionar('/?page=projetos');
     }
 
     public function deletar(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /?page=projetos&erro=metodo-invalido');
-            exit;
+            $this->redirecionar('/?page=projetos&erro=metodo-invalido');
         }
 
         $projetoId = (int) ($_POST['projeto_id'] ?? 0);
         $usuarioId = usuarioLogado();
 
         if (!$projetoId || !$usuarioId) {
-            header('Location: /index.php');
-            exit;
+            $this->redirecionar('/?page=login');
         }
 
         if (!ProjetoMembro::isAdmin($projetoId, $usuarioId)) {
-            header('Location: /?page=projetos&erro=nao-autorizado');
-            exit;
+            $this->redirecionar('/?page=projetos&erro=nao-autorizado');
         }
 
         Projeto::deletar($projetoId);
-        header('Location: /?page=projetos');
+
+        $this->redirecionar('/?page=projetos');
+    }
+
+    private function redirecionar(string $path): void
+    {
+        $baseUrl = defined('BASE_URL') ? BASE_URL : '';
+        header('Location: ' . $baseUrl . $path);
         exit;
     }
 }

@@ -14,26 +14,82 @@ $usuario = [
     'avatar' => $dadosUsuario['avatar'] ?? '',
 ];
 
-$totalProjetos      = $pdo->query("SELECT COUNT(*) FROM projetos")->fetchColumn();
-$tarefasConcluidas  = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 3")->fetchColumn();
-$tarefasPendentes   = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 1")->fetchColumn();
-$tarefasFazendo     = $pdo->query("SELECT COUNT(*) FROM tarefas WHERE status = 2")->fetchColumn();
+$stmtProjetos = $pdo->prepare("
+    SELECT COUNT(DISTINCT p.id)
+    FROM projetos p
+    INNER JOIN projeto_membros pm ON pm.projeto_id = p.id
+    WHERE pm.usuario_id = :usuario_id
+");
+$stmtProjetos->execute(['usuario_id' => $usuarioId]);
+$totalProjetos = (int) $stmtProjetos->fetchColumn();
 
-$totalTarefas = (int)$tarefasPendentes + (int)$tarefasFazendo + (int)$tarefasConcluidas;
+function contarTarefasPorStatus(PDO $pdo, int $usuarioId, int $status): int
+{
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM tarefas t
+        INNER JOIN projeto_membros pm ON pm.projeto_id = t.projeto_id
+        WHERE pm.usuario_id = :usuario_id
+          AND t.status = :status
+    ");
+
+    $stmt->execute([
+        'usuario_id' => $usuarioId,
+        'status' => $status,
+    ]);
+
+    return (int) $stmt->fetchColumn();
+}
+
+$tarefasPendentes  = contarTarefasPorStatus($pdo, $usuarioId, 1);
+$tarefasFazendo    = contarTarefasPorStatus($pdo, $usuarioId, 2);
+$tarefasConcluidas = contarTarefasPorStatus($pdo, $usuarioId, 3);
+
+$totalTarefas = $tarefasPendentes + $tarefasFazendo + $tarefasConcluidas;
 $progresso    = $totalTarefas > 0 ? round(($tarefasConcluidas / $totalTarefas) * 100) : 0;
 
-$recentes = $pdo->query("
+$stmtRecentes = $pdo->prepare("
     SELECT t.titulo, t.status
     FROM tarefas t
-    ORDER BY t.id DESC
+    INNER JOIN projeto_membros pm ON pm.projeto_id = t.projeto_id
+    WHERE pm.usuario_id = :usuario_id
+    ORDER BY t.atualizado_em DESC, t.id DESC
     LIMIT 5
-")->fetchAll(PDO::FETCH_ASSOC);
+");
+$stmtRecentes->execute(['usuario_id' => $usuarioId]);
+$recentes = $stmtRecentes->fetchAll(PDO::FETCH_ASSOC);
 
 $statusLabel = [1 => 'A Fazer', 2 => 'Em Andamento', 3 => 'Concluído'];
 $statusClass = [1 => 'a-fazer', 2 => 'fazendo', 3 => 'concluido'];
 
-$labelsDias     = json_encode(['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']);
-$performanceJson = json_encode([1, 3, 2, 5, 4, 3, 2]);
+$labels = [];
+$concluidasPorDia = [];
+for ($i = 6; $i >= 0; $i--) {
+    $data = new DateTime("-$i days");
+    $chave = $data->format('Y-m-d');
+    $labels[] = $data->format('d/m');
+    $concluidasPorDia[$chave] = 0;
+}
+
+$stmtRitmo = $pdo->prepare("
+    SELECT DATE(t.atualizado_em) AS dia, COUNT(*) AS total
+    FROM tarefas t
+    INNER JOIN projeto_membros pm ON pm.projeto_id = t.projeto_id
+    WHERE pm.usuario_id = :usuario_id
+      AND t.status = 3
+      AND DATE(t.atualizado_em) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+    GROUP BY DATE(t.atualizado_em)
+");
+$stmtRitmo->execute(['usuario_id' => $usuarioId]);
+
+foreach ($stmtRitmo->fetchAll(PDO::FETCH_ASSOC) as $linha) {
+    if (isset($concluidasPorDia[$linha['dia']])) {
+        $concluidasPorDia[$linha['dia']] = (int) $linha['total'];
+    }
+}
+
+$labelsDias = json_encode($labels, JSON_UNESCAPED_UNICODE);
+$performanceJson = json_encode(array_values($concluidasPorDia));
 ?>
 
 <div class="page-header">
@@ -116,10 +172,7 @@ $performanceJson = json_encode([1, 3, 2, 5, 4, 3, 2]);
 window.addEventListener('load', function () {
     const cores = ['#8B0836', '#64748b', '#10b981'];
 
-<<<<<<< HEAD
     // GRÁFICO DE ROSCA (Status)
-=======
->>>>>>> c0e151e0fcbfe22b88359596f6375134535fe966
     const ctxStatus = document.getElementById('tasksChart');
     if (ctxStatus) {
         new Chart(ctxStatus, {
@@ -147,10 +200,7 @@ window.addEventListener('load', function () {
         });
     }
 
-<<<<<<< HEAD
     // GRÁFICO DE LINHA (Ritmo) 
-=======
->>>>>>> c0e151e0fcbfe22b88359596f6375134535fe966
     const ctxLine = document.getElementById('lineChart');
     if (ctxLine) {
         new Chart(ctxLine, {
